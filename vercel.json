@@ -1,6 +1,11 @@
 {
   "engines": {
-    "node": "14.x"
+    "node": "12.x"
+  },
+  "functions": {
+    "api/index.js": {
+      "memory": 2048
+    }
   },
   "rewrites": [
     {
