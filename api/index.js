@@ -18,11 +18,22 @@ app.use('/api', router);
 
 /* if not serverless */
 if (!process.env.SERVERLESS) {
-  // static server
+  // static server in production
+  if (process.env.NODE_ENV === 'production') {
+    const path = require('path');
+    const history = require('connect-history-api-fallback');
+    app.use(history(), express.static(path.resolve('./dist')));
+  }
   // port listening
-  const port = process.env.SERVER_PORT || 3000;
+  const port =
+    process.env.NODE_ENV === 'production'
+      ? process.env.SERVER_PORT || 3000
+      : process.env.API_SERVER_PORT || 3001;
   app.listen(port, () => {
-    console.log(`[Goose Analytics] Listening at http://localhost:${port}`);
+    console.log(
+      `[Goose ${process.env.NODE_ENV === 'production' ? 'Analytics' : 'Dev API' || 3001}]`,
+      `Listening at http://localhost:${port}`
+    );
   });
 }
 /* if serverless */
