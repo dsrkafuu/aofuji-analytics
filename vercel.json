@@ -4,7 +4,8 @@
   },
   "functions": {
     "api/index.js": {
-      "memory": 2048
+      "memory": 1024,
+      "maxDuration": 10
     }
   },
   "rewrites": [
