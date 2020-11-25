@@ -1,0 +1,11 @@
+{
+  "engines": {
+    "node": "14.x"
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    }
+  ]
+}
