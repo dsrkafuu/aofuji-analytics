@@ -1,24 +1,27 @@
-# goose-analytics
+# Goose Analytics (Prototype)
 
-## Project setup
+Prototype of WIP Goose Analytics based on Vue.
+
+## Environment Variables
+
 ```
+SERVER_PORT=3000
+DATABASE_URL=mongodb://localhost:27017/goosedb_preview
+```
+
+## Development
+
+First fork this repo and clone it.
+
+### Vanilla Node.js Server
+
+```bash
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## License
 
-### Lints and fixes files
-```
-npm run lint
-```
+This project is released under `Apache License 2.0`, for more information read the [LICENSE](https://github.com/amzrk2/goose-analytics/blob/main/LICENSE).
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+**Copyright © 2020-present DSRKafuU <https://amzrk2.cc/>**
