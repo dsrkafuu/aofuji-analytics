@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Goose Analytics",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Users"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Get user list",
+        "description": "Get user list, without password",
+        "tags": ["Users"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      },
+                      "isAdmin": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["password", "isAdmin", "username", "_id"]
+                  }
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new user",
+        "description": "Add a new user",
+        "tags": ["Users"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "isAdmin": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["username", "password", "isAdmin"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}
