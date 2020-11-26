@@ -9,6 +9,8 @@ const app = express();
 // response time logger
 const responseTime = require('./middlewares/responseTime');
 app.use(responseTime());
+// body parser
+app.use(express.json());
 // safety helmet
 if (process.env.HELMET) {
   const helmet = require('helmet');
@@ -20,7 +22,7 @@ if (process.env.VERCEL) {
   app.use(vercelCookie());
 }
 
-// link database
+/* link database */
 const { mongoose } = require('./utils/mongoose');
 app.use(mongoose());
 

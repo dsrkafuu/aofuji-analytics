@@ -5,12 +5,21 @@ const errorBuilder = require('./utils/errorBuilder');
 /* init sub router */
 const router = Router();
 
+/* load models */
+const { User, Website } = require('./utils/mongoose');
+
 /* basic routes */
-router.get('/', async (req, res) => {
-  res.send('Request get');
+// get all users
+router.get('/users', async (req, res) => {
+  const result = await User.find({}, 'username password isAdmin');
+  res.send(result);
 });
-router.get('/test', async (req, res) => {
-  res.send('Test request get');
+// create a new user
+router.post('/users', async (req, res) => {
+  // body fliter
+  const { username, password, isAdmin } = req.body;
+  const result = await User.create({ username, password, isAdmin });
+  res.send(result);
 });
 
 /* fallbacks 403 */

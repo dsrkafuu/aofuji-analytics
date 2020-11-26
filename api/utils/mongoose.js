@@ -7,19 +7,24 @@ if (dbURL) {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+  mongoose.connection.on('error', () => {
+    console.error('[Goose API] Mongoose failed to connect to database');
+  });
 } else {
   console.error('[Goose API] Environment variable DATABASE_URL not set');
 }
 
 /* compile models */
+const User = require('../models/User')(mongoose);
 const Website = require('../models/Website')(mongoose);
 
 module.exports = {
   // mongoose instance middleware
   mongoose: () => async (req, res, next) => {
-    req.mongoose = mongoose; // inject mongoose instance and models to req
+    req.mongoose = mongoose;
     next();
   },
   // models
+  User,
   Website,
 };
