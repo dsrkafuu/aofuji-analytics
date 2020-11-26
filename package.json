@@ -12,8 +12,9 @@
     "start": "cross-env NODE_ENV=production node ./api/index.js"
   },
   "dependencies": {
-    "connect-history-api-fallback": "^1.6.0",
+    "connect-history-api-fallback": "~1.6.0",
     "express": "~5.0.0-alpha.8",
+    "mongoose": "^5.10.16",
     "vue": "~3.0.2"
   },
   "devDependencies": {
