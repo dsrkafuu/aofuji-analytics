@@ -1,11 +1,19 @@
 /*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
-require('../utils/initEnv')(); // load env
+require('../utils/env')(); // load env
 
 /* init express instance */
 const express = require('express');
 const app = express();
 
 /* middlewares */
+// response time logger
+const responseTime = require('./middlewares/responseTime');
+app.use(responseTime());
+// safety helmet
+if (process.env.HELMET) {
+  const helmet = require('helmet');
+  app.use(helmet());
+}
 // vercel CDN
 if (process.env.VERCEL) {
   const vercelCookie = require('./middlewares/vercelCookie');
@@ -21,7 +29,7 @@ const router = require('./router');
 app.use('/api', router);
 
 /* if not serverless */
-if (!process.env.SERVERLESS) {
+if (!process.env.VERCEL) {
   // static server in production
   if (process.env.NODE_ENV === 'production') {
     const staticServer = require('./utils/staticServer');

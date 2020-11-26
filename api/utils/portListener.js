@@ -6,7 +6,7 @@ module.exports = (app) => {
   const port =
     process.env.NODE_ENV === 'production'
       ? process.env.SERVER_PORT || 3000
-      : process.env.API_SERVER_PORT || 3001;
+      : process.env.SERVER_API_PORT || 3001;
   app.listen(port, () => {
     console.log(
       `[Goose ${process.env.NODE_ENV === 'production' ? 'Analytics' : 'Dev API'}]`,

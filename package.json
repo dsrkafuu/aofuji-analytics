@@ -14,7 +14,9 @@
   "dependencies": {
     "connect-history-api-fallback": "~1.6.0",
     "express": "~5.0.0-alpha.8",
-    "mongoose": "^5.10.16",
+    "helmet": "~4.2.0",
+    "mongoose": "~5.10.16",
+    "on-headers": "~1.0.2",
     "vue": "~3.0.2"
   },
   "devDependencies": {
