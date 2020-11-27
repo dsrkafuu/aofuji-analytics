@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const errorBuilder = require('./errorBuilder');
 
 /* connect database */
 const dbURL = process.env.DATABASE_URL;
@@ -22,8 +23,13 @@ const Website = require('../models/Website')(mongoose);
 module.exports = {
   // mongoose instance middleware
   mongoose: () => async (req, res, next) => {
-    req.mongoose = mongoose;
-    next();
+    if (mongoose.connection.readyState !== 1) {
+      // respond 503 when database unavailable
+      res.status(503).send(errorBuilder(503));
+    } else {
+      req.mongoose = mongoose;
+      next();
+    }
   },
   // models
   User,

@@ -22,10 +22,7 @@ if (process.env.VERCEL) {
   app.use(vercelCookie());
 }
 
-/* link database */
-const { mongoose } = require('./utils/mongoose');
-app.use(mongoose());
-
+/* link database (only when requesting `/api`) */
 /* routes */
 const router = require('./router');
 app.use('/api', router);

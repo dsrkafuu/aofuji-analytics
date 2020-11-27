@@ -5,13 +5,19 @@ const errorBuilder = require('./utils/errorBuilder');
 /* init sub router */
 const router = Router();
 
+/* link database */
+const { mongoose } = require('./utils/mongoose');
+router.use(mongoose());
+
 /* load models */
-const { User, Website } = require('./utils/mongoose');
+const { User } = require('./utils/mongoose');
 
 /* basic routes */
 // get all users
 router.get('/users', async (req, res) => {
-  const result = await User.find({}, 'username password isAdmin');
+  console.log(1);
+  const result = await User.find({}, 'username password isAdmin').maxTimeMS(1000);
+  console.log(2);
   res.send(result);
 });
 // create a new user

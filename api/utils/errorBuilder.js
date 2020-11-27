@@ -7,7 +7,13 @@ module.exports = (statusCode) => {
     case 403: {
       return {
         statusCode,
-        statusText: 'API route not available',
+        statusText: 'API server route not available',
+      };
+    }
+    case 503: {
+      return {
+        statusCode,
+        statusText: 'API database connection failed',
       };
     }
     default: {
