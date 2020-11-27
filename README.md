@@ -2,6 +2,10 @@
 
 Prototype of WIP Goose Analytics based on Vue.
 
+## About Vue.js
+
+Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem is not stable yet.
+
 ## Local Development
 
 First you need to fork this repo and clone it.

@@ -1,5 +1,5 @@
 /**
- * build an error
+ * build an http error
  * @param {Number} statusCode status code
  */
 module.exports = (statusCode) => {

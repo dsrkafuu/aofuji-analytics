@@ -1,7 +1,11 @@
+# built files
 dist/
 
 # production env
 .env.production
+# local env files
+.env.local
+.env.*.local
 
 # system
 Thumbs.db
@@ -10,13 +14,17 @@ Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
 
-# local env files
-.env.local
-.env.*.local
-
 # npm files
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
