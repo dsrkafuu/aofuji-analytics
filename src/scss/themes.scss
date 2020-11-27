@@ -1,0 +1,53 @@
+$colors-light: (
+  'body': #f2f5f8,
+  'bg': #fffffd,
+  'hover': #f3f5fa,
+  'wrapper': #f5f5f5,
+  'font': #3f4551,
+  'primary': #8aa2d3,
+  'secondary': #8b81c3,
+  'scroll-bg': #f0f0f0,
+  'scroll-thumb': #cdcdcd,
+  'scroll-hover': #a6a6a6,
+  'scroll-focus': #606060,
+);
+@mixin light {
+  @each $key, $value in $colors-light {
+    --color-#{$key}: #{$value};
+  }
+  --shadow: 0 0.25rem 1rem rgba(48, 55, 66, 0.06);
+}
+
+$colors-dark: (
+  'body': #2f3136,
+  'bg': #4d5158,
+  'hover': #41454b,
+  'wrapper': #34373d,
+  'font': rgba(255, 255, 255, 0.75),
+  'primary': #8aa2d3,
+  'secondary': #bab1df,
+  'scroll-bg': #3c3f45,
+  'scroll-thumb': #888a8d,
+  'scroll-hover': #75777a,
+  'scroll-focus': #535559,
+);
+@mixin dark {
+  @each $key, $value in $colors-dark {
+    --color-#{$key}: #{$value};
+  }
+  --shadow: none;
+}
+
+body[data-theme='auto'] {
+  @include light();
+
+  @media (prefers-color-scheme: dark) {
+    @include dark();
+  }
+}
+body[data-theme='light'] {
+  @include light();
+}
+body[data-theme='dark'] {
+  @include dark();
+}

@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* sticky footer */
+html {
+  min-height: 100vh;
+}
+body {
+  min-height: 100vh;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-body);
+  color: var(--color-font);
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1 1 auto;
+}
+header,
+footer {
+  flex: 0 0 auto;
+}
+
+/* reset */
+a {
+  color: inherit;
+  text-decoration: none;
+}

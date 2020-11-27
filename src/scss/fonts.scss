@@ -1,0 +1,15 @@
+/* sans-serif */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Inter Regular'), url('../assets/fonts/inter-regular.woff2?v=3.15') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Inter Semi Bold'), url('../assets/fonts/inter-semibold.woff2?v=3.15') format('woff2');
+}

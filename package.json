@@ -16,6 +16,7 @@
     "express": "~5.0.0-alpha.8",
     "helmet": "~4.2.0",
     "mongoose": "~5.10.16",
+    "normalize.css": "~8.0.1",
     "on-headers": "~1.0.2",
     "vue": "~2.6.12",
     "vue-router": "~3.4.9",

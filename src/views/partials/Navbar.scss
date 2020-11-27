@@ -1,0 +1,37 @@
+.navbar {
+  background-color: var(--color-bg);
+  height: $navbar-height;
+
+  .container {
+    display: flex;
+    height: $navbar-height;
+    line-height: $navbar-height;
+  }
+
+  .navbar-brand {
+    flex: 0 0 auto;
+    padding: 0 $space-base;
+    font-size: $font-size-md;
+  }
+
+  .navbar-menu {
+    flex: 1 1 auto;
+    display: flex;
+  }
+
+  .navbar-start {
+    flex: 1 1 auto;
+
+    .navbar-item {
+      padding: 0 $space-sm;
+    }
+  }
+
+  .navbar-end {
+    flex: 0 0 auto;
+  }
+
+  @media screen and (max-width: $responsive-tablet + $responsive-offset) {
+    height: $navbar-height-sm * 2;
+  }
+}

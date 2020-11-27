@@ -1,0 +1,13 @@
+.container {
+  width: $responsive-desktop;
+  margin: 0 auto;
+
+  @media screen and (max-width: $responsive-desktop + $responsive-offset) {
+    width: $responsive-tablet;
+  }
+
+  @media screen and (max-width: $responsive-tablet + $responsive-offset) {
+    width: $responsive-mobile;
+    height: $navbar-height-sm * 2;
+  }
+}
