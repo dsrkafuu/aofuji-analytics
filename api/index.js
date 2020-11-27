@@ -28,7 +28,7 @@ const router = require('./router');
 app.use('/api', router);
 
 /* if not serverless */
-if (!process.env.VERCEL) {
+if (!process.env.SERVERLESS) {
   // static server in production
   if (process.env.NODE_ENV === 'production') {
     const staticServer = require('./utils/staticServer');

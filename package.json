@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "vue-cli-service lint",
     "dev:web": "cross-env NODE_ENV=development vue-cli-service serve",
-    "dev:api": "cross-env NODE_ENV=development nodemon --watch api --watch .env.development ./api/index.js",
+    "dev:api": "cross-env NODE_ENV=development nodemon --watch api  --watch utils --watch .env.development ./api/index.js",
     "dev": "cross-env NODE_ENV=development npm-run-all -p dev:api dev:web",
     "build:web": "cross-env NODE_ENV=production vue-cli-service build --modern",
     "build": "cross-env NODE_ENV=production npm-run-all -p build:web",
