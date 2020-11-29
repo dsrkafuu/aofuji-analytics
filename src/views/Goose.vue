@@ -1,7 +1,11 @@
 <template>
   <div class="goose">
     <Navbar />
-    <router-view />
+    <main class="container">
+      <keep-alive exclude="Settings">
+        <router-view />
+      </keep-alive>
+    </main>
   </div>
 </template>
 

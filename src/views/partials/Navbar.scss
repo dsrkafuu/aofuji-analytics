@@ -1,6 +1,7 @@
 .navbar {
   background-color: var(--color-bg);
   height: $navbar-height;
+  box-shadow: var(--shadow);
 
   .container {
     display: flex;
@@ -8,10 +9,30 @@
     line-height: $navbar-height;
   }
 
+  .navbar-item {
+    display: block;
+    padding: 0 $space-sm;
+
+    &:hover {
+      background-color: var(--color-hover);
+    }
+
+    &.router-link-exact-active {
+      color: var(--color-primary);
+    }
+  }
+
   .navbar-brand {
     flex: 0 0 auto;
-    padding: 0 $space-base;
     font-size: $font-size-md;
+
+    .navbar-item {
+      padding: 0 $space-base;
+
+      &.router-link-exact-active {
+        color: var(--color-font);
+      }
+    }
   }
 
   .navbar-menu {
@@ -21,10 +42,7 @@
 
   .navbar-start {
     flex: 1 1 auto;
-
-    .navbar-item {
-      padding: 0 $space-sm;
-    }
+    display: flex;
   }
 
   .navbar-end {
