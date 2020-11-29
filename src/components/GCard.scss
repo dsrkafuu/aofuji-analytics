@@ -1,6 +1,6 @@
-.card {
+.g-card {
   background-color: var(--color-bg);
   box-shadow: var(--shadow);
   border-radius: $radius;
-  margin: $space-base;
+  overflow: hidden; // prevent internal elements to cover radius
 }

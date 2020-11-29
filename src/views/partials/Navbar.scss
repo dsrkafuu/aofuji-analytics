@@ -9,29 +9,13 @@
     line-height: $navbar-height;
   }
 
-  .navbar-item {
-    display: block;
-    padding: 0 $space-sm;
-
-    &:hover {
-      background-color: var(--color-hover);
-    }
-
-    &.router-link-exact-active {
-      color: var(--color-primary);
-    }
-  }
-
   .navbar-brand {
     flex: 0 0 auto;
     font-size: $font-size-md;
 
     .navbar-item {
-      padding: 0 $space-base;
-
-      &.router-link-exact-active {
-        color: var(--color-font);
-      }
+      padding: 0 $space-lg;
+      color: var(--color-font) !important;
     }
   }
 

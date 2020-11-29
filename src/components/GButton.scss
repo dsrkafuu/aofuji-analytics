@@ -1,0 +1,36 @@
+.g-button {
+  outline: none;
+  border: none;
+  text-align: center;
+  color: var(--color-font);
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--color-hover);
+  }
+
+  &.g-button-primary {
+    display: inline-block;
+    border-radius: $radius;
+    padding: $space-sm $space-base;
+  }
+  &.g-button-full-width {
+    display: block;
+    width: 100%;
+    padding: $space-sm 0;
+  }
+  &.g-button-full-height {
+    display: block;
+    height: 100%;
+    padding: 0 $space-base;
+  }
+
+  &.g-button-active {
+    color: var(--color-primary);
+  }
+  &.g-button-disabled:hover {
+    cursor: not-allowed;
+    background-color: transparent;
+  }
+}

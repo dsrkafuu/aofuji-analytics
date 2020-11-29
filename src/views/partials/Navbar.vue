@@ -2,13 +2,21 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <router-link :to="{ name: 'goose' }" class="navbar-item">{{ siteTitle }}</router-link>
+        <GRouterLink class="navbar-item" :to="{ name: 'goose' }" type="full-height">
+          {{ siteTitle }}
+        </GRouterLink>
       </div>
       <div class="navbar-menu">
         <div class="navbar-start">
-          <router-link :to="{ name: 'dashboard' }" class="navbar-item">Dashboard</router-link>
-          <router-link :to="{ name: 'realtime' }" class="navbar-item">Realtime</router-link>
-          <router-link :to="{ name: 'settings' }" class="navbar-item">Settings</router-link>
+          <GRouterLink class="navbar-item" :to="{ name: 'dashboard' }" type="full-height">
+            Dashboard
+          </GRouterLink>
+          <GRouterLink class="navbar-item" :to="{ name: 'realtime' }" type="full-height">
+            Realtime
+          </GRouterLink>
+          <GRouterLink class="navbar-item" :to="{ name: 'settings' }" type="full-height">
+            Settings
+          </GRouterLink>
         </div>
         <div class="navbar-end">
           <span>end</span>
@@ -19,8 +27,13 @@
 </template>
 
 <script>
+import GRouterLink from '../../components/GRouterLink.vue';
+
 export default {
   name: 'Navbar',
+  components: {
+    GRouterLink,
+  },
   computed: {
     /**
      * site title from environment variables

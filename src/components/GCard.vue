@@ -1,14 +1,14 @@
 <template>
-  <div class="card">
+  <div class="g-card">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Card',
+  name: 'GCard',
 };
 </script>
 
-<style lang="scss" src="./Card.scss">
+<style lang="scss" src="./GCard.scss">
 </style>

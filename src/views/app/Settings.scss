@@ -1,0 +1,12 @@
+.settings {
+  display: flex;
+  margin: $space-lg;
+
+  .settings-ctrl {
+    flex: 0 0 20%;
+  }
+  .settings-content {
+    flex: 1 1 auto;
+    margin-left: $space-lg;
+  }
+}
