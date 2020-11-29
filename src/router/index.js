@@ -2,34 +2,46 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+/* components */
+import Goose from '../views/Goose.vue';
+import Dashboard from '../views/app/Dashboard.vue';
+import Realtime from '../views/app/Realtime.vue';
+import Settings from '../views/app/Settings.vue';
+import Login from '../views/Login.vue';
+import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
     path: '/',
     name: 'goose',
-    component: () => import(/* webpackChunkName: "goose" */ '../views/Goose.vue'),
+    component: Goose,
     children: [
       {
         path: '/dashboard',
         name: 'dashboard',
-        component: () => import(/* webpackChunkName: "goose" */ '../views/app/Dashboard.vue'),
+        component: Dashboard,
       },
       {
         path: '/realtime',
         name: 'realtime',
-        component: () => import(/* webpackChunkName: "goose" */ '../views/app/Realtime.vue'),
+        component: Realtime,
       },
       {
         path: '/settings',
         name: 'settings',
-        component: () => import(/* webpackChunkName: "goose" */ '../views/app/Settings.vue'),
+        component: Settings,
       },
     ],
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+    component: Login,
+  },
+  {
+    path: '/*',
+    name: 'not-found',
+    component: NotFound,
   },
 ];
 
