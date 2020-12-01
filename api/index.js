@@ -11,10 +11,16 @@ const responseTime = require('./middlewares/responseTime');
 app.use(responseTime());
 // body parser
 app.use(express.json());
+// compression
+if (process.env.NODE_ENV === 'production') {
+  const compression = require('compression');
+  app.use(compression());
+}
 // safety helmet
 if (process.env.HELMET) {
   const helmet = require('helmet');
   app.use(helmet());
+  console.log('[Goose Analytics] Helmet is securing the server which needs an HTTPS connection');
 }
 // vercel CDN
 if (process.env.VERCEL) {

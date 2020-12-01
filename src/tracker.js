@@ -43,9 +43,9 @@
 
   const gooseView = () => {
     sendData('view', {
-      lang: navigator.language,
       path: location.pathname,
       ref: document.referrer,
+      lang: navigator.language,
       sc: screen.width * dpr + 'x' + screen.height * dpr,
     });
   };
@@ -65,11 +65,22 @@
       }
     }, 0);
   };
-  const gooseEvent = (name, type) => {
-    sendData('event', {
-      name,
-      type,
-    });
+  /**
+   * @param {String} name
+   * @param {Event|String} e
+   */
+  const gooseEvent = (name, e) => {
+    if (typeof e === 'string') {
+      sendData('event', {
+        name,
+        type: e,
+      });
+    } else {
+      sendData('event', {
+        name,
+        type: e.type || 'unknown',
+      });
+    }
   };
 
   gooseView();
