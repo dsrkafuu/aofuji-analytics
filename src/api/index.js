@@ -29,14 +29,12 @@ if (process.env.VERCEL) {
 }
 
 // test
+const path = require('path');
+const fs = require('fs');
 app.get('/api/test', async (req, res) => {
-  const p = require('path').resolve(__dirname, '../../api/assets/GeoLite2-Country.mmdb');
-  if (require('fs').existsSync(p)) {
-    console.log(require('fs').readFileSync(p));
-    res.send({ status: 'exists' });
-  } else {
-    res.send({ status: 'notfound' });
-  }
+  let p = path.resolve(__dirname);
+  console.log(fs.readdirSync(p));
+  res.send({ status: 'done' });
 });
 
 /* link database (only when requesting `/api`) */
