@@ -38,8 +38,6 @@ app.get('/api/test', async (req, res) => {
   console.log(fs.readdirSync(p));
   p = path.resolve(p, '../');
   console.log(fs.readdirSync(p));
-  p = path.resolve(p, '../');
-  console.log(fs.readdirSync(p));
   p = path.resolve(p, './api');
   console.log(fs.readdirSync(p));
   p = path.resolve(p, '../src');
