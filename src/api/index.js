@@ -34,6 +34,10 @@ const fs = require('fs');
 app.get('/api/test', async (req, res) => {
   let p = path.resolve(__dirname);
   console.log(fs.readdirSync(p));
+  p = path.resolve(p, '..');
+  console.log(fs.readdirSync(p));
+  p = path.resolve(p, '..');
+  console.log(fs.readdirSync(p));
   res.send({ status: 'done' });
 });
 
