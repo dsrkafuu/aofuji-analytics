@@ -9,12 +9,14 @@ Vue.js is in the transition phase from v2 to v3, and the project will continue t
 Options API prop order:
 
 ```
-name => components => props => data => computed => watch => methods => lifecycle functions
+render => name => components => props => data => computed => watch => methods => lifecycle functions
 ```
 
 ## Local Development
 
 First you need to fork this repo and clone it. Then create a `.env.development` then set the development environment variables below.
+
+Note that this project uses husky and lint-staged to format source code, so the git commands may be slow due to the Prettier formatting workflow.
 
 After these, you can simply:
 
@@ -22,6 +24,8 @@ After these, you can simply:
 npm install
 npm run dev
 ```
+
+Remember to use `npm run lint` to check the errors before commiting.
 
 Check the [Environment Variables](#environment-variables) section for more details.
 
@@ -43,11 +47,9 @@ SERVER_API_PORT=3001
 
 ### Production
 
-Production mode needs `npm run build` first.
+Production mode needs `npm run build` first. Both the API server and website files built are provided by expressjs on port `SERVER_PORT`.
 
-Both the API server and website files built are provided by express.js on `SERVER_PORT`.
-
-Use `HELMET=1` to enable Helmet for server.
+If you have a server with SSL cert which can enable HTTPS, use `HELMET=1` to enable Helmet for security.
 
 ```
 SERVER_PORT=3000
