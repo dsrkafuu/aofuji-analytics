@@ -12,6 +12,14 @@ Options API prop order:
 render => name => components => props => data => computed => watch => methods => lifecycle functions
 ```
 
+## Bypass Block Extensions
+
+Add `TRACKER_FILENAME` environment variable to customize the tracker script name, for example:
+
+```
+TRACKER_FILENAME="jquery.min.js"
+```
+
 ## Local Development
 
 First you need to fork this repo and clone it. Then create a `.env.development` then set the development environment variables below.
@@ -31,6 +39,15 @@ Check the [Environment Variables](#environment-variables) section for more detai
 
 ## Environment Variables
 
+The varibales below are available both in development mode and production mode:
+
+```
+SERVER_PORT=3000  # control panel server port
+DATABASE_URL="mongodb://localhost:27017/goosedb_preview" # database url (mongodb)
+TRACKER_FILENAME="goose.min.js" # tracker script file name
+VUE_APP_TITLE="Goose Analytics (Prototype)" # app title on control panel
+```
+
 ### Development
 
 In development mode, the website itself is provided by Vue CLI on `SERVER_PORT`.
@@ -38,10 +55,6 @@ In development mode, the website itself is provided by Vue CLI on `SERVER_PORT`.
 Difference is that the API server is deployed on `SERVER_API_PORT` without static file provider, then proxyed by Vue CLI's webpack-dev-server to the same port as `SERVER_PORT`.
 
 ```
-SERVER_PORT=3000
-DATABASE_URL="mongodb://localhost:27017/goosedb_preview"
-VUE_APP_TITLE="Goose Analytics (Prototype)"
-
 SERVER_API_PORT=3001
 ```
 
@@ -52,10 +65,6 @@ Production mode needs `npm run build` first. Both the API server and website fil
 If you have a server with SSL cert which can enable HTTPS, use `HELMET=1` to enable Helmet for security.
 
 ```
-SERVER_PORT=3000
-DATABASE_URL="mongodb://localhost:27017/goosedb_preview"
-VUE_APP_TITLE="Goose Analytics (Prototype)"
-
 BASE_URL="/"
 HELMET=1
 ```

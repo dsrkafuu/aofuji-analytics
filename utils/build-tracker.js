@@ -3,6 +3,7 @@ require('./env')();
 const path = require('path');
 const fs = require('fs');
 const terser = require('terser').minify;
+const fileName = process.env.TRACKER_FILENAME || 'goose.min.js';
 
 async function buildTracker() {
   const script = path.resolve(__dirname, '../src/tracker.js');
@@ -15,7 +16,7 @@ async function buildTracker() {
   await new Promise((resolve, reject) => {
     try {
       terser(content).then((result) => {
-        fs.writeFileSync(path.join(folder, 'goose.js'), result.code);
+        fs.writeFileSync(path.join(folder, fileName), result.code);
         resolve();
       });
     } catch (e) {
