@@ -15,9 +15,7 @@ const { User } = require('./utils/mongoose');
 /* basic routes */
 // get all users
 router.get('/users', async (req, res) => {
-  console.log(1);
   const result = await User.find({}, 'username password isAdmin').maxTimeMS(1000);
-  console.log(2);
   res.send(result);
 });
 // create a new user
@@ -26,6 +24,17 @@ router.post('/users', async (req, res) => {
   const { username, password, isAdmin } = req.body;
   const result = await User.create({ username, password, isAdmin });
   res.send(result);
+});
+
+// test
+router.get('/test', async (req, res) => {
+  const p = require('path').resolve(__dirname, '../../api/assets/GeoLite2-Country.mmdb');
+  if (require('fs').existsSync(p)) {
+    console.log(require('fs').readFileSync(p));
+    res.send({ status: 'exists' });
+  } else {
+    res.send({ status: 'notfound' });
+  }
 });
 
 /* fallbacks 403 */
