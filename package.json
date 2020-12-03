@@ -20,6 +20,7 @@
     "connect-history-api-fallback": "~1.6.0",
     "express": "~5.0.0-alpha.8",
     "helmet": "~4.2.0",
+    "maxmind": "~4.3.1",
     "mongoose": "~5.11.2",
     "normalize.css": "~8.0.1",
     "on-headers": "~1.0.2",
