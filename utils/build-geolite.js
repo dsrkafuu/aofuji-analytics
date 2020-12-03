@@ -1,11 +1,12 @@
-require('./env')();
-
 const path = require('path');
 const fs = require('fs');
 const zlib = require('zlib');
 const tar = require('tar');
 const https = require('https');
 
+/**
+ * build geo database to `api/assets/geolite`
+ */
 async function buildGeoLite() {
   // init geolite database url
   let url =
@@ -18,7 +19,7 @@ async function buildGeoLite() {
   }
 
   // file infos
-  const folder = path.resolve(__dirname, '../public/geolite');
+  const folder = path.resolve(__dirname, '../api/assets/geolite');
   if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder);
   }

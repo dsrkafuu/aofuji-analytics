@@ -1,10 +1,11 @@
-require('./env')();
-
 const path = require('path');
 const fs = require('fs');
 const terser = require('terser').minify;
 const fileName = process.env.TRACKER_FILENAME || 'goose.min.js';
 
+/**
+ * build tracker to `dist`
+ */
 async function buildTracker() {
   const script = path.resolve(__dirname, '../src/tracker.js');
   const content = fs.readFileSync(script, { encoding: 'utf-8' });

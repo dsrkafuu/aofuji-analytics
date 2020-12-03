@@ -1,4 +1,6 @@
-(function(window) {
+/*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
+
+(function (window) {
   /* init */
 
   // get window props

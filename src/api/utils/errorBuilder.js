@@ -1,24 +1,24 @@
 /**
  * build an http error
- * @param {Number} statusCode status code
+ * @param {Number} status status code
  */
-module.exports = (statusCode) => {
-  switch (statusCode) {
+module.exports = (status) => {
+  switch (status) {
     case 403: {
       return {
-        statusCode,
+        status,
         statusText: 'API server route not available',
       };
     }
     case 503: {
       return {
-        statusCode,
+        status,
         statusText: 'API database connection failed',
       };
     }
     default: {
       return {
-        statusCode: 418,
+        status: 418,
         statusText: 'You found a teapot of API server (internal error)',
       };
     }
