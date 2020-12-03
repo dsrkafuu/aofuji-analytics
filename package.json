@@ -12,7 +12,8 @@
     "build:web": "cross-env NODE_ENV=production vue-cli-service build --modern",
     "build:api": "cross-env NODE_ENV=production node ./utils/build.js",
     "build": "cross-env NODE_ENV=production npm-run-all build:web build:api",
-    "start": "cross-env NODE_ENV=production node ./api/index.js"
+    "start": "cross-env NODE_ENV=production node ./api/index.js",
+    "vercel-build": "cross-env NODE_ENV=production npm run build:api"
   },
   "dependencies": {
     "compression": "~1.7.4",
