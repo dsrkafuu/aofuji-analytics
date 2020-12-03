@@ -3,7 +3,9 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "lint": "vue-cli-service lint",
+    "lint:web": "vue-cli-service lint",
+    "lint:api": "eslint ./api",
+    "lint": "npm-run-all -p lint:web lint:api",
     "dev:web": "cross-env NODE_ENV=development vue-cli-service serve",
     "dev:api": "cross-env NODE_ENV=development nodemon --watch api  --watch utils --watch .env.development ./api/index.js",
     "dev": "cross-env NODE_ENV=development npm-run-all -p dev:api dev:web",
@@ -35,12 +37,23 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.14.0",
     "eslint-plugin-vue": "^7.1.0",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
     "nodemon": "^2.0.6",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.2.1",
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",
     "tar": "^6.0.5",
     "terser": "^5.5.1",
     "vue-template-compiler": "~2.6.12"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,scss,md}": "prettier --write"
   }
 }
