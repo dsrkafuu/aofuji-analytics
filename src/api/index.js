@@ -29,23 +29,13 @@ if (process.env.VERCEL) {
 }
 
 // test
-const path = require('path');
-const fs = require('fs');
 app.get('/api/test', async (req, res) => {
-  let p = path.resolve(__dirname);
-  console.log(fs.readdirSync(p));
-  p = path.resolve(p, '../');
-  console.log(fs.readdirSync(p));
-  p = path.resolve(p, '../');
-  console.log(fs.readdirSync(p));
-  p = path.resolve(p, './api');
-  console.log(fs.readdirSync(p));
-  p = path.resolve(p, '../src');
-  console.log(fs.readdirSync(p));
-  p = path.resolve(p, '../utils');
-  console.log(fs.readdirSync(p));
+  const path = require('path');
+  const fs = require('fs');
+  let geoDBPath = path.resolve(__dirname, '../../api/assets/geolite/GeoLite2-Country.mmdb');
+  console.log(fs.statSync(geoDBPath));
   const maxmind = require('maxmind');
-  const lookup = await maxmind.open('../../api/assets/geolite/GeoLite2-Country.mmdb');
+  const lookup = await maxmind.open(geoDBPath);
   console.log(lookup.get('66.6.44.4'));
   console.log(lookup.getWithPrefixLength('66.6.44.4'));
   res.send({ status: 200 });
