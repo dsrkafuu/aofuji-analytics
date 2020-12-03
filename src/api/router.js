@@ -26,17 +26,6 @@ router.post('/users', async (req, res) => {
   res.send(result);
 });
 
-// test
-router.get('/test', async (req, res) => {
-  const p = require('path').resolve(__dirname, '../../api/assets/GeoLite2-Country.mmdb');
-  if (require('fs').existsSync(p)) {
-    console.log(require('fs').readFileSync(p));
-    res.send({ status: 'exists' });
-  } else {
-    res.send({ status: 'notfound' });
-  }
-});
-
 /* fallbacks 403 */
 router.get('/*', async (req, res) => {
   res.status(403).send(errorBuilder(403));

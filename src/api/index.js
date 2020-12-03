@@ -28,6 +28,17 @@ if (process.env.VERCEL) {
   app.use(vercelCookie());
 }
 
+// test
+app.get('/api/test', async (req, res) => {
+  const p = require('path').resolve(__dirname, '../../api/assets/GeoLite2-Country.mmdb');
+  if (require('fs').existsSync(p)) {
+    console.log(require('fs').readFileSync(p));
+    res.send({ status: 'exists' });
+  } else {
+    res.send({ status: 'notfound' });
+  }
+});
+
 /* link database (only when requesting `/api`) */
 /* routes */
 const router = require('./router');
