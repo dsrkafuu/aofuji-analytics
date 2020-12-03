@@ -1,6 +1,10 @@
 # built files
 dist/
 
+# extracted geo db files
+api/assets/geolite/*
+!api/assets/geolite/LICENSE
+
 # production env
 .env.production
 
