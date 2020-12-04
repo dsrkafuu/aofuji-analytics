@@ -4,9 +4,8 @@
   /* init */
 
   // get window props
-  const { document, location, navigator, screen, JSON, fetch } = window;
+  const { document, location, navigator, screen, JSON, performance } = window;
   const dpr = window.devicePixelRatio || 1;
-  const timing = window.performance.getEntriesByType('navigation');
 
   // get tracker settings
   const { GOOSE_ID, GOOSE_API } = window;
@@ -19,55 +18,79 @@
    * @param {Object} payload
    */
   function sendData(type, payload) {
+    // if basic data not defined
     if (!GOOSE_API || !GOOSE_ID) {
       return;
     }
+    // if dnt
+    if (navigator.doNotTrack === '1') {
+      return;
+    }
+    // collect api url
     const collect = `${GOOSE_API}${/\/$/.exec(GOOSE_API) ? '' : '/'}collect`;
-
-    const body = JSON.stringify({
+    // data body
+    const data = JSON.stringify({
       t: type,
       id: GOOSE_ID,
-      p: payload,
+      p: location.pathname,
+      d: payload,
     });
-
-    return fetch(collect, {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      referrer: 'no-referrer',
-      credentials: 'include',
-    });
+    // [DEBUG]
+    console.log(JSON.parse(data));
+    // send with beacon api
+    return navigator.sendBeacon(
+      collect,
+      new Blob([data], {
+        type: 'application/json',
+      })
+    );
   }
 
   /* tracker */
 
+  /**
+   * send view data
+   */
   const gooseView = () => {
     sendData('view', {
-      path: location.pathname,
       ref: document.referrer,
       lang: navigator.language,
       sc: screen.width * dpr + 'x' + screen.height * dpr,
     });
   };
+  /**
+   * send leave data
+   * @param {Number} pvt page view time
+   */
+  const gooseLeave = (pvt) => {
+    sendData('leave', {
+      pvt,
+    });
+  };
+  /**
+   * send performance data
+   */
   const goosePerf = () => {
-    setTimeout(() => {
-      const navPerf = timing[0];
-      console.log(1);
-      if (navPerf) {
-        const res = navPerf.responseStart - navPerf.startTime;
-        const dcl = navPerf.domContentLoadedEventStart - navPerf.startTime;
-        const load = navPerf.loadEventStart - navPerf.startTime;
+    let perf = performance.getEntriesByType('navigation');
+    if (perf && perf[0]) {
+      perf = perf[0];
+    }
+    if (perf) {
+      // prevent load event time not calculated
+      setTimeout(() => {
+        const res = perf.responseStart - perf.startTime;
+        const dcl = perf.domContentLoadedEventStart - perf.startTime;
+        const load = perf.loadEventStart - perf.startTime;
         sendData('perf', {
           res,
           dcl,
           load,
         });
-      }
-    }, 0);
+      }, 0);
+    }
   };
   /**
+   * send event data
    * @param {String} name
    * @param {Event|String} e
    */
@@ -85,6 +108,13 @@
     }
   };
 
+  /* expose tracker */
+  window.gooseView = gooseView;
+  window.gooseLeave = gooseLeave;
+  window.gooseEvent = gooseEvent;
+
+  /* start tracking */
+  // start view
   gooseView();
   if (document.readyState === 'complete') {
     goosePerf();
@@ -95,10 +125,21 @@
       }
     });
   }
+  // page view time calculation
+  let pvt = 0;
+  let st = Date.now();
+  document.addEventListener('visibilitychange', () => {
+    const now = Date.now();
+    if (document.visibilityState === 'hidden') {
+      pvt += now - st;
+    }
+    st = now;
+  });
+  window.addEventListener('beforeunload', () => {
+    pvt += Date.now() - st;
+    gooseLeave(pvt);
+  });
 
   /* spa listener */
-
-  /* expose tracker */
-  window.gooseView = gooseView;
-  window.gooseEvent = gooseEvent;
+  /* [TODO] */
 })(window);
