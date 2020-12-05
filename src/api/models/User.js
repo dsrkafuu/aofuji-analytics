@@ -1,12 +1,9 @@
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema(
     {
-      // username
-      username: String,
-      // password
-      password: String,
-      // whether is admin
-      isAdmin: Boolean,
+      username: { type: String },
+      password: { type: String },
+      isAdmin: { type: Boolean },
     },
     { timestamps: true }
   );
