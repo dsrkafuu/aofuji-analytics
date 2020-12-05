@@ -7,7 +7,7 @@
     "lint:api": "eslint ./api",
     "lint": "npm-run-all -p lint:web lint:api",
     "dev:web": "cross-env NODE_ENV=development vue-cli-service serve",
-    "dev:api": "cross-env NODE_ENV=development nodemon --watch api  --watch utils --watch .env.development ./api/index.js",
+    "dev:api": "cross-env NODE_ENV=development nodemon --watch src --watch api --watch utils ./api/index.js",
     "dev": "cross-env NODE_ENV=development npm-run-all -p dev:api dev:web",
     "build:web": "cross-env NODE_ENV=production vue-cli-service build --modern",
     "build:api": "cross-env NODE_ENV=production node ./utils/build.js",
@@ -18,6 +18,7 @@
   "dependencies": {
     "compression": "~1.7.4",
     "connect-history-api-fallback": "~1.6.0",
+    "cors": "~2.8.5",
     "express": "~5.0.0-alpha.8",
     "helmet": "~4.2.0",
     "maxmind": "~4.3.1",
