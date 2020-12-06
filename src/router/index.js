@@ -3,18 +3,18 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 /* components */
-import Goose from '../views/Goose.vue';
-import Dashboard from '../views/app/Dashboard.vue';
-import Realtime from '../views/app/Realtime.vue';
-import Settings from '../views/app/Settings.vue';
+import Base from '../views/Base/Base.vue';
+import Dashboard from '../views/Dashboard/Dashboard.vue';
+import Realtime from '../views/Realtime/Realtime.vue';
+import Settings from '../views/Settings/Settings.vue';
 import Login from '../views/Login.vue';
 import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'goose',
-    component: Goose,
+    name: 'base',
+    component: Base,
     children: [
       {
         path: '/dashboard',

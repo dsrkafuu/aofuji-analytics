@@ -1,5 +1,5 @@
 <template>
-  <div class="goose">
+  <div class="base">
     <Navbar />
     <main class="container">
       <keep-alive exclude="Settings">
@@ -11,10 +11,10 @@
 
 <script>
 /* components */
-import Navbar from './partials/Navbar.vue';
+import Navbar from './Navbar.vue';
 
 export default {
-  name: 'Goose',
+  name: 'Base',
   components: {
     Navbar,
   },
