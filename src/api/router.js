@@ -12,15 +12,21 @@ router.use(mongoose());
 const { Event, Session, User, View, Website } = require('./utils/mongoose');
 
 /* route level middleware */
+// close db connection if serverless
+if (process.env.SERVERLESS) {
+  const closeConnection = require('./middlewares/closeConnection');
+  router.use(closeConnection());
+}
+// collect route cors
 const cors = require('cors');
-
-/* collect route */
 const corsOptions = {
   origin: true,
   methods: 'POST',
   credentials: true,
   maxAge: 86400,
 };
+
+/* collect route */
 router.options('/collect', cors(corsOptions));
 router.post('/collect', cors(corsOptions), async (req, res) => {
   res.status(204).send();
