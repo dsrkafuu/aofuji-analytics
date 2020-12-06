@@ -7,5 +7,8 @@
 <script>
 export default {
   name: 'App',
+  created() {
+    this.$store.dispatch('INIT_THEME');
+  },
 };
 </script>

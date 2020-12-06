@@ -14,10 +14,15 @@ export default new Vuex.Store({
   mutations: {
     UPDATE_THEME(state, payload) {
       const { newTheme } = payload;
+      document.body.setAttribute(THEME_BODY_ATTR, newTheme);
       state.theme = newTheme;
+      setLS(THEME_STORAGE_KEY, newTheme);
     },
   },
   actions: {
+    async INIT_THEME({ state }) {
+      document.body.setAttribute(THEME_BODY_ATTR, state.theme);
+    },
     async SWITCH_THEME({ commit, state }) {
       // get the current theme of app
       const currentTheme = state.theme;
@@ -38,12 +43,8 @@ export default new Vuex.Store({
           newTheme = THEMES.AUTO;
         }
       }
-      // set the body attribute
-      document.body.setAttribute(THEME_BODY_ATTR, newTheme);
       // commit theme change
       commit('UPDATE_THEME', { newTheme });
-      // save to `localStorage`
-      setLS(THEME_STORAGE_KEY, newTheme);
     },
   },
 });

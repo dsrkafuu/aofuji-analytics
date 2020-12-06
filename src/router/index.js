@@ -35,12 +35,12 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: Login,
   },
   {
     path: '/*',
-    name: 'not-found',
+    name: 'NotFound',
     component: NotFound,
   },
 ];
