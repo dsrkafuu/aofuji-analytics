@@ -1,9 +1,7 @@
 .g-button {
-  outline: none;
-  border: none;
-  text-align: center;
   color: var(--color-font);
   background-color: transparent;
+  text-align: center;
 
   &:hover {
     cursor: pointer;
@@ -13,15 +11,18 @@
   &.g-button-primary {
     display: inline-block;
     border-radius: $radius;
-    padding: $space-sm $space-base;
+    height: $button-height;
+    line-height: $button-height;
+    padding: 0 $space-base;
   }
   &.g-button-full-width {
     display: block;
     width: 100%;
-    padding: $space-sm 0;
+    height: $button-height;
+    line-height: $button-height;
   }
   &.g-button-full-height {
-    display: block;
+    display: inline-block;
     height: 100%;
     padding: 0 $space-base;
   }

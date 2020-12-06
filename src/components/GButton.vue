@@ -2,20 +2,16 @@
 export default {
   render(h) {
     // init tag
-    const tag = this.$attrs.href ? 'a' : 'button';
+    const tag = this.$attrs.href ? 'a' : 'div';
 
     // apply classes and dom props
     const options = {
       class: this.buttonClasses,
-      attrs: this.$attrs,
+      attrs: { ...this.$attrs },
       on: {
         click: this.onClick,
       },
     };
-    // only apply disabled prop when it is a button
-    if (tag === 'button') {
-      options.attrs.disabled = this.disabled;
-    }
 
     return h(tag, options, this.$slots.default);
   },
@@ -38,6 +34,9 @@ export default {
         `g-button-${this.type}`,
         {
           'g-button-disabled': this.disabled,
+        },
+        {
+          'g-button-active': this.active,
         },
       ];
     },

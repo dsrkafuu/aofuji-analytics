@@ -1,25 +1,59 @@
 <template>
   <div class="settings">
     <GCard class="settings-ctrl">
-      <GButton type="full-width" active>Websites</GButton>
-      <GButton type="full-width" href="https://example.org" target="_blank">Websites</GButton>
+      <GButton
+        v-for="(tab, index) of tabs"
+        :key="tab.name"
+        type="full-width"
+        @click.prevent="handleTabChange(index)"
+        :active="index === currentTab"
+      >
+        {{ tab.name }}
+      </GButton>
     </GCard>
     <GCard class="settings-content">
-      <GButton active href="https://example.org" target="_blank">Websites</GButton>
-      <GButton disabled>Websites</GButton>
+      <keep-alive>
+        <component :is="tabs[currentTab].component"></component>
+      </keep-alive>
     </GCard>
   </div>
 </template>
 
 <script>
-import GButton from '../../components/GButton.vue';
+/* components */
 import GCard from '../../components/GCard.vue';
+import GButton from '../../components/GButton.vue';
+import UserSettings from './UserSettings.vue';
+import WebsiteSettings from './WebsiteSettings.vue';
+import About from './About.vue';
 
 export default {
   name: 'Settings',
   components: {
-    GButton,
     GCard,
+    GButton,
+    UserSettings,
+    WebsiteSettings,
+    About,
+  },
+  data() {
+    return {
+      tabs: [
+        { name: 'Users', component: UserSettings },
+        { name: 'Websites', component: WebsiteSettings },
+        { name: 'About', component: About },
+      ],
+      currentTab: 0,
+    };
+  },
+  methods: {
+    /**
+     * change current tab
+     * @param {Number} tabIndex
+     */
+    handleTabChange(tabIndex) {
+      this.currentTab = tabIndex;
+    },
   },
 };
 </script>

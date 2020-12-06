@@ -3,7 +3,7 @@
     <GCard class="not-found">
       <span>OOPS</span>
       <span>404 PAGE NOT FOUND</span>
-      <GRouterLink :to="{ name: 'dashboard' }">Back to dashboard</GRouterLink>
+      <GRouterLink :to="{ name: 'Dashboard' }">Back to dashboard</GRouterLink>
     </GCard>
   </div>
 </template>

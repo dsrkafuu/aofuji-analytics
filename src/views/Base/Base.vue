@@ -2,7 +2,7 @@
   <div class="base">
     <Navbar />
     <main class="container">
-      <keep-alive exclude="Settings">
+      <keep-alive>
         <router-view />
       </keep-alive>
     </main>

@@ -1,0 +1,28 @@
+.user-settings {
+  margin: $space-base;
+
+  .g-list {
+    display: flex;
+    flex-direction: column;
+
+    .g-list-item {
+      display: flex;
+      height: $list-item-height;
+      line-height: $list-item-height;
+    }
+
+    .g-list-label {
+      &:first-child {
+        flex: 1 1 auto;
+      }
+      &:not(:first-child) {
+        flex: 0 0 auto;
+      }
+    }
+
+    .g-list-control {
+      flex: 0 0 auto;
+      display: flex;
+    }
+  }
+}
