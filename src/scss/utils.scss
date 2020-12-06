@@ -1,4 +1,4 @@
-.container {
+.g-container {
   width: $responsive-desktop;
   margin: 0 auto;
 
@@ -9,4 +9,12 @@
   @media screen and (max-width: $responsive-tablet) {
     width: 100%;
   }
+}
+
+.g-icon {
+  max-width: 1.125rem;
+  max-height: 1.125rem;
+  line-height: 1.125rem;
+  opacity: 0.9;
+  fill: currentColor;
 }

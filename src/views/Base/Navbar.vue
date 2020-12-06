@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar">
-    <div class="container">
+    <div class="g-container">
       <div class="navbar-brand">
         <GRouterLink class="navbar-item" :to="{ name: 'Base' }" type="full-height">
           {{ siteTitle }}
@@ -19,7 +19,9 @@
           </GRouterLink>
         </div>
         <div class="navbar-end">
-          <span>end</span>
+          <GButton class="navbar-item" type="full-height" @click.prevent="handleThemeSwitch">
+            <GIconAdjust class="g-icon" />
+          </GButton>
         </div>
       </div>
     </div>
@@ -28,11 +30,15 @@
 
 <script>
 import GRouterLink from '../../components/GRouterLink.vue';
+import GButton from '../../components/GButton.vue';
+import GIconAdjust from '../../assets/icons/adjust.svg';
 
 export default {
   name: 'Navbar',
   components: {
     GRouterLink,
+    GButton,
+    GIconAdjust,
   },
   computed: {
     /**
@@ -40,6 +46,14 @@ export default {
      */
     siteTitle() {
       return process.env.VUE_APP_TITLE || 'Goose Analytics';
+    },
+  },
+  methods: {
+    /**
+     * switch the theme
+     */
+    handleThemeSwitch() {
+      this.$store.dispatch('SWITCH_THEME');
     },
   },
 };

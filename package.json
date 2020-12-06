@@ -49,6 +49,7 @@
     "sass-loader": "^10.1.0",
     "tar": "^6.0.5",
     "terser": "^5.5.1",
+    "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "~2.6.12"
   },
   "husky": {

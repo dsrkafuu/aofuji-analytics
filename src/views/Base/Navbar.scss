@@ -3,7 +3,7 @@
   height: $navbar-height;
   box-shadow: var(--shadow);
 
-  .container {
+  .g-container {
     display: flex;
     height: $navbar-height;
     line-height: $navbar-height;
@@ -32,6 +32,12 @@
 
   .navbar-end {
     flex: 0 0 auto;
+
+    .navbar-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
   }
 
   @media screen and (max-width: $responsive-tablet + $responsive-offset) {
