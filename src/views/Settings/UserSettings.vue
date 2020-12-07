@@ -18,12 +18,17 @@ export default {
         {
           id: '1',
           text: 'admin',
-          label: 's1',
+          label: 'admin',
         },
         {
           id: '2',
           text: 'amzrk2',
-          label: 'ss2',
+          label: 'user',
+        },
+        {
+          id: '3',
+          text: 'goose',
+          label: 'user',
         },
       ],
     };

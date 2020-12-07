@@ -19,19 +19,19 @@ export default {
           id: '1',
           text: 'DSRKafuU Main Home',
           sub: 'amzrk2.cc',
-          label: 's1',
+          label: 'public',
         },
         {
           id: '2',
           text: 'DSRCA',
           sub: 'dsrca.amzrk2.cc',
-          label: 'ss2',
+          label: 'private',
         },
         {
           id: '3',
           text: 'Pouni Calculation Tester',
           sub: 'github.com/pouni-calculation-tester',
-          label: 'sss3',
+          label: 'private',
         },
       ],
     };
