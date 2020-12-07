@@ -62,5 +62,22 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./Settings.scss">
+<style lang="scss">
+.settings {
+  display: flex;
+  margin: $space-lg;
+}
+
+.settings-ctrl {
+  flex: 0 0 20%;
+
+  .g-card {
+    padding: $space-base 0;
+  }
+}
+
+.settings-content {
+  flex: 1 1 auto;
+  margin-left: $space-lg;
+}
 </style>

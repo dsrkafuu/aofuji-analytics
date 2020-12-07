@@ -1,6 +1,6 @@
 <template>
   <div class="user-settings">
-    <GList :data="data" control :type="'extend'"></GList>
+    <GList :data="data" control></GList>
   </div>
 </template>
 
@@ -17,21 +17,13 @@ export default {
       data: [
         {
           id: '1',
-          text: 'DSRKafuU Main Home',
-          sub: 'amzrk2.cc',
+          text: 'admin',
           label: 's1',
         },
         {
           id: '2',
-          text: 'DSRCA',
-          sub: 'dsrca.amzrk2.cc',
+          text: 'amzrk2',
           label: 'ss2',
-        },
-        {
-          id: '3',
-          text: 'Pouni Calculation Tester',
-          sub: 'github.com/pouni-calculation-tester',
-          label: 'sss3',
         },
       ],
     };
@@ -39,5 +31,8 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./UserSettings.scss">
+<style lang="scss">
+.user-settings {
+  margin: $space-base;
+}
 </style>
