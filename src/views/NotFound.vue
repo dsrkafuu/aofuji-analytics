@@ -21,5 +21,23 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./NotFound.scss">
+<style lang="scss">
+.not-found {
+  margin: $space-lg;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    margin-top: $space-lg;
+    font-size: $font-size-xl;
+    font-weight: 500;
+  }
+
+  a {
+    margin: $space-base 0;
+  }
+}
 </style>

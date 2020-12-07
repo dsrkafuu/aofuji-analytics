@@ -26,5 +26,10 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./GRouterLink.scss">
+<style lang="scss">
+.g-router-link {
+  &.g-router-active {
+    color: var(--color-primary);
+  }
+}
 </style>

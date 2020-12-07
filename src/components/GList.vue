@@ -67,5 +67,69 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./GList.scss">
+<style lang="scss">
+.g-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.g-list-item {
+  display: flex;
+  height: $list-item-height;
+  line-height: $list-item-height;
+}
+
+.g-list-text,
+.g-list-label {
+  padding: 0 $space-sm;
+
+  &:first-child {
+    flex: 1 1 auto;
+  }
+  &:not(:first-child) {
+    flex: 0 0 auto;
+  }
+}
+
+.g-list-ctrl {
+  padding: 0 $space-sm;
+  flex: 0 0 auto;
+  display: flex;
+}
+
+/* dense list */
+
+.g-list-dense {
+  .g-list-item {
+    height: $list-item-height-sm;
+    line-height: $list-item-height-sm;
+    font-size: $font-size-sm;
+  }
+}
+
+/* extend list */
+
+.g-list-extend {
+  .g-list-item {
+    height: $list-item-height + $list-item-height-sm;
+  }
+
+  .g-list-text-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .g-list-text {
+    height: $list-item-height;
+    line-height: $list-item-height;
+  }
+
+  .g-list-sub {
+    height: $list-item-height-sm;
+    line-height: initial;
+    font-size: $font-size-sm;
+    padding: 0 $space-sm;
+  }
+}
 </style>

@@ -10,5 +10,11 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./GCard.scss">
+<style lang="scss">
+.g-card {
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow);
+  border-radius: $radius;
+  overflow: hidden; // prevent internal elements to cover radius
+}
 </style>

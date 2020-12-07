@@ -59,5 +59,45 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./Navbar.scss">
+<style lang="scss">
+.navbar {
+  background-color: var(--color-bg);
+  height: $navbar-height;
+  box-shadow: var(--shadow);
+
+  .g-container {
+    display: flex;
+    height: $navbar-height;
+    line-height: $navbar-height;
+  }
+
+  @media screen and (max-width: $responsive-tablet + $responsive-offset) {
+    height: $navbar-height-sm * 2;
+  }
+}
+
+.navbar-brand {
+  flex: 0 0 auto;
+  font-size: $font-size-md;
+  font-weight: 500;
+
+  .navbar-item {
+    padding: 0 $space-lg;
+    color: var(--color-font) !important;
+  }
+}
+
+.navbar-menu {
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.navbar-start {
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.navbar-end {
+  flex: 0 0 auto;
+}
 </style>
