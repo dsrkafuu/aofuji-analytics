@@ -5,7 +5,10 @@
 
 .settings-ctrl {
   flex: 0 0 20%;
-  padding: $space-base 0;
+
+  .g-card {
+    padding: $space-base 0;
+  }
 }
 
 .settings-content {

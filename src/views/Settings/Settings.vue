@@ -1,21 +1,25 @@
 <template>
   <div class="settings">
-    <GCard class="settings-ctrl">
-      <GButton
-        v-for="(tab, index) of tabs"
-        :key="tab.name"
-        type="full-width"
-        @click.prevent="handleTabChange(index)"
-        :active="index === currentTab"
-      >
-        {{ tab.name }}
-      </GButton>
-    </GCard>
-    <GCard class="settings-content">
-      <keep-alive>
-        <component :is="tabs[currentTab].component"></component>
-      </keep-alive>
-    </GCard>
+    <div class="settings-ctrl">
+      <GCard>
+        <GButton
+          v-for="(tab, index) of tabs"
+          :key="tab.name"
+          type="full-width"
+          @click.prevent="handleTabChange(index)"
+          :active="index === currentTab"
+        >
+          {{ tab.name }}
+        </GButton>
+      </GCard>
+    </div>
+    <div class="settings-content">
+      <GCard>
+        <keep-alive>
+          <component :is="tabs[currentTab].component"></component>
+        </keep-alive>
+      </GCard>
+    </div>
   </div>
 </template>
 
