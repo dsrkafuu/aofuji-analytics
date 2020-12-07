@@ -28,10 +28,37 @@
 }
 
 /* dense list */
+
 .g-list-dense {
-  & .g-list-item {
+  .g-list-item {
     height: $list-item-height-sm;
     line-height: $list-item-height-sm;
     font-size: $font-size-sm;
+  }
+}
+
+/* extend list */
+
+.g-list-extend {
+  .g-list-item {
+    height: $list-item-height + $list-item-height-sm;
+  }
+
+  .g-list-text-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .g-list-text {
+    height: $list-item-height;
+    line-height: $list-item-height;
+  }
+
+  .g-list-sub {
+    height: $list-item-height-sm;
+    line-height: initial;
+    font-size: $font-size-sm;
+    padding: 0 $space-sm;
   }
 }

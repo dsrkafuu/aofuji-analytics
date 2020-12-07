@@ -1,7 +1,11 @@
 <template>
-  <div :class="['g-list', { 'g-list-dense': dense }]">
+  <div :class="['g-list', `g-list-${type}`]">
     <div class="g-list-item" v-for="item of data" :key="item.id">
-      <div class="g-list-text">{{ item.text }}</div>
+      <div v-if="type === 'extend'" class="g-list-text-wrapper">
+        <div class="g-list-text">{{ item.text }}</div>
+        <div class="g-list-sub">{{ item.sub }}</div>
+      </div>
+      <div v-else class="g-list-text">{{ item.text }}</div>
       <div class="g-list-label" v-if="item.label">{{ item.label }}</div>
       <div class="g-list-ctrl" v-if="control">
         <div class="g-list-ctrl-item">
@@ -16,7 +20,7 @@
         </div>
       </div>
       <div class="g-list-graph" v-if="graph">
-        <slot></slot>
+        <slot name="graph" :data="data" :dense="dense"></slot>
       </div>
     </div>
   </div>
@@ -50,7 +54,13 @@ export default {
       },
       required: true,
     },
-    dense: Boolean, // dense list
+    type: {
+      type: String,
+      validator: (val) => {
+        return ['extend', 'dense', 'common'].includes(val);
+      },
+      default: 'common', // common list by default
+    },
     control: Boolean, // show control buttons
     graph: Boolean, // custom grid at the end
   },

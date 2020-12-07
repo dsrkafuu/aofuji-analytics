@@ -1,6 +1,6 @@
 <template>
   <div class="user-settings">
-    <GList :data="data" control></GList>
+    <GList :data="data" control :type="'extend'"></GList>
   </div>
 </template>
 
@@ -17,17 +17,20 @@ export default {
       data: [
         {
           id: '1',
-          text: 'amzrk2.cc',
+          text: 'DSRKafuU Main Home',
+          sub: 'amzrk2.cc',
           label: 's1',
         },
         {
           id: '2',
-          text: 'dsrca.amzrk2.cc',
+          text: 'DSRCA',
+          sub: 'dsrca.amzrk2.cc',
           label: 'ss2',
         },
         {
           id: '3',
-          text: 'github.com/pouni-calculation-tester',
+          text: 'Pouni Calculation Tester',
+          sub: 'github.com/pouni-calculation-tester',
           label: 'sss3',
         },
       ],
