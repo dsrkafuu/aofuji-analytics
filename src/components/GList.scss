@@ -1,0 +1,37 @@
+.g-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.g-list-item {
+  display: flex;
+  height: $list-item-height;
+  line-height: $list-item-height;
+}
+
+.g-list-text,
+.g-list-label {
+  padding: 0 $space-sm;
+
+  &:first-child {
+    flex: 1 1 auto;
+  }
+  &:not(:first-child) {
+    flex: 0 0 auto;
+  }
+}
+
+.g-list-ctrl {
+  padding: 0 $space-sm;
+  flex: 0 0 auto;
+  display: flex;
+}
+
+/* dense list */
+.g-list-dense {
+  & .g-list-item {
+    height: $list-item-height-sm;
+    line-height: $list-item-height-sm;
+    font-size: $font-size-sm;
+  }
+}

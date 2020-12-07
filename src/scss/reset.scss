@@ -4,9 +4,11 @@
 }
 
 /* sticky footer */
+
 html {
   min-height: 100vh;
 }
+
 body {
   min-height: 100vh;
   font-family: $font-family-base;
@@ -18,15 +20,18 @@ body {
   display: flex;
   flex-direction: column;
 }
+
 main {
   flex: 1 1 auto;
 }
+
 header,
 footer {
   flex: 0 0 auto;
 }
 
 /* reset */
+
 a {
   color: inherit;
   text-decoration: none;

@@ -2,6 +2,12 @@
   color: var(--color-font);
   background-color: transparent;
   text-align: center;
+  user-select: none;
+
+  /* icon support */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
@@ -9,20 +15,20 @@
   }
 
   &.g-button-primary {
-    display: inline-block;
+    display: inline-flex;
     border-radius: $radius;
     height: $button-height;
     line-height: $button-height;
     padding: 0 $space-base;
   }
   &.g-button-full-width {
-    display: block;
+    display: flex;
     width: 100%;
     height: $button-height;
     line-height: $button-height;
   }
   &.g-button-full-height {
-    display: inline-block;
+    display: inline-flex;
     height: 100%;
     padding: 0 $space-base;
   }
