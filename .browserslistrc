@@ -3,10 +3,7 @@
 >= 1%
 last 1 major version
 not dead
-Chrome >= 60
-Firefox >= 60
-Edge >= 80
-iOS >= 10
-Safari >= 10
-Android >= 6
-not Explorer <= 11
+chrome >= 60
+firefox >= 60
+edge >= 80
+not ie <= 11

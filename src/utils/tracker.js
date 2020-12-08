@@ -4,11 +4,18 @@
   /* init */
 
   // get window props
-  const { document, location, navigator, screen, JSON, performance } = window;
+  const { document, location, navigator, screen, JSON } = window;
   const dpr = window.devicePixelRatio || 1;
 
   // get tracker settings
   const { GOOSE_ID, GOOSE_API } = window;
+  const GOOSE_SPA = window.GOOSE_SPA || false;
+  const COLLECT_API = `${GOOSE_API}${/\/$/.exec(GOOSE_API) ? '' : '/'}collect`;
+
+  // if basic data not defined or dnt
+  if (!GOOSE_API || !GOOSE_ID || navigator.doNotTrack === '1') {
+    return;
+  }
 
   /* functions */
 
@@ -17,78 +24,107 @@
    * @param {String} type
    * @param {Object} payload
    */
-  function sendData(type, payload) {
-    // if basic data not defined
-    if (!GOOSE_API || !GOOSE_ID) {
-      return;
-    }
-    // if dnt
-    if (navigator.doNotTrack === '1') {
-      return;
-    }
-    // collect api url
-    const collect = `${GOOSE_API}${/\/$/.exec(GOOSE_API) ? '' : '/'}collect`;
+  async function sendData(type, payload) {
     // data body
     const data = JSON.stringify({
       t: type,
       id: GOOSE_ID,
-      p: location.pathname,
       d: payload,
     });
     // [DEBUG]
     console.log(JSON.parse(data));
     // send with beacon api
     return navigator.sendBeacon(
-      collect,
+      COLLECT_API,
       new Blob([data], {
         type: 'application/json',
       })
     );
   }
 
+  /**
+   * remove trailing slash
+   * @param {String} pathname original pathname
+   */
+  function removeTrail(pathname) {
+    const exp = /^(\/.*[^/])\/?$/.exec(pathname);
+    if (exp && exp[1]) {
+      return exp[1];
+    } else {
+      return '/';
+    }
+  }
+
+  // init pvt data
+  const pvt = {
+    status: -1, // active status
+    st: 0, // start time
+    tt: 0, // total time
+    init() {
+      if (this.status === -1) {
+        this.status = 1;
+        this.st = Date.now();
+        this.tt = 0;
+      }
+    },
+    pause() {
+      if (this.status === 1) {
+        this.status = 0;
+        this.tt += Date.now() - this.st;
+      }
+    },
+    start() {
+      if (this.status === 0) {
+        this.status = 1;
+        this.st = Date.now();
+      }
+    },
+    end: () => {
+      if (this.status === 1) {
+        this.tt += Date.now() - this.st; // if active, add new time
+      }
+      this.status = -1;
+      return this.tt;
+    },
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      pvt.pause();
+    } else {
+      pvt.start();
+    }
+  });
+
   /* tracker */
 
   /**
    * send view data
+   * @param {String} pathname
+   * @param {String} referrer
    */
-  const gooseView = () => {
+  const gooseView = (pathname, referrer) => {
+    // start pvt
+    pvt.init();
+    // send view data
     sendData('view', {
-      ref: document.referrer,
+      p: removeTrail(pathname),
+      ref: referrer,
       lang: navigator.language,
       sc: screen.width * dpr + 'x' + screen.height * dpr,
     });
   };
+
   /**
    * send leave data
-   * @param {Number} pvt page view time
+   * @param {String} pathname
    */
-  const gooseLeave = (pvt) => {
+  const gooseLeave = (pathname) => {
     sendData('leave', {
-      pvt,
+      p: removeTrail(pathname),
+      pvt: pvt.end(),
     });
   };
-  /**
-   * send performance data
-   */
-  const goosePerf = () => {
-    let perf = performance.getEntriesByType('navigation');
-    if (perf && perf[0]) {
-      perf = perf[0];
-    }
-    if (perf) {
-      // prevent load event time not calculated
-      setTimeout(() => {
-        const res = perf.responseStart - perf.startTime;
-        const dcl = perf.domContentLoadedEventStart - perf.startTime;
-        const load = perf.loadEventStart - perf.startTime;
-        sendData('perf', {
-          res,
-          dcl,
-          load,
-        });
-      }, 0);
-    }
-  };
+
   /**
    * send event data
    * @param {String} name
@@ -109,37 +145,20 @@
   };
 
   /* expose tracker */
+
   window.gooseView = gooseView;
   window.gooseLeave = gooseLeave;
   window.gooseEvent = gooseEvent;
 
-  /* start tracking */
-  // start view
-  gooseView();
-  if (document.readyState === 'complete') {
-    goosePerf();
-  } else {
-    document.addEventListener('readystatechange', (e) => {
-      if (e.target.readyState === 'complete') {
-        goosePerf();
-      }
+  /* tracker */
+
+  if (!GOOSE_SPA) {
+    // legacy mode
+    const pathname = location.pathname;
+    // start view
+    gooseView(pathname, document.referrer);
+    window.addEventListener('beforeunload', () => {
+      gooseLeave(pathname);
     });
   }
-  // page view time calculation
-  let pvt = 0;
-  let st = Date.now();
-  document.addEventListener('visibilitychange', () => {
-    const now = Date.now();
-    if (document.visibilityState === 'hidden') {
-      pvt += now - st;
-    }
-    st = now;
-  });
-  window.addEventListener('beforeunload', () => {
-    pvt += Date.now() - st;
-    gooseLeave(pvt);
-  });
-
-  /* spa listener */
-  /* [TODO] */
 })(window);
