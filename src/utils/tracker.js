@@ -57,33 +57,33 @@
 
   // init pvt data
   const pvt = {
-    status: -1, // active status
+    sts: -1, // active status
     st: 0, // start time
     tt: 0, // total time
     init() {
-      if (this.status === -1) {
-        this.status = 1;
+      if (this.sts === -1) {
+        this.sts = 1;
         this.st = Date.now();
         this.tt = 0;
       }
     },
     pause() {
-      if (this.status === 1) {
-        this.status = 0;
+      if (this.sts === 1) {
+        this.sts = 0;
         this.tt += Date.now() - this.st;
       }
     },
     start() {
-      if (this.status === 0) {
-        this.status = 1;
+      if (this.sts === 0) {
+        this.sts = 1;
         this.st = Date.now();
       }
     },
     end: () => {
-      if (this.status === 1) {
+      if (this.sts === 1) {
         this.tt += Date.now() - this.st; // if active, add new time
       }
-      this.status = -1;
+      this.sts = -1;
       return this.tt;
     },
   };
