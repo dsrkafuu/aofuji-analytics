@@ -10,7 +10,6 @@
   // get tracker settings
   const { GOOSE_ID, GOOSE_API } = window;
   const GOOSE_SPA = window.GOOSE_SPA || false;
-  const COLLECT_API = `${GOOSE_API}${/\/$/.exec(GOOSE_API) ? '' : '/'}collect`;
 
   // if basic data not defined or dnt
   if (!GOOSE_API || !GOOSE_ID || navigator.doNotTrack === '1') {
@@ -19,6 +18,7 @@
 
   /* functions */
 
+  const COLLECT_API = `${GOOSE_API}${/\/$/.exec(GOOSE_API) ? '' : '/'}collect`;
   /**
    * send data to server
    * @param {String} type
@@ -31,8 +31,6 @@
       id: GOOSE_ID,
       d: payload,
     });
-    // [DEBUG]
-    console.log(JSON.parse(data));
     // send with beacon api
     return navigator.sendBeacon(
       COLLECT_API,

@@ -29,6 +29,7 @@ const corsOptions = {
 /* collect route */
 router.options('/collect', cors(corsOptions));
 router.post('/collect', cors(corsOptions), async (req, res) => {
+  console.log('[WIP] GET COLLECT REQUEST', req.body);
   res.status(204).send();
 });
 
