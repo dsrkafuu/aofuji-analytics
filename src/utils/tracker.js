@@ -79,7 +79,7 @@
         this.st = Date.now();
       }
     },
-    end: () => {
+    end() {
       if (this.sts === 1) {
         this.tt += Date.now() - this.st; // if active, add new time
       }
