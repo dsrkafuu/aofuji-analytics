@@ -8,21 +8,26 @@
   const dpr = window.devicePixelRatio || 1;
 
   // get tracker settings
-  const { GOOSE_ID, GOOSE_API } = window;
-  const GOOSE_SPA = window.GOOSE_SPA || false;
-
-  // if basic data not defined or dnt
-  if (!GOOSE_API || !GOOSE_ID || navigator.doNotTrack === '1') {
+  const { GOOSE_ID, GOOSE_API: _API, GOOSE_BASE: _BASE, GOOSE_SPA: _SPA } = window;
+  if (!_API || !GOOSE_ID || navigator.doNotTrack === '1') {
     return;
   }
+  const GOOSE_API = `${_API}${/\/$/.exec(_API) ? '' : '/'}collect`;
+  const GOOSE_BASE = (() => {
+    if (typeof _BASE !== 'string') {
+      return '/';
+    }
+    const url = new URL(_BASE);
+    return removeTrail(url.pathname);
+  })();
+  const GOOSE_SPA = _SPA || false;
 
   /* functions */
 
-  const COLLECT_API = `${GOOSE_API}${/\/$/.exec(GOOSE_API) ? '' : '/'}collect`;
   /**
    * send data to server
-   * @param {String} type
-   * @param {Object} payload
+   * @param {String} type data type
+   * @param {Object} payload data object
    */
   async function sendData(type, payload) {
     // data body
@@ -33,7 +38,7 @@
     });
     // send with beacon api
     return navigator.sendBeacon(
-      COLLECT_API,
+      GOOSE_API,
       new Blob([data], {
         type: 'application/json',
       })
@@ -42,7 +47,7 @@
 
   /**
    * remove trailing slash
-   * @param {String} pathname original pathname
+   * @param {String} pathname
    */
   function removeTrail(pathname) {
     const exp = /^(\/.*[^/])\/?$/.exec(pathname);
@@ -51,6 +56,19 @@
     } else {
       return '/';
     }
+  }
+
+  /**
+   * format pathname
+   * @param {String} pathname
+   */
+  function formatPath(pathname) {
+    pathname = removeTrail(pathname);
+    // remove base url if not spa
+    if (GOOSE_SPA || GOOSE_BASE === '/') {
+      return pathname;
+    }
+    return pathname.split(GOOSE_BASE)[1] || '/';
   }
 
   // init pvt data
@@ -105,7 +123,7 @@
     pvt.init();
     // send view data
     sendData('view', {
-      p: removeTrail(pathname),
+      p: formatPath(pathname),
       ref: referrer,
       lang: navigator.language,
       sc: screen.width * dpr + 'x' + screen.height * dpr,
@@ -118,7 +136,7 @@
    */
   const gooseLeave = (pathname) => {
     sendData('leave', {
-      p: removeTrail(pathname),
+      p: formatPath(pathname),
       pvt: pvt.end(),
     });
   };

@@ -30,6 +30,7 @@ const corsOptions = {
 router.options('/collect', cors(corsOptions));
 router.post('/collect', cors(corsOptions), async (req, res) => {
   console.log('[WIP] GET COLLECT REQUEST', req.body);
+  res.cookie('goose_test', 'test_value', { sameSite: 'lax' });
   res.status(204).send();
 });
 
