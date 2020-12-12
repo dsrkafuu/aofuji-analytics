@@ -36,12 +36,12 @@ router.post('/collect', cors(corsOptions), collectData());
 // init routes
 router.get('/init', async (req, res) => {
   const results = await User.findOne({ username: 'admin' }, 'username').lean();
-  res.send(results[0] || {});
+  res.send(results || { username: '' });
 });
 router.post('/init', async (req, res) => {
   const admin = await User.findOne({ username: 'admin' }, 'username').lean();
   if (admin) {
-    res.status(400).send(httpError('No need to init'));
+    res.status(400).send(httpError('No need to init user'));
   } else {
     let result = await User.create({
       username: 'admin',
@@ -72,7 +72,7 @@ router.put('/users/:id', async (req, res) => {
 
 // get all websites
 router.get('/websites', async (req, res) => {
-  const result = await Website.find({});
+  const result = await Website.find({}).lean();
   res.send(result);
 });
 // create a new websites

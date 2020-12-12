@@ -4,7 +4,6 @@
   /* init */
 
   // get window props
-  const { document, location, navigator, screen, JSON } = window;
   const dpr = window.devicePixelRatio || 1;
 
   // get tracker settings
@@ -34,6 +33,7 @@
     const data = JSON.stringify({
       type,
       id: GOOSE_ID,
+      date: Date.now(),
       data: payload,
     });
     // send with beacon api
@@ -96,43 +96,69 @@
     return '';
   }
 
+  /**
+   * set local storage
+   * @param {String} key
+   * @param {any} value
+   */
+  function setLS(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      return;
+    }
+  }
+
+  /**
+   * get local storage
+   * @param {String} key
+   */
+  function getLS(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
   // init pvt data
-  const pvt = {
-    sts: -1, // active status
-    stt: 0, // start time
-    ttt: 0, // total time
+  const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [-1, 0, 1];
+  const pvtCtrl = {
+    stat: PVT_INACTIVE, // active status
+    st: 0, // start time
+    tt: 0, // total time
     init() {
-      if (this.sts === -1) {
-        this.sts = 1;
-        this.stt = Date.now();
-        this.ttt = 0;
+      if (this.stat === PVT_INACTIVE) {
+        this.stat = PVT_ACTIVE;
+        this.strt = Date.now();
+        this.tt = 0;
       }
     },
     pause() {
-      if (this.sts === 1) {
-        this.sts = 0;
-        this.ttt += Date.now() - this.stt;
+      if (this.stat === PVT_ACTIVE) {
+        this.stat = PVT_PAUSE;
+        this.tt += Date.now() - this.st;
       }
     },
     start() {
-      if (this.sts === 0) {
-        this.sts = 1;
-        this.stt = Date.now();
+      if (this.stat === PVT_PAUSE) {
+        this.stat = PVT_ACTIVE;
+        this.strt = Date.now();
       }
     },
     end() {
-      if (this.sts === 1) {
-        this.ttt += Date.now() - this.stt; // if active, add new time
+      if (this.stat === PVT_ACTIVE) {
+        this.tt += Date.now() - this.st; // if active, add new time
       }
-      this.sts = -1;
-      return this.ttt;
+      this.stat = PVT_INACTIVE;
+      return this.tt > 0 ? this.tt : -1;
     },
   };
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
-      pvt.pause();
+      pvtCtrl.pause();
     } else {
-      pvt.start();
+      pvtCtrl.start();
     }
   });
 
@@ -145,14 +171,23 @@
    */
   const gooseView = (pathname, referrer) => {
     // start pvt
-    pvt.init();
-    // send view data
-    sendData('view', {
+    pvtCtrl.init();
+    // those need to send every time
+    const data = {
       path: formatPath(pathname),
       ref: formatRef(referrer),
-      lang: navigator.language || '',
-      scs: screen.width * dpr + 'x' + screen.height * dpr || '',
-    });
+    };
+    // those do not need to send every time
+    const cache = getLS('goose_cache');
+    const now = Date.now();
+    if (Math.abs(now - cache) > 3600000 * 12) {
+      data.sync = true;
+      data.lang = navigator.language || '';
+      data.scrn = screen.width * dpr + 'x' + screen.height * dpr || '';
+      setLS('goose_cache', now);
+    }
+    // send view data
+    sendData('view', data);
   };
 
   /**
@@ -160,10 +195,14 @@
    * @param {String} pathname
    */
   const gooseLeave = (pathname) => {
-    sendData('leave', {
+    const pvt = pvtCtrl.end();
+    const data = {
       path: formatPath(pathname),
-      pvt: pvt.end() || -1,
-    });
+    };
+    if (pvt !== -1) {
+      data.pvt = pvt;
+    }
+    sendData('leave', data);
   };
 
   /**

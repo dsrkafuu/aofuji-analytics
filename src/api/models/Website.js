@@ -1,12 +1,13 @@
 module.exports = (mongoose) => {
-  const schema = new mongoose.Schema(
-    {
-      _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      name: { type: String },
-      domain: { type: String }, // clean domain of website (no protocol, port and trailing slash)
-      isPublic: { type: Boolean }, // whether can be viewed in public page
-    },
-    { timestamps: true }
-  );
+  const schema = new mongoose.Schema({
+    _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    name: { type: String },
+    domain: { type: String }, // clean domain of website (no protocol, port and trailing slash)
+    isPublic: { type: Boolean }, // whether can be viewed in public page
+    _date: { type: Number, default: Date.now },
+  });
+
+  schema.index({ _date: -1 });
+
   return mongoose.model('Website', schema);
 };
