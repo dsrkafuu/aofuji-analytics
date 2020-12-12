@@ -32,9 +32,9 @@
   async function sendData(type, payload) {
     // data body
     const data = JSON.stringify({
-      t: type,
+      type,
       id: GOOSE_ID,
-      d: payload,
+      data: payload,
     });
     // send with beacon api
     return navigator.sendBeacon(
@@ -64,43 +64,68 @@
    */
   function formatPath(pathname) {
     pathname = removeTrail(pathname);
+    // only remote trail if spa
+    if (GOOSE_SPA) {
+      return pathname;
+    }
     // remove base url if not spa
-    if (GOOSE_SPA || GOOSE_BASE === '/') {
+    if (GOOSE_BASE === '/') {
       return pathname;
     }
     return pathname.split(GOOSE_BASE)[1] || '/';
   }
 
+  /**
+   * format referrer
+   * @param {String} referrer
+   */
+  function formatRef(referrer) {
+    // if samesite
+    if (referrer.includes(location.host)) {
+      const url = new URL(referrer);
+      return formatPath(url.pathname);
+    }
+    // if other site
+    if (referrer.startsWith('http')) {
+      return referrer;
+    }
+    // if spa same site
+    if (referrer.startsWith('/')) {
+      return removeTrail(referrer);
+    }
+    return '';
+  }
+
   // init pvt data
   const pvt = {
     sts: -1, // active status
-    st: 0, // start time
-    tt: 0, // total time
+    stt: 0, // start time
+    ttt: 0, // total time
     init() {
       if (this.sts === -1) {
         this.sts = 1;
-        this.st = Date.now();
-        this.tt = 0;
+        this.stt = Date.now();
+        this.ttt = 0;
       }
     },
     pause() {
       if (this.sts === 1) {
         this.sts = 0;
-        this.tt += Date.now() - this.st;
+        this.ttt += Date.now() - this.stt;
       }
     },
     start() {
       if (this.sts === 0) {
         this.sts = 1;
-        this.st = Date.now();
+        this.stt = Date.now();
       }
     },
     end() {
       if (this.sts === 1) {
-        this.tt += Date.now() - this.st; // if active, add new time
+        this.ttt += Date.now() - this.stt; // if active, add new time
       }
       this.sts = -1;
-      return this.tt;
+      return this.ttt;
     },
   };
   document.addEventListener('visibilitychange', () => {
@@ -123,10 +148,10 @@
     pvt.init();
     // send view data
     sendData('view', {
-      p: formatPath(pathname),
-      ref: referrer,
-      lang: navigator.language,
-      sc: screen.width * dpr + 'x' + screen.height * dpr,
+      path: formatPath(pathname),
+      ref: formatRef(referrer),
+      lang: navigator.language || '',
+      scs: screen.width * dpr + 'x' + screen.height * dpr || '',
     });
   };
 
@@ -136,8 +161,8 @@
    */
   const gooseLeave = (pathname) => {
     sendData('leave', {
-      p: formatPath(pathname),
-      pvt: pvt.end(),
+      path: formatPath(pathname),
+      pvt: pvt.end() || -1,
     });
   };
 
@@ -147,17 +172,10 @@
    * @param {Event|String} e
    */
   const gooseEvent = (name, e) => {
-    if (typeof e === 'string') {
-      sendData('event', {
-        name,
-        type: e,
-      });
-    } else {
-      sendData('event', {
-        name,
-        type: e.type || 'unknown',
-      });
-    }
+    sendData('event', {
+      name: name || '',
+      type: typeof e === 'string' ? e : e.type || '',
+    });
   };
 
   /* expose tracker */
