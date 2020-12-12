@@ -9,7 +9,7 @@ const { mongoose } = require('./utils/mongoose');
 router.use(mongoose());
 
 /* load models */
-const { Event, Session, User, View, Website } = require('./utils/mongoose');
+const { User, Website } = require('./utils/mongoose');
 
 /* route level middleware */
 // close db connection if serverless
@@ -27,24 +27,21 @@ const corsOptions = {
 };
 
 /* collect route */
+const collectData = require('./middlewares/collectData');
 router.options('/collect', cors(corsOptions));
-router.post('/collect', cors(corsOptions), async (req, res) => {
-  console.log('[WIP] GET COLLECT REQUEST', req.body);
-  res.cookie('goose_test', 'test_value', { sameSite: 'lax' });
-  res.status(204).send();
-});
+router.post('/collect', cors(corsOptions), collectData());
 
 /* basic routes */
 
 // init routes
 router.get('/init', async (req, res) => {
-  const results = await User.find({ username: 'admin' }, 'username').lean();
+  const results = await User.findOne({ username: 'admin' }, 'username').lean();
   res.send(results[0] || {});
 });
 router.post('/init', async (req, res) => {
-  const admin = await User.find({ username: 'admin' }, 'username').lean();
-  if (admin && admin[0]) {
-    res.status(403).send(httpError('No need to init'));
+  const admin = await User.findOne({ username: 'admin' }, 'username').lean();
+  if (admin) {
+    res.status(400).send(httpError('No need to init'));
   } else {
     let result = await User.create({
       username: 'admin',
