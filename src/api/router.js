@@ -1,37 +1,23 @@
+/* utils */
 const { Router } = require('express');
 const httpError = require('./utils/httpError');
-
-/* init sub router */
 const router = Router();
-
-/* link database */
+// db
 const { mongoose } = require('./utils/mongoose');
 router.use(mongoose());
-
-/* load models */
 const { User, Website } = require('./utils/mongoose');
 
-/* route level middleware */
+/* middlewares */
 // close db connection if serverless
 if (process.env.SERVERLESS) {
   const closeConnection = require('./middlewares/closeConnection');
   router.use(closeConnection());
 }
-// collect route cors
-const cors = require('cors');
-const corsOptions = {
-  origin: true,
-  methods: 'POST',
-  credentials: true,
-  maxAge: 86400,
-};
 
-/* collect route */
-const collectData = require('./middlewares/collectData');
-router.options('/collect', cors(corsOptions));
-router.post('/collect', cors(corsOptions), collectData());
+/* routes */
 
-/* basic routes */
+// collect route
+require('./routes/collect')(router);
 
 // init routes
 router.get('/init', async (req, res) => {
@@ -81,9 +67,7 @@ router.post('/websites', async (req, res) => {
   res.send(result);
 });
 
-/* fallbacks */
-router.get('/*', async (req, res) => {
-  res.status(404).send(httpError('Route not found'));
-});
+// fallbacks
+require('./routes/fallback')(router);
 
 module.exports = router;

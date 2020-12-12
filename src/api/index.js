@@ -1,7 +1,7 @@
 /*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
 require('../../utils/env')();
 
-/* init express instance */
+/* utils */
 const express = require('express');
 const app = express();
 
@@ -29,7 +29,7 @@ if (process.env.VERCEL) {
   app.use(vercelCookie());
 }
 
-// test
+// [DEBUG] test
 app.get('/api/test', async (req, res) => {
   const path = require('path');
   const fs = require('fs');
@@ -42,12 +42,11 @@ app.get('/api/test', async (req, res) => {
   res.send({ status: 200 });
 });
 
-/* link database (only when requesting `/api`) */
 /* routes */
 const router = require('./router');
 app.use('/api', router);
 
-/* if not serverless */
+/* server */
 if (!process.env.SERVERLESS) {
   // static server in production
   if (process.env.NODE_ENV === 'production') {
@@ -58,5 +57,5 @@ if (!process.env.SERVERLESS) {
   const portListener = require('./utils/portListener');
   portListener(app);
 }
-/* if serverless */
+// if serverless
 module.exports = app;
