@@ -34,11 +34,10 @@ app.get('/api/test', async (req, res) => {
   const path = require('path');
   const fs = require('fs');
   let geoDBPath = path.resolve(__dirname, '../../api/assets/geolite/GeoLite2-Country.mmdb');
-  console.log(fs.statSync(geoDBPath));
-  const maxmind = require('maxmind');
-  const lookup = await maxmind.open(geoDBPath);
-  console.log(lookup.get('66.6.44.4'));
-  console.log(lookup.getWithPrefixLength('66.6.44.4'));
+  const { Reader } = require('maxmind');
+  const lookup = new Reader(fs.readFileSync(geoDBPath));
+  console.log(require('./utils/requestIP')(req));
+  console.log(lookup.get('121.229.106.251'));
   res.send({ status: 200 });
 });
 

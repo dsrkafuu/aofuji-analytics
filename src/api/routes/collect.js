@@ -1,6 +1,15 @@
 /* utils */
 const { v4 } = require('uuid');
+const path = require('path');
+const fs = require('fs');
+const Bowser = require('bowser');
+const { Reader } = require('maxmind');
+const gdb = fs.readFileSync(
+  path.resolve(__dirname, '../../../api/assets/geolite/GeoLite2-Country.mmdb')
+);
+const maxmind = new Reader(gdb);
 const httpError = require('../utils/httpError');
+const requestIP = require('../utils/requestIP');
 // models
 const { Session, View, Website } = require('../utils/mongoose');
 
@@ -62,9 +71,18 @@ module.exports = (router) => {
         works.push(View.create(newView));
         // check whether need to update session data
         if (data.sync) {
+          // language & screen
           session.language = data.lang;
           session.screen = data.scrn;
-          // [WIP]
+          // browser & system & platform
+          const ua = req.get('User-Agent');
+          const bowser = Bowser.parse(ua);
+          session.browser = (bowser.browser.name || '').toLowerCase();
+          session.system = (bowser.os.name || '').toLowerCase();
+          session.platform = (bowser.platform.type || '').toLowerCase();
+          // location
+          const gd = maxmind.get(requestIP(req));
+          session.location = gd && gd.country ? gd.country.iso_code : '';
           works.push(session.save());
         }
         break;

@@ -5,6 +5,7 @@ module.exports = (mongoose) => {
     screen: { type: String }, // screen pixel size
     browser: { type: String },
     system: { type: String },
+    platform: { type: String },
     location: { type: String },
     _date: { type: Number, default: Date.now },
   });
