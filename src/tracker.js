@@ -122,22 +122,22 @@
   }
 
   // init pvt data
-  const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [-1, 0, 1];
+  const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
   const pvtCtrl = {
     stat: PVT_INACTIVE, // active status
-    st: 0, // start time
-    tt: 0, // total time
+    strt: 0, // start time
+    tott: 0, // total time
     init() {
       if (this.stat === PVT_INACTIVE) {
         this.stat = PVT_ACTIVE;
         this.strt = Date.now();
-        this.tt = 0;
+        this.tott = 0;
       }
     },
     pause() {
       if (this.stat === PVT_ACTIVE) {
         this.stat = PVT_PAUSE;
-        this.tt += Date.now() - this.st;
+        this.tott += Date.now() - this.strt;
       }
     },
     start() {
@@ -148,10 +148,10 @@
     },
     end() {
       if (this.stat === PVT_ACTIVE) {
-        this.tt += Date.now() - this.st; // if active, add new time
+        this.tott += Date.now() - this.strt; // if active, add new time
       }
       this.stat = PVT_INACTIVE;
-      return this.tt > 0 ? this.tt : -1;
+      return this.tott > 0 ? this.tott : undefined;
     },
   };
   document.addEventListener('visibilitychange', () => {
@@ -194,11 +194,11 @@
    * @param {String} pathname
    */
   const gooseLeave = (pathname) => {
-    const pvt = pvtCtrl.end();
     const data = {
       path: formatPath(pathname),
     };
-    if (pvt !== -1) {
+    const pvt = pvtCtrl.end();
+    if (pvt) {
       data.pvt = pvt;
     }
     sendData('leave', data);

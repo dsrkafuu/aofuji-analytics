@@ -35,10 +35,10 @@ module.exports = (router) => {
     let website = null;
     try {
       website = await Website.findById(id).lean();
+      if (!website) {
+        throw new Error();
+      }
     } catch {
-      return res.status(400).send(httpError('Request website not allowed'));
-    }
-    if (!website) {
       return res.status(400).send(httpError('Request website not allowed'));
     }
     // check whether is a exist session
@@ -46,43 +46,44 @@ module.exports = (router) => {
     let session = await Session.findOne({ uuid });
     if (!session) {
       session = await Session.create({ uuid, _date: date });
+      res.cookie('goose_uuid', uuid, { sameSite: 'lax' });
     }
 
+    // data process
+    const works = [];
     console.log();
     console.log('[WIP] TYPE:', type);
     console.log('[WIP] TIME:', date);
     console.log('[WIP] UUID:', uuid);
     console.log('[WIP] SITE:', website._id);
-    console.log('[WIP] DATE:', data);
+    console.log('[WIP] DATA:', data);
     console.log();
-    // data process
-    const works = [];
 
     switch (type) {
       case 'view': {
         // save view
         const newView = {
+          _date: date,
           _session: session._id,
           _website: website._id,
           pathname: data.path,
           referrer: data.ref,
         };
-        date && (newView._date = date);
         works.push(View.create(newView));
         // check whether need to update session data
-        if (data.sync) {
+        if (data.lang || data.scrn) {
           // language & screen
           session.language = data.lang;
           session.screen = data.scrn;
           // browser & system & platform
           const ua = req.get('User-Agent');
           const bowser = Bowser.parse(ua);
-          session.browser = (bowser.browser.name || '').toLowerCase();
-          session.system = (bowser.os.name || '').toLowerCase();
-          session.platform = (bowser.platform.type || '').toLowerCase();
+          session.browser = (bowser.browser.name || '').toLowerCase() || undefined;
+          session.system = (bowser.os.name || '').toLowerCase() || undefined;
+          session.platform = (bowser.platform.type || '').toLowerCase() || undefined;
           // location
           const gd = maxmind.get(requestIP(req));
-          session.location = gd && gd.country ? gd.country.iso_code : '';
+          session.location = gd && gd.country ? gd.country.iso_code : undefined;
           works.push(session.save());
         }
         break;
@@ -101,12 +102,10 @@ module.exports = (router) => {
                 pathname: data.path,
               },
               {
-                // apply new page view time
-                pvt: data.pvt,
+                pvt: data.pvt, // apply new page view time
               },
               {
-                // first view before this leave
-                sort: { _date: -1 },
+                sort: { _date: -1 }, // first view before this leave
               }
             )
           );
@@ -117,7 +116,6 @@ module.exports = (router) => {
 
     // send response
     await Promise.all(works);
-    res.cookie('goose_uuid', uuid, { sameSite: 'lax' });
     res.status(204).send();
   });
 };
