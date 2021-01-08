@@ -175,15 +175,14 @@
     // those need to send every time
     const data = {
       path: formatPath(pathname),
-      ref: formatRef(referrer),
+      ref: formatRef(referrer) || undefined,
     };
     // those do not need to send every time
     const cache = getLS('goose_cache');
     const now = Date.now();
     if (Math.abs(now - cache) > 3600000 * 12) {
-      data.sync = true;
-      data.lang = navigator.language || '';
-      data.scrn = screen.width * dpr + 'x' + screen.height * dpr || '';
+      data.lang = navigator.language || undefined;
+      data.scrn = screen.width * dpr + 'x' + screen.height * dpr || undefined;
       setLS('goose_cache', now);
     }
     // send view data
@@ -211,10 +210,11 @@
    * @param {Event|String} e
    */
   const gooseEvent = (name, e) => {
-    sendData('event', {
-      name: name || '',
-      type: typeof e === 'string' ? e : e.type || '',
-    });
+    name &&
+      sendData('event', {
+        name: name,
+        type: (typeof e === 'string' ? e : e.type) || undefined,
+      });
   };
 
   /* expose tracker */
