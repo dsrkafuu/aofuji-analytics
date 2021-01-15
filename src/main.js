@@ -3,6 +3,7 @@ import Vue from 'vue';
 Vue.config.productionTip = false;
 import router from './router';
 import store from './store';
+
 /* css */
 import 'normalize.css';
 import './scss/index.scss';
@@ -10,8 +11,11 @@ import './scss/index.scss';
 import App from './App.vue';
 
 /* app */
-new Vue({
+const app = new Vue({
   router,
   store,
   render: (h) => h(App),
 }).$mount('#app');
+
+import { initMessage } from './utils/message';
+initMessage(app);

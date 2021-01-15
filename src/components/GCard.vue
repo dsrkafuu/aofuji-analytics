@@ -5,6 +5,11 @@
 </template>
 
 <script>
+/**
+ * [vue 3]
+ * compatible
+ */
+
 export default {
   name: 'GCard',
 };

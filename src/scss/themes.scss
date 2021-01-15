@@ -6,16 +6,14 @@ $colors-light: (
   'font': #3f4551,
   'primary': #8aa2d3,
   'secondary': #8b81c3,
-  'scroll-bg': #f0f0f0,
-  'scroll-thumb': #cdcdcd,
-  'scroll-hover': #a6a6a6,
-  'scroll-focus': #606060,
 );
 @mixin light {
   @each $key, $value in $colors-light {
     --color-#{$key}: #{$value};
   }
   --shadow: 0 0.25rem 1rem rgba(48, 55, 66, 0.06);
+  --shadow-info: 0 0.125rem 0.5rem rgba(48, 55, 66, 0.2);
+  --shadow-error: 0 0.125rem 0.5rem rgba(255, 0, 0, 0.2);
 }
 
 $colors-dark: (
@@ -26,16 +24,14 @@ $colors-dark: (
   'font': rgba(255, 255, 255, 0.75),
   'primary': #8aa2d3,
   'secondary': #bab1df,
-  'scroll-bg': #3c3f45,
-  'scroll-thumb': #888a8d,
-  'scroll-hover': #75777a,
-  'scroll-focus': #535559,
 );
 @mixin dark {
   @each $key, $value in $colors-dark {
     --color-#{$key}: #{$value};
   }
-  --shadow: none;
+  --shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-info: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.4);
+  --shadow-error: 0 0.125rem 0.5rem rgba(255, 0, 0, 0.25);
 }
 
 body[data-theme='auto'] {

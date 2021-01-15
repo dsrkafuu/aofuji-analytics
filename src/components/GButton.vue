@@ -1,4 +1,9 @@
 <script>
+/**
+ * [vue 3]
+ * unknown
+ */
+
 export default {
   render(h) {
     // init tag
@@ -22,9 +27,9 @@ export default {
     type: {
       type: String,
       validator: (val) => {
-        return ['full-width', 'full-height', 'primary'].includes(val); // button type available
+        return ['full-width', 'full-height', 'default'].includes(val); // button type available
       },
-      default: 'primary', // common button by default
+      default: 'default', // common button by default
     },
   },
   computed: {
@@ -66,7 +71,7 @@ export default {
     background-color: var(--color-hover);
   }
 
-  &.g-button-primary {
+  &.g-button-default {
     display: inline-flex;
     border-radius: $radius;
     height: $button-height;

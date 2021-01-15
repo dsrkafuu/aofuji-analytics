@@ -32,6 +32,12 @@
 </template>
 
 <script>
+/**
+ * [vue 3]
+ * unknown
+ * vue-svg-loader need to be upgraded
+ */
+
 import GButton from './GButton.vue';
 import GLabel from './GLabel.vue';
 import GIconEdit from '../assets/icons/edit.svg';
@@ -64,9 +70,9 @@ export default {
     type: {
       type: String,
       validator: (val) => {
-        return ['extend', 'dense', 'common'].includes(val);
+        return ['extend', 'dense', 'default'].includes(val);
       },
-      default: 'common', // common list by default
+      default: 'default', // common list by default
     },
     control: Boolean, // show control buttons
     graph: Boolean, // custom grid at the end

@@ -10,6 +10,8 @@ export default new Vuex.Store({
   state: {
     // init theme from `localStorage`
     theme: getLS(THEME_STORAGE_KEY) || THEMES.AUTO,
+    // message popup data
+    messages: [],
   },
   mutations: {
     UPDATE_THEME(state, payload) {
@@ -17,6 +19,13 @@ export default new Vuex.Store({
       document.body.setAttribute(THEME_BODY_ATTR, newTheme);
       state.theme = newTheme;
       setLS(THEME_STORAGE_KEY, newTheme);
+    },
+    ADD_MESSAGE(state, payload) {
+      const { text, type } = payload;
+      state.messages.push({ text, type });
+    },
+    REMOVE_MESSAGE(state) {
+      state.messages.shift();
     },
   },
   actions: {
@@ -45,6 +54,10 @@ export default new Vuex.Store({
       }
       // commit theme change
       commit('UPDATE_THEME', { newTheme });
+    },
+    async TRIGGER_MESSAGE({ commit }, payload) {
+      commit('ADD_MESSAGE', payload);
+      setTimeout(() => commit('REMOVE_MESSAGE'), 3000);
     },
   },
 });

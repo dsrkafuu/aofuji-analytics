@@ -12,6 +12,12 @@
 </template>
 
 <script>
+/**
+ * [vue 3]
+ * unknown
+ * vue-router need to be upgraded
+ */
+
 import GButton from './GButton.vue';
 
 export default {
