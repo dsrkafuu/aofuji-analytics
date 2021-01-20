@@ -1,10 +1,13 @@
 <template>
   <div class="website-settings">
-    <GList :data="data" control :type="'extend'"></GList>
+    <GList :data="data" control type="extend"></GList>
   </div>
 </template>
 
 <script>
+/* utils */
+import { logInfo, logError } from '../../utils/logger.js';
+/* components */
 import GList from '../../components/GList.vue';
 
 export default {
@@ -14,27 +17,37 @@ export default {
   },
   data() {
     return {
-      data: [
-        {
-          id: '1',
-          text: 'DSRKafuU Main Home',
-          sub: 'amzrk2.cc',
-          label: 'public',
-        },
-        {
-          id: '2',
-          text: 'DSRCA',
-          sub: 'dsrca.amzrk2.cc',
-          label: 'private',
-        },
-        {
-          id: '3',
-          text: 'Pouni Calculation Tester',
-          sub: 'github.com/pouni-calculation-tester',
-          label: 'private',
-        },
-      ],
+      data: [],
     };
+  },
+  methods: {
+    /**
+     * fetch websites data when first mounted
+     */
+    async fetchWebsites() {
+      let res;
+      try {
+        res = await this.$axios.get('/websites');
+      } catch (e) {
+        this.$error(`failed to fetch websites`);
+        logError(`failed to fetch websites`, e);
+        res = null;
+      }
+      if (res && Array.isArray(res.data)) {
+        for (let i = 0; i < res.data.length; i++) {
+          const site = res.data[i];
+          site.id = site._id;
+          site.text = site.name;
+          site.sub = site.domain;
+          site.label = site.isPublic ? 'public' : 'private';
+        }
+        this.data = res.data;
+      }
+    },
+  },
+  async mounted() {
+    await this.fetchWebsites();
+    logInfo('websites data initialized');
   },
 };
 </script>

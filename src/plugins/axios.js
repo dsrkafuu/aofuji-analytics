@@ -13,14 +13,24 @@ export default {
     });
 
     // interceptors
-    axiosInst.interceptors.response.use(
-      (res) => res,
+    axiosInst.interceptors.request.use(
+      (req) => req,
       (e) => {
         store.dispatch('TRIGGER_MESSAGE', {
           type: 'error',
           text: `request error ${e.response.status}`,
         });
-        return null;
+        return Promise.reject(e);
+      }
+    );
+    axiosInst.interceptors.response.use(
+      (res) => res,
+      (e) => {
+        store.dispatch('TRIGGER_MESSAGE', {
+          type: 'error',
+          text: `response error ${e.response.status}`,
+        });
+        return Promise.reject(e);
       }
     );
 
