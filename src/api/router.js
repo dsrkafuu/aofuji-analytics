@@ -5,7 +5,6 @@ const router = Router();
 // db
 const { mongoose } = require('./utils/mongoose');
 router.use(mongoose());
-const { User, Website } = require('./utils/mongoose');
 
 /* middlewares */
 // close db connection if serverless
@@ -19,6 +18,7 @@ if (process.env.SERVERLESS) {
 // collect route
 require('./routes/collect')(router);
 
+const { User } = require('./utils/mongoose');
 // init routes
 router.get('/init', async (req, res) => {
   const results = await User.findOne({ username: 'admin' }, 'username').lean();
@@ -56,17 +56,8 @@ router.put('/users/:id', async (req, res) => {
   res.send(result);
 });
 
-// get all websites
-router.get('/websites', async (req, res) => {
-  const result = await Website.find({}).lean();
-  res.send(result);
-});
-// create a new websites
-router.post('/websites', async (req, res) => {
-  const result = await Website.create(req.body);
-  res.send(result);
-});
-
+// websites
+require('./routes/websites')(router);
 // fallbacks
 require('./routes/fallback')(router);
 

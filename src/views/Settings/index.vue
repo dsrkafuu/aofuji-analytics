@@ -6,8 +6,8 @@
           v-for="(tab, index) of tabs"
           :key="tab.name"
           type="full-width"
-          @click.prevent="handleTabChange(index)"
-          :active="index === currentTab"
+          @click.prevent="changeTab(index)"
+          :active="index === curIndex"
         >
           {{ tab.name }}
         </GButton>
@@ -16,7 +16,7 @@
     <div class="settings-content">
       <GCard>
         <keep-alive>
-          <component :is="tabs[currentTab].component"></component>
+          <component :is="curTab"></component>
         </keep-alive>
       </GCard>
     </div>
@@ -30,6 +30,11 @@ import GButton from '../../components/GButton.vue';
 import UserSettings from './UserSettings.vue';
 import WebsiteSettings from './WebsiteSettings.vue';
 import About from './About.vue';
+import UserEdit from './UserEdit.vue';
+import WebsiteEdit from './WebsiteEdit.vue';
+/* utils */
+import { SETTING_TYPES } from '../../utils/constants.js';
+const { USER, WEBSITE } = SETTING_TYPES;
 
 export default {
   name: 'Settings',
@@ -39,6 +44,8 @@ export default {
     UserSettings,
     WebsiteSettings,
     About,
+    UserEdit,
+    WebsiteEdit,
   },
   data() {
     return {
@@ -47,16 +54,30 @@ export default {
         { name: 'Websites', component: WebsiteSettings },
         { name: 'About', component: About },
       ],
-      currentTab: 0,
+      curIndex: 0, // current index
     };
+  },
+  computed: {
+    // current tab object
+    curTab() {
+      switch (this.$store.state.editing.type) {
+        case USER:
+          return UserEdit;
+        case WEBSITE:
+          return WebsiteEdit;
+        default:
+          return this.tabs[this.curIndex].component;
+      }
+    },
   },
   methods: {
     /**
      * change current tab
-     * @param {Number} tabIndex
+     * @param {number} newIndex
      */
-    handleTabChange(tabIndex) {
-      this.currentTab = tabIndex;
+    changeTab(newIndex) {
+      this.$store.dispatch('EDIT_SETTING'); // exit editing
+      this.curIndex = newIndex;
     },
   },
 };

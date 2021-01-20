@@ -8,7 +8,7 @@ import Login from '../views/Login.vue';
 import NotFound from '../views/NotFound.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue';
 import Realtime from '../views/Realtime/Realtime.vue';
-import Settings from '../views/Settings/Settings.vue';
+import Settings from '../views/Settings/index.vue';
 
 const routes = [
   {

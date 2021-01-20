@@ -1,12 +1,14 @@
 <template>
   <div class="user-settings">
-    <GList :data="data" control></GList>
+    <GList :data="data" control @edit="handleEdit"></GList>
   </div>
 </template>
 
 <script>
 /* utils */
 import { logInfo, logError } from '../../utils/logger.js';
+import { SETTING_TYPES } from '../../utils/constants.js';
+const { USER } = SETTING_TYPES;
 /* components */
 import GList from '../../components/GList.vue';
 
@@ -42,6 +44,13 @@ export default {
         }
         this.data = res.data;
       }
+    },
+    /**
+     * handle user edit
+     * @param {string} id
+     */
+    handleEdit(id) {
+      this.$store.dispatch('EDIT_SETTING', { type: USER, id });
     },
   },
   async mounted() {

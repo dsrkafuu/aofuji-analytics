@@ -1,22 +1,20 @@
 /* utils */
 const path = require('path');
 const fs = require('fs');
+const httpError = require('../utils/httpError');
+const requestIP = require('../utils/requestIP');
+const { Session, View, Website } = require('../utils/mongoose');
 
+/* deps */
 const { v4 } = require('uuid');
 const Bowser = require('bowser');
 const { Reader } = require('maxmind');
 const gdb = fs.readFileSync(path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb'));
 const maxmind = new Reader(gdb);
 
-const httpError = require('../utils/httpError');
-const requestIP = require('../utils/requestIP');
-
-/* models */
-const { Session, View, Website } = require('../utils/mongoose');
-
 /* middlewares */
-// collect route cors
 const cors = require('cors');
+// collect route cors settings
 const corsOptions = {
   origin: true,
   methods: 'POST',

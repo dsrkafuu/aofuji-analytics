@@ -1,12 +1,14 @@
 <template>
   <div class="website-settings">
-    <GList :data="data" control type="extend"></GList>
+    <GList :data="data" control type="extend" @edit="handleEdit"></GList>
   </div>
 </template>
 
 <script>
 /* utils */
 import { logInfo, logError } from '../../utils/logger.js';
+import { SETTING_TYPES } from '../../utils/constants.js';
+const { WEBSITE } = SETTING_TYPES;
 /* components */
 import GList from '../../components/GList.vue';
 
@@ -43,6 +45,13 @@ export default {
         }
         this.data = res.data;
       }
+    },
+    /**
+     * handle website edit
+     * @param {string} id
+     */
+    handleEdit(id) {
+      this.$store.dispatch('EDIT_SETTING', { type: WEBSITE, id });
     },
   },
   async mounted() {
