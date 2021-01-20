@@ -1,6 +1,6 @@
 <template>
   <transition-group tag="div" name="g-message" class="g-message-wrapper">
-    <div :class="['g-message', `g-message-${item.type}`]" v-for="item of messages" :key="item.text">
+    <div :class="['g-message', `g-message-${item.type}`]" v-for="item of messages" :key="item.id">
       <span>{{ item.text }}</span>
     </div>
   </transition-group>

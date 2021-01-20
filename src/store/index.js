@@ -1,7 +1,12 @@
-/* deps */
+/* vue */
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
+
+/* deps */
+import { ID } from '../utils/id.js';
+const idm = new ID(); // id manager
+
 /* vars */
 import { THEME_STORAGE_KEY, THEME_BODY_ATTR, THEMES } from '../utils/constants.js';
 import { getLS, setLS } from '../utils/storage.js';
@@ -22,10 +27,12 @@ export default new Vuex.Store({
     },
     ADD_MESSAGE(state, payload) {
       const { text, type } = payload;
-      state.messages.push({ text, type });
+      const id = idm.get();
+      state.messages.push({ id, text, type });
     },
     REMOVE_MESSAGE(state) {
-      state.messages.shift();
+      const message = state.messages.shift();
+      idm.remove(message.id);
     },
   },
   actions: {
@@ -57,7 +64,7 @@ export default new Vuex.Store({
     },
     async TRIGGER_MESSAGE({ commit }, payload) {
       commit('ADD_MESSAGE', payload);
-      setTimeout(() => commit('REMOVE_MESSAGE'), 3000);
+      setTimeout(() => commit('REMOVE_MESSAGE'), 10000);
     },
   },
 });
