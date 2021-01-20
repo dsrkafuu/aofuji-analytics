@@ -2,9 +2,8 @@
   <div class="about">
     <div class="test">
       <span>tests</span>
-      <GButton @click="handleTestInfo">$info()</GButton>
-      <GButton @click="handleTestError">$error()</GButton>
       <GButton @click="handleTestAPI">/api/debug</GButton>
+      <GButton @click="handleTestAPIError">/api/error</GButton>
       <div class="test-api-debug" v-if="testAPIDebug">
         <pre>{{ testAPIDebug }}</pre>
       </div>
@@ -27,15 +26,19 @@ export default {
     };
   },
   methods: {
-    handleTestInfo() {
-      this.$info(Date.now());
-    },
-    handleTestError() {
-      this.$error(Date.now());
-    },
     async handleTestAPI() {
       const res = await this.$axios.get('/debug');
-      this.testAPIDebug = res.data;
+      if (res) {
+        this.testAPIDebug = res.data;
+        this.$info('successfully get `/api/debug`');
+      }
+    },
+    async handleTestAPIError() {
+      const res = await this.$axios.get('/error');
+      if (res) {
+        this.testAPIDebug = res.data;
+        this.$info('successfully get `/api/error`');
+      }
     },
   },
 };
