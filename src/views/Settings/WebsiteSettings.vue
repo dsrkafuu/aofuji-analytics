@@ -24,15 +24,15 @@ export default {
   },
   methods: {
     /**
-     * fetch websites data when first mounted
+     * fetch website data when first mounted
      */
     async fetchWebsites() {
       let res;
       try {
-        res = await this.$axios.get('/websites');
+        res = await this.$axios.get('/website');
       } catch (e) {
-        this.$error(`failed to fetch websites`);
-        logError(`failed to fetch websites`, e);
+        this.$error('failed to fetch websites');
+        logError('failed to fetch websites', e);
         res = null;
       }
       if (res && Array.isArray(res.data)) {
@@ -56,7 +56,7 @@ export default {
   },
   async mounted() {
     await this.fetchWebsites();
-    logInfo('websites data initialized');
+    logInfo('websites initialized');
   },
 };
 </script>

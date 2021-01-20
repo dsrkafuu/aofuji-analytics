@@ -61,4 +61,11 @@ require('./routes/websites')(router);
 // fallbacks
 require('./routes/fallback')(router);
 
+/* internal error handler */
+/* eslint-disable */
+router.use((e, req, res, next) => {
+  console.error(e.stack);
+  res.status(500).send('Internal error');
+});
+
 module.exports = router;
