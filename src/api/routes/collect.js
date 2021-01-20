@@ -1,13 +1,16 @@
 /* utils */
-const { v4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
+
+const { v4 } = require('uuid');
 const Bowser = require('bowser');
 const { Reader } = require('maxmind');
 const gdb = fs.readFileSync(path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb'));
 const maxmind = new Reader(gdb);
+
 const httpError = require('../utils/httpError');
 const requestIP = require('../utils/requestIP');
+
 /* models */
 const { Session, View, Website } = require('../utils/mongoose');
 
@@ -25,11 +28,11 @@ module.exports = (router) => {
   // cors prefetch
   router.options('/collect', cors(corsOptions));
 
+  // collect route
   router.post('/collect', cors(corsOptions), async (req, res) => {
     const { type, id, date, data } = req.body;
 
-    /* website and session */
-    // get website
+    // get website and session
     let website = null;
     try {
       website = await Website.findById(id).lean();
@@ -37,7 +40,7 @@ module.exports = (router) => {
         throw new Error();
       }
     } catch {
-      return res.status(400).send(httpError('Request website not allowed'));
+      return res.status(400).send(httpError('request website not allowed'));
     }
     // check whether is a exist session
     const uuid = req.cookies.goose_uuid || v4();
@@ -92,19 +95,17 @@ module.exports = (router) => {
           // update pvt to last view
           works.push(
             View.findOneAndUpdate(
+              // view before this leave
               {
-                // view before this leave
                 _date: { $lt: date },
                 _session: session._id,
                 _website: website._id,
                 pathname: data.path,
               },
-              {
-                pvt: data.pvt, // apply new page view time
-              },
-              {
-                sort: { _date: -1 }, // first view before this leave
-              }
+              // apply new page view time
+              { pvt: data.pvt },
+              // first view before this leave
+              { sort: { _date: -1 } }
             )
           );
         }

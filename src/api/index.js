@@ -29,11 +29,6 @@ if (process.env.VERCEL) {
   app.use(vercelCookie());
 }
 
-// [DEBUG] test
-app.get('/api/test', async (req, res) => {
-  res.send({ status: 200 });
-});
-
 /* routes */
 const router = require('./router');
 app.use('/api', router);
