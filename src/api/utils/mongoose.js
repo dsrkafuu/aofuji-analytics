@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const httpError = require('./httpError');
 
 /* connect database */
 async function connectDB() {
@@ -14,9 +13,9 @@ async function connectDB() {
       });
     } catch {
       if (process.env.SERVERLESS) {
-        console.error('[Goose API] Mongoose connection failed');
+        console.error('[goose api] mongoose connection failed');
       } else {
-        console.error('[Goose API] Mongoose connection failed, try again after 1 minute');
+        console.error('[goose api] mongoose connection failed, try again after 1 minute');
         setTimeout(() => {
           connectDB();
         }, 60 * 1000);
@@ -40,7 +39,9 @@ module.exports = {
   mongoose: () => async (req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
       // respond 503 when database unavailable
-      res.status(503).send(httpError('Database connection failed'));
+      const err = new Error('database connection failed');
+      err.status = 503;
+      throw err;
     } else {
       req.mongoose = mongoose;
       next();

@@ -1,7 +1,6 @@
 /* utils */
 const path = require('path');
 const fs = require('fs');
-const httpError = require('../utils/httpError');
 const requestIP = require('../utils/requestIP');
 const { Session, View, Website } = require('../utils/mongoose');
 
@@ -30,7 +29,7 @@ module.exports = (router) => {
   router.post('/collect', cors(corsOptions), async (req, res) => {
     const { type, id, date, data } = req.body;
 
-    // get website and session
+    // get website
     let website = null;
     try {
       website = await Website.findById(id).lean();
@@ -38,61 +37,65 @@ module.exports = (router) => {
         throw new Error();
       }
     } catch {
-      return res.status(400).send(httpError('request website not allowed'));
-    }
-    // check whether is a exist session
-    const uuid = req.cookies.goose_uuid || v4();
-    let session = await Session.findOne({ uuid });
-    if (!session) {
-      session = await Session.create({ uuid, _date: date });
-      res.cookie('goose_uuid', uuid, { sameSite: 'lax' });
+      const err = new Error('request website not allowed');
+      err.status = 403;
+      throw err;
     }
 
-    // data process
-    const works = [];
-    console.log();
-    console.log('[WIP] TYPE:', type);
-    console.log('[WIP] TIME:', date);
-    console.log('[WIP] UUID:', uuid);
-    console.log('[WIP] SITE:', website._id);
-    console.log('[WIP] DATA:', data);
-    console.log();
-
-    switch (type) {
-      case 'view': {
-        // save view
-        const newView = {
-          _date: date,
-          _session: session._id,
-          _website: website._id,
-          pathname: data.path,
-          referrer: data.ref,
-        };
-        works.push(View.create(newView));
-        // check whether need to update session data
-        if (data.lang || data.scrn) {
-          // language & screen
-          session.language = data.lang;
-          session.screen = data.scrn;
-          // browser & system & platform
-          const ua = req.get('User-Agent');
-          const bowser = Bowser.parse(ua);
-          session.browser = (bowser.browser.name || '').toLowerCase() || undefined;
-          session.system = (bowser.os.name || '').toLowerCase() || undefined;
-          session.platform = (bowser.platform.type || '').toLowerCase() || undefined;
-          // location
-          const gd = maxmind.get(requestIP(req));
-          session.location = gd && gd.country ? gd.country.iso_code : undefined;
-          works.push(session.save());
-        }
-        break;
+    try {
+      // check whether is a exist session
+      const uuid = req.cookies.goose_uuid || v4();
+      let session = await Session.findOne({ uuid });
+      if (!session) {
+        session = await Session.create({ uuid, _date: date });
+        res.cookie('goose_uuid', uuid, { sameSite: 'lax' });
       }
 
-      case 'leave': {
-        if (data.pvt) {
-          // update pvt to last view
-          works.push(
-            View.findOneAndUpdate(
+      // data process
+      console.log();
+      console.log('[WIP] TYPE:', type);
+      console.log('[WIP] TIME:', date);
+      console.log('[WIP] UUID:', uuid);
+      console.log('[WIP] SITE:', website._id);
+      console.log('[WIP] DATA:', data);
+      console.log();
+
+      switch (type) {
+        case 'view': {
+          const works = [];
+          // save view
+          const newView = {
+            _date: date,
+            _session: session._id,
+            _website: website._id,
+            pathname: data.path,
+            referrer: data.ref,
+          };
+          works.push(View.create(newView));
+          // check whether need to update session data
+          if (data.lang || data.scrn) {
+            // language & screen
+            session.language = data.lang;
+            session.screen = data.scrn;
+            // browser & system & platform
+            const ua = req.get('User-Agent');
+            const bowser = Bowser.parse(ua);
+            session.browser = (bowser.browser.name || '').toLowerCase() || undefined;
+            session.system = (bowser.os.name || '').toLowerCase() || undefined;
+            session.platform = (bowser.platform.type || '').toLowerCase() || undefined;
+            // location
+            const gd = maxmind.get(requestIP(req));
+            session.location = gd && gd.country ? gd.country.iso_code : undefined;
+            works.push(session.save());
+          }
+          await Promise.all(works);
+          break;
+        }
+
+        case 'leave': {
+          if (data.pvt) {
+            // update pvt to last view
+            await View.findOneAndUpdate(
               // view before this leave
               {
                 _date: { $lt: date },
@@ -104,15 +107,18 @@ module.exports = (router) => {
               { pvt: data.pvt },
               // first view before this leave
               { sort: { _date: -1 } }
-            )
-          );
+            );
+          }
+          break;
         }
-        break;
       }
+    } catch {
+      const err = new Error('error processing data');
+      err.status = 500;
+      throw err;
     }
 
     // send response
-    await Promise.all(works);
     res.status(204).send();
   });
 };

@@ -1,20 +1,18 @@
 /* utils */
 const { Router } = require('express');
-const httpError = require('./utils/httpError');
 const router = Router();
 // db
-const { mongoose } = require('./utils/mongoose');
+const { mongoose } = require('./utils/mongoose.js');
 router.use(mongoose());
 
 /* middlewares */
 // close db connection if serverless
 if (process.env.SERVERLESS) {
-  const closeConnection = require('./middlewares/closeConnection');
+  const closeConnection = require('./middlewares/closeConnection.js');
   router.use(closeConnection());
 }
 
 /* routes */
-
 // collect route
 require('./routes/collect')(router);
 
@@ -27,7 +25,7 @@ router.get('/init', async (req, res) => {
 router.post('/init', async (req, res) => {
   const admin = await User.findOne({ username: 'admin' }, 'username').lean();
   if (admin) {
-    res.status(400).send(httpError('No need to init user'));
+    res.status(400).send('No need to init user');
   } else {
     let result = await User.create({
       username: 'admin',
@@ -47,7 +45,7 @@ router.get('/users', async (req, res) => {
 });
 // [WIP] create a new user
 router.post('/users', async (req, res) => {
-  res.status(418).send(httpError('Feature not done yet'));
+  res.status(418).send('Feature not done yet');
 });
 // change user password
 router.put('/users/:id', async (req, res) => {
@@ -57,15 +55,14 @@ router.put('/users/:id', async (req, res) => {
 });
 
 // websites
-require('./routes/websites')(router);
-// fallbacks
-require('./routes/fallback')(router);
+require('./routes/websites.js')(router);
 
-/* internal error handler */
-/* eslint-disable */
-router.use((e, req, res, next) => {
-  console.error(e.stack);
-  res.status(500).send('Internal error');
+/* api error handler */
+router.get('/*', async () => {
+  const err = new Error('route not found');
+  err.status = 404;
+  throw err;
 });
+router.use(require('./middlewares/errorHandler.js')());
 
 module.exports = router;
