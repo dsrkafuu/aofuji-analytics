@@ -4,13 +4,11 @@ const path = require('path');
 const fs = require('fs');
 const Bowser = require('bowser');
 const { Reader } = require('maxmind');
-const gdb = fs.readFileSync(
-  path.resolve(__dirname, '../../../api/assets/geolite/GeoLite2-Country.mmdb')
-);
+const gdb = fs.readFileSync(path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb'));
 const maxmind = new Reader(gdb);
 const httpError = require('../utils/httpError');
 const requestIP = require('../utils/requestIP');
-// models
+/* models */
 const { Session, View, Website } = require('../utils/mongoose');
 
 /* middlewares */

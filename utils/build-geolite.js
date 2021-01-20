@@ -19,7 +19,7 @@ async function buildGeoLite() {
   }
 
   // file infos
-  const folder = path.resolve(__dirname, '../api/assets/geolite');
+  const folder = path.resolve(__dirname, '../api/assets');
   if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder);
   }

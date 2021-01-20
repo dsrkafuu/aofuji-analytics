@@ -2,8 +2,8 @@
 dist/
 
 # extracted geo db files
-api/assets/geolite/*
-!api/assets/geolite/LICENSE
+api/assets/*.mmdb
+api/assets/*.tar.gz
 
 # production env
 .env.production

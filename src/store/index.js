@@ -1,8 +1,8 @@
+/* deps */
 import Vue from 'vue';
 import Vuex from 'vuex';
-
 Vue.use(Vuex);
-
+/* vars */
 import { THEME_STORAGE_KEY, THEME_BODY_ATTR, THEMES } from '../utils/constants.js';
 import { getLS, setLS } from '../utils/storage.js';
 
