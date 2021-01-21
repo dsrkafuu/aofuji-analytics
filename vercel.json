@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": "12.x"
-  },
   "functions": {
     "api/index.js": {
       "includeFiles": "+(api/**|src/api/**)"
