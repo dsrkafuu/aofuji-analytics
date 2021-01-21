@@ -27,6 +27,7 @@ module.exports = (router) => {
 
   // collect route
   router.post('/collect', cors(corsOptions), async (req, res) => {
+    console.log(`[debug] ${Date.now()} start collect route`);
     const { type, id, date, data } = req.body;
 
     // get website
@@ -41,6 +42,7 @@ module.exports = (router) => {
       err.status = 403;
       throw err;
     }
+    console.log(`[debug] ${Date.now()} get website done`);
 
     try {
       // check whether is a exist session
@@ -50,6 +52,7 @@ module.exports = (router) => {
         session = await Session.create({ uuid, _date: date });
         res.cookie('goose_uuid', uuid, { sameSite: 'lax' });
       }
+      console.log(`[debug] ${Date.now()} get session done`);
 
       // data process
       console.log();
@@ -89,6 +92,7 @@ module.exports = (router) => {
             works.push(session.save());
           }
           await Promise.all(works);
+          console.log(`[debug] ${Date.now()} record view done`);
           break;
         }
 
@@ -108,6 +112,7 @@ module.exports = (router) => {
               // first view before this leave
               { sort: { _date: -1 } }
             );
+            console.log(`[debug] ${Date.now()} record leave done`);
           }
           break;
         }
@@ -119,6 +124,7 @@ module.exports = (router) => {
     }
 
     // send response
+    console.log(`[debug] ${Date.now()} collect route done`);
     res.status(204).send();
   });
 };

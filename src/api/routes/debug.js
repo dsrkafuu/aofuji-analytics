@@ -14,6 +14,8 @@ const maxmind = new Reader(gdb);
 module.exports = (router) => {
   // debug route
   router.get('/debug', async (req, res) => {
+    console.log(`[debug] ${Date.now()} debug route start`);
+
     try {
       const response = {};
 
@@ -37,6 +39,7 @@ module.exports = (router) => {
         response.maxmind.user = { ip: userIP, ...user };
       }
 
+      console.log(`[debug] ${Date.now()} debug route done`);
       res.send(response);
     } catch (e) {
       console.log(e.stack);

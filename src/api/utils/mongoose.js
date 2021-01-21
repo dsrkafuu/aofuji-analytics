@@ -14,13 +14,16 @@ const Website = require('../models/Website.js')(mongoose);
     console.error('[goose api] environment variable DATABASE_URL not set');
     return;
   }
-  console.log('connecting to', dbURL);
+  console.log(`[debug] ${Date.now()} started db connect`);
   mongoose
     .connect(dbURL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
       useFindAndModify: false,
+    })
+    .then(() => {
+      console.log(`[debug] ${Date.now()} finish db connect`);
     })
     .catch((e) => {
       console.error(e.stack);

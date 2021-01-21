@@ -5,6 +5,8 @@ require('../../utils/env.js')();
 const express = require('express');
 const app = express();
 
+console.log(`[debug] ${Date.now()} express started`);
+
 /* middlewares */
 // response time logger
 app.use(require('./middlewares/responseTime.js')());
@@ -12,9 +14,7 @@ app.use(require('./middlewares/responseTime.js')());
 app.use(express.json());
 app.use(require('cookie-parser')());
 // compression
-if (process.env.NODE_ENV === 'production') {
-  app.use(require('compression')());
-}
+app.use(require('compression')());
 // safety helmet
 if (process.env.HELMET) {
   app.use(require('helmet')());
