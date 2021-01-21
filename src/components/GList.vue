@@ -15,12 +15,12 @@
       <div class="g-list-ctrl" v-if="control">
         <div class="g-list-ctrl-item">
           <GButton @click.prevent="$emit('edit', item.id)">
-            <GIconEdit class="g-icon" />
+            <GIconEdit />
           </GButton>
         </div>
         <div class="g-list-ctrl-item">
           <GButton @click.prevent="$emit('delete', item.id)">
-            <GIconTrash class="g-icon" />
+            <GIconTrash />
           </GButton>
         </div>
       </div>

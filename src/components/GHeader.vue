@@ -22,6 +22,7 @@ export default {
 .g-header {
   height: 3rem;
   display: flex;
+  user-select: none;
 }
 
 .g-header-title {

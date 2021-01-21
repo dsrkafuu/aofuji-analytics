@@ -1,6 +1,9 @@
 <template>
   <div class="website-edit">
-    <GHeader text="editing website"></GHeader>
+    <GHeader text="editing website">
+      <GButton><GIconTimes @click="handleExit" /></GButton>
+      <GButton><GIconCheck /></GButton>
+    </GHeader>
     <div class="website-edit-line">
       <span>id</span>
       <GLabel>{{ id }}</GLabel>
@@ -23,6 +26,9 @@ import { logInfo, logError } from '../../utils/logger.js';
 import GInput from '../../components/GInput.vue';
 import GLabel from '../../components/GLabel.vue';
 import GHeader from '../../components/GHeader.vue';
+import GButton from '../../components/GButton.vue';
+import GIconCheck from '../../assets/icons/check.svg';
+import GIconTimes from '../../assets/icons/times.svg';
 
 export default {
   name: 'WebsiteEdit',
@@ -30,6 +36,9 @@ export default {
     GInput,
     GLabel,
     GHeader,
+    GButton,
+    GIconCheck,
+    GIconTimes,
   },
   data() {
     return {
@@ -59,6 +68,12 @@ export default {
       }
       this.name = res.data.name || '';
       this.domain = res.data.domain || '';
+    },
+    /**
+     * exit editing
+     */
+    handleExit() {
+      this.$store.dispatch('EDIT_SETTING');
     },
   },
   async activated() {
