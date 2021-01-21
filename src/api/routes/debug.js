@@ -1,6 +1,7 @@
 /* utils */
 const { Website, User } = require('../utils/mongoose.js');
 const buildError = require('../utils/buildError.js');
+const requestIP = require('../utils/requestIP.js');
 
 /* deps */
 const fs = require('fs');
@@ -26,14 +27,20 @@ module.exports = (router) => {
       response.db = results;
 
       // geodb check
-      const gd1 = maxmind.get('1.1.1.1');
-      const gd2 = maxmind.get('114.48.198.220');
-      response.maxmind = [gd1, gd2];
+      const internal = { ip: '1.1.1.1', ...maxmind.get('1.1.1.1') };
+      response.maxmind = {
+        internal,
+      };
+      const userIP = requestIP(req);
+      if (userIP) {
+        const user = maxmind.get(userIP);
+        response.maxmind.user = { ip: userIP, ...user };
+      }
 
       res.send(response);
     } catch (e) {
       console.log(e.stack);
-      throw buildError(418, 'debug test failed');
+      throw buildError(500, 'debug test failed');
     }
   });
 };
