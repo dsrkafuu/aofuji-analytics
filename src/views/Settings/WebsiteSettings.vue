@@ -58,7 +58,7 @@ export default {
       this.$store.dispatch('EDIT_SETTING', { type: WEBSITE, id });
     },
   },
-  async mounted() {
+  async activated() {
     await this.fetchWebsites();
     logInfo('websites initialized');
   },

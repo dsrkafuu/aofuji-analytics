@@ -59,6 +59,7 @@ export default {
      */
     handleExit() {
       this.$store.dispatch('EDIT_SETTING');
+      logInfo(`website editing/adding cancelled`);
     },
   },
   async activated() {
@@ -66,9 +67,12 @@ export default {
     if (this.id) {
       await this.fetchWebsite(this.id);
       logInfo(`website ${this.id} initialized`);
+    } else {
+      logInfo(`adding new website`);
     }
   },
   deactivated() {
+    // clear data when exit
     this.name = '';
     this.domain = '';
   },

@@ -1,5 +1,8 @@
 <template>
   <div class="user-settings">
+    <GHeader text="user settings">
+      <GButton @click="handleAdd"><GIconPlus /></GButton>
+    </GHeader>
     <GList :data="data" control @edit="handleEdit"></GList>
   </div>
 </template>
@@ -41,6 +44,13 @@ export default {
       }
     },
     /**
+     * [TODO]
+     * handle user add
+     */
+    handleAdd() {
+      this.$error('multi-user feature coming soon');
+    },
+    /**
      * handle user edit
      * @param {string} id
      */
@@ -48,7 +58,7 @@ export default {
       this.$store.dispatch('EDIT_SETTING', { type: USER, id });
     },
   },
-  async mounted() {
+  async activated() {
     await this.fetchUsers();
     logInfo('users data initialized');
   },
@@ -57,6 +67,6 @@ export default {
 
 <style lang="scss">
 .user-settings {
-  margin: $space-base;
+  margin: $space-lg;
 }
 </style>
