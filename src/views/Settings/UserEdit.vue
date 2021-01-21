@@ -2,7 +2,7 @@
   <div class="user-edit">
     <GHeader :text="`${id ? 'editing' : 'adding'} user`">
       <GButton @click="handleExit"><GIconTimes /></GButton>
-      <GButton><GIconCheck /></GButton>
+      <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
     <div class="user-edit-line" v-show="id">
       <span>id</span>
@@ -21,7 +21,7 @@
 
 <script>
 /* utils */
-import { logInfo } from '../../utils/logger.js';
+import { logInfo, logError } from '../../utils/logger.js';
 
 export default {
   name: 'UserEdit',
@@ -41,8 +41,30 @@ export default {
     /**
      * fetch user data with id when activated
      */
-    async fetchUser() {
+    fetchUser() {
       this.username = 'admin';
+    },
+    /**
+     * add a new user or modify website data
+     */
+    async handleCheck() {
+      if (!this.id) {
+        return;
+      }
+      let res, buf;
+      try {
+        res = await this.$axios.put(`/user/${this.id}`, {
+          password: this.password,
+        });
+        buf = 'user modified';
+        this.$info(buf);
+        logInfo(buf, res.data);
+        this.$store.dispatch('EDIT_SETTING'); // exit editing
+      } catch (e) {
+        buf = 'failed to modify user';
+        this.$error(buf);
+        logError(buf, e);
+      }
     },
     /**
      * exit editing

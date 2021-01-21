@@ -1,37 +1,38 @@
 <template>
   <div class="about">
     <div class="test">
-      <span>tests</span>
-      <GButton @click="handleTestAPI">/api/debug</GButton>
-      <GButton @click="handleTestAPIError">/api/error</GButton>
-      <div class="test-api-debug" v-if="testAPIDebug">
-        <pre>{{ testAPIDebug }}</pre>
+      <GButton @click="handleTest">click here to test api</GButton>
+      <div class="test-api" v-if="testAPI">
+        <pre>{{ testAPI }}</pre>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+/* utils */
+import { logInfo, logError } from '../../utils/logger.js';
+
 export default {
   name: 'About',
   data() {
     return {
-      testAPIDebug: '',
+      testAPI: null,
     };
   },
   methods: {
-    async handleTestAPI() {
-      const res = await this.$axios.get('/debug');
-      if (res) {
-        this.testAPIDebug = res.data;
-        this.$info('successfully get `/api/debug`');
-      }
-    },
-    async handleTestAPIError() {
-      const res = await this.$axios.get('/error');
-      if (res) {
-        this.testAPIDebug = res.data;
-        this.$info('successfully get `/api/error`');
+    async handleTest() {
+      let res, buf;
+      try {
+        res = await this.$axios.get('/debug');
+        this.testAPI = res.data;
+        buf = 'debug test data got';
+        this.$info(buf);
+        logInfo(buf, res.data);
+      } catch (e) {
+        buf = 'failed to proceed debug test';
+        this.$error('failed to proceed debug test');
+        logError(buf, e);
       }
     },
   },
@@ -48,7 +49,7 @@ export default {
       margin-right: $space-sm;
     }
 
-    .test-api-debug pre {
+    .test-api pre {
       margin: $space-base;
       font-size: $font-size-xs;
     }

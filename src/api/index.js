@@ -1,5 +1,5 @@
 /*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
-require('../../utils/env')();
+require('../../utils/env.js')();
 
 /* utils */
 const express = require('express');
@@ -21,20 +21,20 @@ if (process.env.HELMET) {
 }
 // vercel CDN
 if (process.env.VERCEL) {
-  app.use(require('./middlewares/vercelCookie')());
+  app.use(require('./middlewares/vercelCookie.js')());
 }
 
 /* routes */
-app.use('/api', require('./router'));
+app.use('/api', require('./router.js'));
 
 /* server */
 if (!process.env.SERVERLESS) {
   // static server in production
   if (process.env.NODE_ENV === 'production') {
-    require('./utils/staticServer')(app);
+    require('./utils/staticServer.js')(app);
   }
   // port listening
-  require('./utils/portListener')(app);
+  require('./utils/portListener.js')(app);
 }
 // if serverless
 module.exports = app;

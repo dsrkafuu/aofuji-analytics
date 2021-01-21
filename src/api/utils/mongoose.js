@@ -28,11 +28,11 @@ async function connectDB() {
 connectDB();
 
 /* compile models */
-const Event = require('../models/Event')(mongoose);
-const Session = require('../models/Session')(mongoose);
-const User = require('../models/User')(mongoose);
-const View = require('../models/View')(mongoose);
-const Website = require('../models/Website')(mongoose);
+const Event = require('../models/Event.js')(mongoose);
+const Session = require('../models/Session.js')(mongoose);
+const User = require('../models/User.js')(mongoose);
+const View = require('../models/View.js')(mongoose);
+const Website = require('../models/Website.js')(mongoose);
 
 module.exports = {
   // mongoose instance middleware

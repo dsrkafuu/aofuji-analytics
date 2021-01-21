@@ -66,7 +66,7 @@ export default {
           res = await this.$axios.put(`/website/${this.id}`, {
             name: this.name,
             domain: this.domain,
-            isPublic: false,
+            isPublic: this.isPublic,
           });
           buf = 'website modified';
         } else {
@@ -74,7 +74,7 @@ export default {
             username: 'admin',
             name: this.name,
             domain: this.domain,
-            isPublic: false,
+            isPublic: this.isPublic,
           });
           buf = 'new website added';
         }

@@ -15,9 +15,9 @@ if (process.env.SERVERLESS) {
 
 /* routes */
 // collect route
-require('./routes/collect')(router);
+require('./routes/collect.js')(router);
 
-const { User } = require('./utils/mongoose');
+const { User } = require('./utils/mongoose.js');
 // init routes
 router.get('/init', async (req, res) => {
   const results = await User.findOne({ username: 'admin' }, 'username').lean();
@@ -57,6 +57,8 @@ router.put('/users/:id', async (req, res) => {
 
 // websites
 require('./routes/websites.js')(router);
+// debug
+require('./routes/debug.js')(router);
 
 /* api error handler */
 router.get('/*', async () => {

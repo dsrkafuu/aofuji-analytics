@@ -1,8 +1,8 @@
 /* utils */
 const path = require('path');
 const fs = require('fs');
-const requestIP = require('../utils/requestIP');
-const { Session, View, Website } = require('../utils/mongoose');
+const requestIP = require('../utils/requestIP.js');
+const { Session, View, Website } = require('../utils/mongoose.js');
 
 /* deps */
 const { v4 } = require('uuid');
