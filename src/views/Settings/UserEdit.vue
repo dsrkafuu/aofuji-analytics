@@ -54,7 +54,9 @@ export default {
       let res, buf;
       try {
         res = await this.$axios.put(`/user/${this.id}`, {
+          username: this.username,
           password: this.password,
+          isAdmin: this.isAdmin,
         });
         buf = 'user modified';
         this.$info(buf);

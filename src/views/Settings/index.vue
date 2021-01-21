@@ -25,11 +25,12 @@
 
 <script>
 /* components */
-import UserSettings from './UserSettings.vue';
 import WebsiteSettings from './WebsiteSettings.vue';
+import UserSettings from './UserSettings.vue';
 import About from './About.vue';
-import UserEdit from './UserEdit.vue';
 import WebsiteEdit from './WebsiteEdit.vue';
+import UserEdit from './UserEdit.vue';
+
 /* utils */
 import { SETTING_TYPES } from '../../utils/constants.js';
 const { USER, WEBSITE } = SETTING_TYPES;
@@ -37,17 +38,17 @@ const { USER, WEBSITE } = SETTING_TYPES;
 export default {
   name: 'Settings',
   components: {
-    UserSettings,
     WebsiteSettings,
+    UserSettings,
     About,
-    UserEdit,
     WebsiteEdit,
+    UserEdit,
   },
   data() {
     return {
       tabs: [
-        { name: 'Users', component: UserSettings },
         { name: 'Websites', component: WebsiteSettings },
+        { name: 'Users', component: UserSettings },
         { name: 'About', component: About },
       ],
       curIndex: 0, // current index
@@ -57,10 +58,10 @@ export default {
     // current tab object
     curTab() {
       switch (this.$store.state.editing.type) {
-        case USER:
-          return UserEdit;
         case WEBSITE:
           return WebsiteEdit;
+        case USER:
+          return UserEdit;
         default:
           return this.tabs[this.curIndex].component;
       }

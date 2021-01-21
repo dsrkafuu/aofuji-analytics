@@ -27,7 +27,7 @@ export default {
     async fetchUsers() {
       let res;
       try {
-        res = await this.$axios.get('/users');
+        res = await this.$axios.get('/user');
       } catch (e) {
         this.$error(`failed to fetch users`);
         logError(`failed to fetch users`, e);
