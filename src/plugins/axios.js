@@ -1,5 +1,4 @@
 import axios from 'axios';
-import store from '../store';
 
 export default {
   /**
@@ -12,26 +11,16 @@ export default {
     });
 
     // interceptors
-    axiosInst.interceptors.request.use(
-      (req) => req,
-      (e) => {
-        store.dispatch('TRIGGER_MESSAGE', {
-          type: 'error',
-          text: `request error ${e.response.status}`,
-        });
-        return Promise.reject(e);
+    axiosInst.interceptors.request.use((req) => {
+      /* search param check */
+      const url = new URL(req.url, 'https://example.org');
+      // no cache set
+      if (url.searchParams.has('nocache') && url.searchParams.get('nocache') == '1') {
+        req.headers['Cache-Control'] = 'no-cache';
+        req.headers['Pragma'] = 'no-cache';
       }
-    );
-    axiosInst.interceptors.response.use(
-      (res) => res,
-      (e) => {
-        store.dispatch('TRIGGER_MESSAGE', {
-          type: 'error',
-          text: `response error ${e.response.status}`,
-        });
-        return Promise.reject(e);
-      }
-    );
+      return req;
+    });
 
     // add global axios
     Vue.prototype.$axios = axiosInst;
