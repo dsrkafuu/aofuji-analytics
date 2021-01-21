@@ -14,7 +14,10 @@ const Website = require('../models/Website.js')(mongoose);
     console.error('[goose api] environment variable DATABASE_URL not set');
     return;
   }
-  console.log(`[debug] ${Date.now()} started db connect`);
+  const now = Date.now();
+  setTimeout(() => {
+    console.log(`[debug] ${now} started db connect`);
+  }, 5000);
   mongoose
     .connect(dbURL, {
       useNewUrlParser: true,
