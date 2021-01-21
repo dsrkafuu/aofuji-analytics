@@ -21,5 +21,6 @@ export default {
   padding: $space-xs 1.25 * $space-xs;
   border-radius: $radius;
   margin: 0 auto;
+  text-align: center;
 }
 </style>
