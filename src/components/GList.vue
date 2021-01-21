@@ -37,20 +37,8 @@
  * unknown
  * vue-svg-loader need to be upgraded
  */
-
-import GButton from './GButton.vue';
-import GLabel from './GLabel.vue';
-import GIconEdit from '../assets/icons/edit.svg';
-import GIconTrash from '../assets/icons/trash.svg';
-
 export default {
   name: 'GList',
-  components: {
-    GButton,
-    GLabel,
-    GIconEdit,
-    GIconTrash,
-  },
   props: {
     data: {
       type: Array,

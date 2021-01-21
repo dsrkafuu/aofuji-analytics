@@ -15,8 +15,6 @@ import './scss/index.scss';
 import App from './App.vue';
 import GComponents from './plugins/components.js';
 Vue.use(GComponents);
-import GIcons from './plugins/icons.js';
-Vue.use(GIcons);
 import GMessage from './plugins/message.js';
 Vue.use(GMessage);
 

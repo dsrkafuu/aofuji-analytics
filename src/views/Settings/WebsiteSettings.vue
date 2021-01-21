@@ -1,5 +1,8 @@
 <template>
   <div class="website-settings">
+    <GHeader text="website settings">
+      <GButton @click="handleAdd"><GIconPlus /></GButton>
+    </GHeader>
     <GList :data="data" control type="extend" @edit="handleEdit"></GList>
   </div>
 </template>
@@ -42,6 +45,12 @@ export default {
       }
     },
     /**
+     * handle website add
+     */
+    handleAdd() {
+      this.$store.dispatch('EDIT_SETTING', { type: WEBSITE });
+    },
+    /**
      * handle website edit
      * @param {string} id
      */
@@ -58,6 +67,6 @@ export default {
 
 <style lang="scss">
 .website-settings {
-  margin: $space-base;
+  margin: $space-lg;
 }
 </style>

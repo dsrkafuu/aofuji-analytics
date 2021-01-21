@@ -9,7 +9,6 @@
  * [vue 3]
  * compatible
  */
-
 export default {
   name: 'GLabel',
 };

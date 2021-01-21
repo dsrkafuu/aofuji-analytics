@@ -3,7 +3,6 @@
  * [vue 3]
  * unknown
  */
-
 export default {
   render(h) {
     // init tag

@@ -17,14 +17,8 @@
  * unknown
  * vue-router need to be upgraded
  */
-
-import GButton from './GButton.vue';
-
 export default {
   name: 'GRouterLink',
-  components: {
-    GButton,
-  },
   props: {
     to: [String, Object],
     type: String,

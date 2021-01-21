@@ -13,7 +13,6 @@
  * may use vue 3 teleport feature to mount message inside body
  * instead of using Vue.extend() directly
  */
-
 export default {
   name: 'GMessage',
   computed: {

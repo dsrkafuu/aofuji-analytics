@@ -23,6 +23,7 @@ export default {
   height: 3rem;
   display: flex;
   user-select: none;
+  padding: 0 $space-sm;
 }
 
 .g-header-title {

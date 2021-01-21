@@ -1,10 +1,10 @@
 <template>
   <div class="website-edit">
-    <GHeader text="editing website">
-      <GButton><GIconTimes @click="handleExit" /></GButton>
+    <GHeader :text="`${id ? 'editing' : 'adding'} website`">
+      <GButton @click="handleExit"><GIconTimes /></GButton>
       <GButton><GIconCheck /></GButton>
     </GHeader>
-    <div class="website-edit-line">
+    <div class="website-edit-line" v-show="id">
       <span>id</span>
       <GLabel>{{ id }}</GLabel>
     </div>
@@ -68,6 +68,10 @@ export default {
       logInfo(`website ${this.id} initialized`);
     }
   },
+  deactivated() {
+    this.name = '';
+    this.domain = '';
+  },
 };
 </script>
 
@@ -78,6 +82,7 @@ export default {
   .website-edit-line {
     display: flex;
     align-items: center;
+    padding: 0 $space-sm;
 
     .g-label,
     .g-input {
