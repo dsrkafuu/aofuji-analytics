@@ -5,7 +5,12 @@ const buildError = require('../utils/buildError.js');
 module.exports = (router) => {
   // get all websites
   router.get('/website', async (req, res) => {
+    const int = setInterval(() => {
+      console.log(Date.now());
+    }, 1000);
     const result = await Website.find({}).lean();
+    clearInterval(int);
+    console.log(result);
     res.send(result);
   });
 
