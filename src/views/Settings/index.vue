@@ -25,8 +25,6 @@
 
 <script>
 /* components */
-import GCard from '../../components/GCard.vue';
-import GButton from '../../components/GButton.vue';
 import UserSettings from './UserSettings.vue';
 import WebsiteSettings from './WebsiteSettings.vue';
 import About from './About.vue';
@@ -39,8 +37,6 @@ const { USER, WEBSITE } = SETTING_TYPES;
 export default {
   name: 'Settings',
   components: {
-    GCard,
-    GButton,
     UserSettings,
     WebsiteSettings,
     About,

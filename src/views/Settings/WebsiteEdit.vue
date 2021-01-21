@@ -22,24 +22,9 @@
 <script>
 /* utils */
 import { logInfo, logError } from '../../utils/logger.js';
-/* components */
-import GInput from '../../components/GInput.vue';
-import GLabel from '../../components/GLabel.vue';
-import GHeader from '../../components/GHeader.vue';
-import GButton from '../../components/GButton.vue';
-import GIconCheck from '../../assets/icons/check.svg';
-import GIconTimes from '../../assets/icons/times.svg';
 
 export default {
   name: 'WebsiteEdit',
-  components: {
-    GInput,
-    GLabel,
-    GHeader,
-    GButton,
-    GIconCheck,
-    GIconTimes,
-  },
   data() {
     return {
       name: '',

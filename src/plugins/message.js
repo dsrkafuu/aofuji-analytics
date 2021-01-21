@@ -1,12 +1,12 @@
-import Vue from 'vue';
 import GMessage from '../components/GMessage.vue';
 import store from '../store';
 
 export default {
   /**
-   * installer for `Vue.use()`
+   * install message module
+   * @param {Vue} Vue
    */
-  install() {
+  install(Vue) {
     // mount `GMessage` component directly to body
     const GMessageClass = Vue.extend(GMessage);
     const message = new GMessageClass({

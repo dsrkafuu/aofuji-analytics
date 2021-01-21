@@ -9,15 +9,8 @@
 </template>
 
 <script>
-import GCard from '../components/GCard.vue';
-import GRouterLink from '../components/GRouterLink.vue';
-
 export default {
   name: 'NotFound',
-  components: {
-    GCard,
-    GRouterLink,
-  },
 };
 </script>
 

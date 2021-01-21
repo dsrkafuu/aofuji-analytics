@@ -13,10 +13,14 @@ import './scss/index.scss';
 
 /* components */
 import App from './App.vue';
+import GComponents from './plugins/components.js';
+Vue.use(GComponents);
+import GIcons from './plugins/icons.js';
+Vue.use(GIcons);
+import GMessage from './plugins/message.js';
+Vue.use(GMessage);
 
 /* plugins */
-import MessagePlugin from './plugins/message.js';
-Vue.use(MessagePlugin);
 import AxiosPlugin from './plugins/axios.js';
 Vue.use(AxiosPlugin);
 

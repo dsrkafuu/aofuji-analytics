@@ -9,14 +9,9 @@
 import { logInfo, logError } from '../../utils/logger.js';
 import { SETTING_TYPES } from '../../utils/constants.js';
 const { USER } = SETTING_TYPES;
-/* components */
-import GList from '../../components/GList.vue';
 
 export default {
   name: 'UserSettings',
-  components: {
-    GList,
-  },
   data() {
     return {
       data: [],

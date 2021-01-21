@@ -29,17 +29,8 @@
 </template>
 
 <script>
-import GRouterLink from '../../components/GRouterLink.vue';
-import GButton from '../../components/GButton.vue';
-import GIconAdjust from '../../assets/icons/adjust.svg';
-
 export default {
   name: 'Navbar',
-  components: {
-    GRouterLink,
-    GButton,
-    GIconAdjust,
-  },
   computed: {
     /**
      * site title from environment variables

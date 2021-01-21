@@ -1,12 +1,11 @@
-import Vue from 'vue';
 import axios from 'axios';
 import store from '../store';
 
 export default {
   /**
-   * installer for `Vue.use()`
+   * install axios
    */
-  install() {
+  install(Vue) {
     // setting base url
     const axiosInst = axios.create({
       baseURL: `${process.env.NODE_ENV === 'production' ? process.env.BASE_URL || '/' : '/'}api`,

@@ -12,14 +12,8 @@
 </template>
 
 <script>
-/* components */
-import GButton from '../../components/GButton.vue';
-
 export default {
   name: 'About',
-  components: {
-    GButton,
-  },
   data() {
     return {
       testAPIDebug: '',
