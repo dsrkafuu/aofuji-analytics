@@ -2,16 +2,8 @@
 const { Router } = require('express');
 const router = Router();
 const buildError = require('./utils/buildError.js');
-// db
 const { mongoose } = require('./utils/mongoose.js');
 router.use(mongoose());
-
-/* middlewares */
-// close db connection if serverless
-if (process.env.SERVERLESS) {
-  const closeConnection = require('./middlewares/closeConnection.js');
-  router.use(closeConnection());
-}
 
 /* routes */
 // collect route
@@ -60,7 +52,7 @@ require('./routes/websites.js')(router);
 // debug
 require('./routes/debug.js')(router);
 
-/* api error handler */
+/* fallback */
 router.get('/*', async () => {
   throw buildError(404, 'route not found');
 });

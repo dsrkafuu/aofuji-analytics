@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const terser = require('terser').minify;
-const fileName = process.env.TRACKER_FILENAME || 'goose.min.js';
+const fileName = process.env.VUE_APP_TRACKER_FILE || 'goose.min.js';
 
 /**
  * build tracker to `dist`

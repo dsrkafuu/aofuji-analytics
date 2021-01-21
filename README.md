@@ -14,10 +14,10 @@ render => name => components => props => data => computed => watch => methods =>
 
 ## Bypass Block Extensions
 
-Add `TRACKER_FILENAME` environment variable to customize the tracker script name, for example:
+Add `VUE_APP_TRACKER_FILE` environment variable to customize the tracker script name, for example:
 
 ```
-TRACKER_FILENAME="jquery.min.js"
+VUE_APP_TRACKER_FILE="jquery.min.js"
 ```
 
 ## Local Development
@@ -44,7 +44,7 @@ The varibales below are available both in development mode and production mode:
 ```
 SERVER_PORT=3000  # control panel server port
 DATABASE_URL="mongodb://localhost:27017/goosedb_preview" # database url (mongodb)
-TRACKER_FILENAME="goose.min.js" # tracker script file name
+VUE_APP_TRACKER_FILE="goose.min.js" # tracker script file name
 VUE_APP_TITLE="Goose Analytics (Prototype)" # app title on control panel
 ```
 
@@ -60,13 +60,10 @@ SERVER_API_PORT=3001
 
 ### Production
 
-Production mode needs `npm run build` first. Both the API server and website files built are provided by expressjs on port `SERVER_PORT`.
-
-If you have a server with SSL cert which can enable HTTPS, use `HELMET=1` to enable Helmet for security.
+Production mode needs `npm run build` first. Both the API server and website files built are provided by express.js on port `SERVER_PORT`.
 
 ```
 BASE_URL="/"
-HELMET=1
 ```
 
 ## License

@@ -24,7 +24,7 @@ export default {
     async handleTest() {
       let res, buf;
       try {
-        res = await this.$axios.get('/debug');
+        res = await this.$axios.get('/debug', { headers: { 'Cache-Control': 'no-cache' } });
         this.testAPI = res.data;
         buf = 'debug test data got';
         this.$info(buf);

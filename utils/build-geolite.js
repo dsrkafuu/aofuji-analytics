@@ -35,20 +35,20 @@ async function buildGeoLite() {
     // https request
     const request = https.get(url, (response) => {
       if (response.statusCode !== 200) {
-        reject(new Error('Failed to fetch geo database'));
+        reject(new Error('failed to fetch geo database'));
       }
       response.pipe(zippedFileStream);
     });
     // error handler
     const handleFailure = () => {
       fs.unlinkSync(zippedFile);
-      reject(new Error('Failed to write geo database file'));
+      reject(new Error('failed to write geo database file'));
     };
     zippedFileStream.on('error', handleFailure);
     request.on('error', handleFailure);
   });
   if (!fs.existsSync(zippedFile)) {
-    throw new Error('Failed to fetch geo database');
+    throw new Error('failed to fetch geo database');
   }
 
   // extract file
@@ -58,7 +58,7 @@ async function buildGeoLite() {
       .pipe(zlib.createGunzip())
       .pipe(tar.t());
     zippedFileStream.on('error', () => {
-      reject(new Error('Failed to read compressed geo database'));
+      reject(new Error('failed to read compressed geo database'));
     });
     zippedFileStream.on('entry', (entry) => {
       if (entry.path.endsWith('.mmdb')) {
@@ -67,7 +67,7 @@ async function buildGeoLite() {
         entry.pipe(extractedFileStream);
         extractedFileStream.on('error', () => {
           fs.unlinkSync(file);
-          reject(new Error('Failed to write extracted geo database'));
+          reject(new Error('failed to write extracted geo database'));
         });
         extractedFileStream.on('finish', () => {
           resolve();

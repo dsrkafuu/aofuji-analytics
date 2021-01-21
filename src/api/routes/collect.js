@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const requestIP = require('../utils/requestIP.js');
+const buildError = require('../utils/buildError.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
 
 /* deps */
@@ -18,32 +19,27 @@ const corsOptions = {
   origin: true,
   methods: 'POST',
   credentials: true,
-  maxAge: 86400,
+  maxAge: 86400, // 1 day
 };
 
 module.exports = (router) => {
-  // cors prefetch
   router.options('/collect', cors(corsOptions));
 
-  // collect route
   router.post('/collect', cors(corsOptions), async (req, res) => {
-    console.log(`[debug] ${Date.now()} start collect route`);
     const { type, id, date, data } = req.body;
 
-    // get website
+    // init website
     let website = null;
     try {
       website = await Website.findById(id).lean();
-      if (!website) {
-        throw new Error();
-      }
     } catch {
-      const err = new Error('request website not allowed');
-      err.status = 403;
-      throw err;
+      throw buildError(403, 'request website not allowed');
     }
-    console.log(`[debug] ${Date.now()} get website done`);
+    if (!website) {
+      throw buildError(403, 'request website not allowed');
+    }
 
+    // collect route
     try {
       // check whether is a exist session
       const uuid = req.cookies.goose_uuid || v4();
@@ -52,17 +48,8 @@ module.exports = (router) => {
         session = await Session.create({ uuid, _date: date });
         res.cookie('goose_uuid', uuid, { sameSite: 'lax' });
       }
-      console.log(`[debug] ${Date.now()} get session done`);
 
       // data process
-      console.log();
-      console.log('[WIP] TYPE:', type);
-      console.log('[WIP] TIME:', date);
-      console.log('[WIP] UUID:', uuid);
-      console.log('[WIP] SITE:', website._id);
-      console.log('[WIP] DATA:', data);
-      console.log();
-
       switch (type) {
         case 'view': {
           const works = [];
@@ -78,11 +65,10 @@ module.exports = (router) => {
           // check whether need to update session data
           if (data.lang || data.scrn) {
             // language & screen
-            session.language = data.lang;
-            session.screen = data.scrn;
+            session.language = data.lang || undefined;
+            session.screen = data.scrn || undefined;
             // browser & system & platform
-            const ua = req.get('User-Agent');
-            const bowser = Bowser.parse(ua);
+            const bowser = Bowser.parse(req.get('User-Agent'));
             session.browser = (bowser.browser.name || '').toLowerCase() || undefined;
             session.system = (bowser.os.name || '').toLowerCase() || undefined;
             session.platform = (bowser.platform.type || '').toLowerCase() || undefined;
@@ -92,7 +78,6 @@ module.exports = (router) => {
             works.push(session.save());
           }
           await Promise.all(works);
-          console.log(`[debug] ${Date.now()} record view done`);
           break;
         }
 
@@ -112,19 +97,15 @@ module.exports = (router) => {
               // first view before this leave
               { sort: { _date: -1 } }
             );
-            console.log(`[debug] ${Date.now()} record leave done`);
           }
           break;
         }
       }
     } catch {
-      const err = new Error('error processing data');
-      err.status = 500;
-      throw err;
+      throw buildError(500, 'error processing data');
     }
 
     // send response
-    console.log(`[debug] ${Date.now()} collect route done`);
     res.status(204).send();
   });
 };

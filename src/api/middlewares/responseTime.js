@@ -1,7 +1,7 @@
 const onHeaders = require('on-headers');
 
 /**
- * show response time in log
+ * attach response time to headers
  */
 module.exports = () => async (req, res, next) => {
   const startTime = Date.now();
