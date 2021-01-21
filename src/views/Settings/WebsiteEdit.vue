@@ -2,7 +2,7 @@
   <div class="website-edit">
     <GHeader :text="`${id ? 'editing' : 'adding'} website`">
       <GButton @click="handleExit"><GIconTimes /></GButton>
-      <GButton><GIconCheck /></GButton>
+      <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
     <div class="website-edit-line" v-show="id">
       <span>id</span>
@@ -43,32 +43,61 @@ export default {
      * @param {string} id
      */
     async fetchWebsite(id) {
-      let res;
+      let res, buf;
       try {
         res = await this.$axios.get(`/website/${id}`);
+        this.name = res.data.name || '';
+        this.domain = res.data.domain || '';
+        buf = 'website data initialized';
+        logInfo(buf, res.data);
       } catch (e) {
-        this.$error(`failed to fetch website info`);
-        logError(`failed to fetch websites ${id}`, e);
-        res = null;
+        buf = 'failed to fetch website info';
+        this.$error(buf);
+        logError(buf, e);
       }
-      this.name = res.data.name || '';
-      this.domain = res.data.domain || '';
+    },
+    /**
+     * add a new website or modify website data
+     */
+    async handleCheck() {
+      let res, buf;
+      try {
+        if (this.id) {
+          res = await this.$axios.put(`/website/${this.id}`, {
+            name: this.name,
+            domain: this.domain,
+            isPublic: false,
+          });
+          buf = 'website modified';
+        } else {
+          res = await this.$axios.post('/website', {
+            username: 'admin',
+            name: this.name,
+            domain: this.domain,
+            isPublic: false,
+          });
+          buf = 'new website added';
+        }
+        this.$info(buf);
+        logInfo(buf, res.data);
+        this.$store.dispatch('EDIT_SETTING'); // exit editing
+      } catch (e) {
+        buf = `failed to ${this.id ? 'modify website' : 'add new website'}`;
+        this.$error(buf);
+        logError(buf, e);
+      }
     },
     /**
      * exit editing
      */
     handleExit() {
       this.$store.dispatch('EDIT_SETTING');
-      logInfo(`website editing/adding cancelled`);
     },
   },
   async activated() {
     // if editing instead of creating
     if (this.id) {
       await this.fetchWebsite(this.id);
-      logInfo(`website ${this.id} initialized`);
-    } else {
-      logInfo(`adding new website`);
     }
   },
   deactivated() {

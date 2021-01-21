@@ -3,7 +3,7 @@
     <GHeader text="user settings">
       <GButton @click="handleAdd"><GIconPlus /></GButton>
     </GHeader>
-    <GList :data="data" control @edit="handleEdit"></GList>
+    <GList :data="data" control @edit="handleEdit" @delete="handleDelete"></GList>
   </div>
 </template>
 
@@ -49,6 +49,13 @@ export default {
      */
     handleAdd() {
       this.$error('multi-user feature coming soon');
+    },
+    /**
+     * [TODO]
+     * handle user delete
+     */
+    handleDelete() {
+      this.$error("you can't delete root user");
     },
     /**
      * handle user edit

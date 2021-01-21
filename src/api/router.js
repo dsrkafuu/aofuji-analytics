@@ -1,6 +1,7 @@
 /* utils */
 const { Router } = require('express');
 const router = Router();
+const buildError = require('./utils/buildError.js');
 // db
 const { mongoose } = require('./utils/mongoose.js');
 router.use(mongoose());
@@ -59,9 +60,7 @@ require('./routes/websites.js')(router);
 
 /* api error handler */
 router.get('/*', async () => {
-  const err = new Error('route not found');
-  err.status = 404;
-  throw err;
+  throw buildError(404, 'route not found');
 });
 router.use(require('./middlewares/errorHandler.js')());
 
