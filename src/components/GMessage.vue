@@ -2,6 +2,7 @@
   <transition-group tag="div" name="g-message" class="g-message-wrapper">
     <div :class="['g-message', `g-message-${item.type}`]" v-for="item of messages" :key="item.id">
       <span>{{ item.text }}</span>
+      <GButton type="full-height" @click="handleClose(item.id)"><GIconTimes /></GButton>
     </div>
   </transition-group>
 </template>
@@ -18,6 +19,15 @@ export default {
   computed: {
     messages() {
       return this.$store.state.MESSAGE.messages;
+    },
+  },
+  methods: {
+    /**
+     * close this message
+     * @param {string} id
+     */
+    handleClose(id) {
+      this.$store.dispatch('CLOSE_MESSAGE', { id });
     },
   },
 };
@@ -41,7 +51,17 @@ export default {
   line-height: 3rem;
   box-shadow: var(--shadow-info);
   border-radius: $radius;
-  padding: 0 1rem;
+  padding-left: 1rem;
+  display: flex;
+  align-items: center;
+
+  & > span {
+    flex: 1 1 auto;
+  }
+
+  & > .g-button {
+    overflow: hidden;
+  }
 }
 
 .g-message-error {
