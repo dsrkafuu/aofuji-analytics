@@ -11,7 +11,7 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '../../utils/loggers.js';
 
 export default {
   name: 'About',

@@ -14,6 +14,7 @@ const Website = require('../models/Website.js')(mongoose);
     console.error('[goose api] environment variable DATABASE_URL not set');
     return;
   }
+  mongoose.set('returnOriginal', false);
   mongoose
     .connect(dbURL, {
       useNewUrlParser: true,
@@ -46,4 +47,16 @@ module.exports = {
   User,
   View,
   Website,
+  // select for `create()`
+  select: (result, keys) => {
+    let ret = result;
+    ret.toObject && (ret = ret.toObject());
+    keys = ['_id', ...(keys.split(' ') || [])];
+    for (let key in ret) {
+      if (!keys.includes(key)) {
+        delete ret[key];
+      }
+    }
+    return ret;
+  },
 };

@@ -1,17 +1,19 @@
 /* utils */
 const buildError = require('../utils/buildError.js');
-const { Website, User } = require('../utils/mongoose.js');
+const { Website, User, select } = require('../utils/mongoose.js');
+
+const selectKeys = 'name domain isPublic';
 
 module.exports = (router) => {
   // get all websites
   router.get('/website', async (req, res) => {
-    const result = await Website.find({}).lean();
+    const result = await Website.find({}).select(selectKeys).limit(50).lean();
     res.send(result);
   });
 
   // get one website
   router.get('/website/:id', async (req, res) => {
-    const result = await Website.findById(req.params.id).lean();
+    const result = await Website.findById(req.params.id).select(selectKeys).lean();
     res.send(result);
   });
 
@@ -27,7 +29,7 @@ module.exports = (router) => {
         isPublic,
         _date: Date.now(),
       });
-      res.status(201).send(result);
+      res.status(201).send(select(result, selectKeys));
     } else {
       throw buildError(403, 'website user not found');
     }
@@ -41,7 +43,9 @@ module.exports = (router) => {
       domain,
       isPublic,
       _date: Date.now(),
-    }).lean();
+    })
+      .select(selectKeys)
+      .lean();
     res.status(201).send(result);
   });
 

@@ -3,22 +3,34 @@
     <GHeader text="website settings">
       <GButton @click="handleAdd"><GIconPlus /></GButton>
     </GHeader>
-    <GList :data="data" control type="extend" @edit="handleEdit" @delete="handleDelete"></GList>
+    <GList :data="websites" control type="extend" @edit="handleEdit" @delete="handleDelete"></GList>
   </div>
 </template>
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/logger.js';
-import { SETTING_TYPES } from '../../utils/constants.js';
-const { WEBSITE } = SETTING_TYPES;
+import { logInfo, logError } from '../../utils/loggers.js';
+import { SETTINGS_TYPES } from '../../utils/constants.js';
+const { WEBSITE } = SETTINGS_TYPES;
 
 export default {
   name: 'WebsiteSettings',
-  data() {
-    return {
-      data: [],
-    };
+  computed: {
+    websites() {
+      const ret = [];
+      const websites = this.$store.state.SETTINGS.websites;
+      if (websites && Array.isArray(websites)) {
+        for (let i = 0; i < websites.length; i++) {
+          const site = {};
+          site.id = websites[i]._id;
+          site.text = websites[i].name;
+          site.sub = websites[i].domain;
+          site.label = websites[i].isPublic ? 'public' : 'private';
+          ret.push(site);
+        }
+      }
+      return ret;
+    },
   },
   methods: {
     /**
@@ -28,57 +40,47 @@ export default {
       let res, buf;
       try {
         res = await this.$axios.get('/website');
+        this.$store.commit('UPDATE_ALL_WEBSITES', { data: res.data });
         buf = 'website list initialized';
         logInfo(buf);
       } catch (e) {
         buf = 'failed to fetch website list';
         this.$error(buf);
         logError(buf, e);
-        return;
-      }
-      if (res && Array.isArray(res.data)) {
-        for (let i = 0; i < res.data.length; i++) {
-          const site = res.data[i];
-          site.id = site._id;
-          site.text = site.name;
-          site.sub = site.domain;
-          site.label = site.isPublic ? 'public' : 'private';
-        }
-        this.data = res.data;
       }
     },
     /**
      * handle website add
      */
     handleAdd() {
-      this.$store.dispatch('EDIT_SETTING', { type: WEBSITE });
-    },
-    /**
-     * handle website delete
-     */
-    async handleDelete(id) {
-      let res, buf;
-      try {
-        res = await this.$axios.delete(`/website/${id}`);
-        await this.fetchWebsites(); // refresh list
-        buf = 'website removed';
-        this.$info(buf);
-        logInfo(buf, res.data);
-      } catch (e) {
-        buf = 'failed to remove website';
-        this.$error(buf);
-        logError(buf, e);
-      }
+      this.$store.commit('TRIGGER_EDITING', { type: WEBSITE });
     },
     /**
      * handle website edit
      * @param {string} id
      */
     handleEdit(id) {
-      this.$store.dispatch('EDIT_SETTING', { type: WEBSITE, id });
+      this.$store.commit('TRIGGER_EDITING', { type: WEBSITE, id });
+    },
+    /**
+     * handle website delete
+     */
+    async handleDelete(id) {
+      let buf;
+      try {
+        await this.$axios.delete(`/website/${id}`);
+        this.$store.commit('REMOVE_WEBSITE', { id });
+        buf = 'website removed';
+        this.$info(buf);
+        logInfo(buf, id);
+      } catch (e) {
+        buf = 'failed to remove website';
+        this.$error(buf);
+        logError(buf, e);
+      }
     },
   },
-  async activated() {
+  async mounted() {
     await this.fetchWebsites();
   },
 };

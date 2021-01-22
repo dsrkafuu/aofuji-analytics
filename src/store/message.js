@@ -1,6 +1,6 @@
 /* utils */
-import { ID } from '../utils/id.js';
-const idm = new ID(); // id manager
+import { RIDManager } from '../utils/RIDManager.js';
+const rIDManager = new RIDManager(); // id manager
 
 export const MESSAGE = {
   state: () => ({
@@ -21,7 +21,7 @@ export const MESSAGE = {
     REMOVE_MESSAGE(state) {
       const message = state.messages.shift();
       message.timeout && clearTimeout(message.timeout);
-      idm.remove(message.id);
+      rIDManager.remove(message.id);
     },
   },
   actions: {
@@ -29,7 +29,7 @@ export const MESSAGE = {
      * trigger a message
      */
     async TRIGGER_MESSAGE({ commit }, payload) {
-      payload.id = idm.get();
+      payload.id = rIDManager.get();
       payload.timeout = setTimeout(() => commit('REMOVE_MESSAGE'), 10000);
       commit('ADD_MESSAGE', payload);
     },

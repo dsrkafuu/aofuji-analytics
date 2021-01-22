@@ -21,7 +21,8 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@/utils/loggers.js';
+import { findObjectIndexInArray } from '@/utils/finders.js';
 
 export default {
   name: 'WebsiteEdit',
@@ -39,21 +40,15 @@ export default {
   },
   methods: {
     /**
-     * fetch website data with id when activated
-     * @param {string} id
+     * init website data with id when activated
      */
-    async fetchWebsite(id) {
-      let res, buf;
-      try {
-        res = await this.$axios.get(`/website/${id}`);
-        this.name = res.data.name || '';
-        this.domain = res.data.domain || '';
-        buf = 'website data initialized';
-        logInfo(buf, res.data);
-      } catch (e) {
-        buf = 'failed to fetch website info';
-        this.$error(buf);
-        logError(buf, e);
+    initWebsite() {
+      const sites = this.$store.state.SETTINGS.websites;
+      const index = findObjectIndexInArray(sites, '_id', this.id);
+      if (!Number.isNaN(index)) {
+        const site = sites[index];
+        this.name = site.name;
+        this.domain = site.domain;
       }
     },
     /**
@@ -68,6 +63,7 @@ export default {
             domain: this.domain,
             isPublic: this.isPublic,
           });
+          this.$store.commit('UPDATE_WEBSITE', { id: this.id, data: res.data });
           buf = 'website modified';
         } else {
           res = await this.$axios.post('/website', {
@@ -76,11 +72,12 @@ export default {
             domain: this.domain,
             isPublic: this.isPublic,
           });
+          this.$store.commit('ADD_WEBSITE', { data: res.data });
           buf = 'new website added';
         }
         this.$info(buf);
-        logInfo(buf, res.data);
-        this.$store.dispatch('EDIT_SETTING'); // exit editing
+        logInfo(buf, res.data._id);
+        this.handleExit();
       } catch (e) {
         buf = `failed to ${this.id ? 'modify website' : 'add new website'}`;
         this.$error(buf);
@@ -91,13 +88,13 @@ export default {
      * exit editing
      */
     handleExit() {
-      this.$store.dispatch('EDIT_SETTING');
+      this.$store.commit('EXIT_EDITING');
     },
   },
-  async activated() {
+  activated() {
     // if editing instead of creating
     if (this.id) {
-      await this.fetchWebsite(this.id);
+      this.initWebsite();
     }
   },
   deactivated() {

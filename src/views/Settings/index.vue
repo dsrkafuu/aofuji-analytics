@@ -26,29 +26,29 @@
 <script>
 /* components */
 import WebsiteSettings from './WebsiteSettings.vue';
-import UserSettings from './UserSettings.vue';
+// import UserSettings from './UserSettings.vue';
 import About from './About.vue';
 import WebsiteEdit from './WebsiteEdit.vue';
-import UserEdit from './UserEdit.vue';
+// import UserEdit from './UserEdit.vue';
 
 /* utils */
-import { SETTING_TYPES } from '../../utils/constants.js';
-const { USER, WEBSITE } = SETTING_TYPES;
+import { SETTINGS_TYPES } from '../../utils/constants.js';
+const { WEBSITE } = SETTINGS_TYPES;
 
 export default {
   name: 'Settings',
   components: {
     WebsiteSettings,
-    UserSettings,
+    // UserSettings,
     About,
     WebsiteEdit,
-    UserEdit,
+    // UserEdit,
   },
   data() {
     return {
       tabs: [
         { name: 'Websites', component: WebsiteSettings },
-        { name: 'Users', component: UserSettings },
+        // { name: 'Users', component: UserSettings },
         { name: 'About', component: About },
       ],
       curIndex: 0, // current index
@@ -60,8 +60,8 @@ export default {
       switch (this.$store.state.SETTINGS.editing.type) {
         case WEBSITE:
           return WebsiteEdit;
-        case USER:
-          return UserEdit;
+        // case USER:
+        //   return UserEdit;
         default:
           return this.tabs[this.curIndex].component;
       }
@@ -73,7 +73,7 @@ export default {
      * @param {number} newIndex
      */
     changeTab(newIndex) {
-      this.$store.dispatch('EDIT_SETTING'); // exit editing
+      this.$store.commit('EXIT_EDITING'); // exit editing
       this.curIndex = newIndex;
     },
   },

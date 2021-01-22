@@ -1,4 +1,4 @@
-class ID {
+class RIDManager {
   /**
    * @constructor
    * init id set
@@ -31,4 +31,4 @@ class ID {
   }
 }
 
-export { ID };
+export { RIDManager };

@@ -11,7 +11,7 @@ export const THEME_TYPES = {
 };
 
 /* settings */
-export const SETTING_TYPES = {
+export const SETTINGS_TYPES = {
   USER: 'goose_user',
   WEBSITE: 'goose_website',
 };

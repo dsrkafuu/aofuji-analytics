@@ -1,4 +1,4 @@
-import { logError } from './logger.js';
+import { logError } from './loggers.js';
 
 /**
  * @param {string} key
