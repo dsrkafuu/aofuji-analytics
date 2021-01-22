@@ -34,16 +34,16 @@ $colors-dark: (
   --shadow-error: 0 0.125rem 0.5rem rgba(255, 0, 0, 0.25);
 }
 
-body[data-theme='auto'] {
+body[data-theme='goose_theme-auto'] {
   @include light();
 
   @media (prefers-color-scheme: dark) {
     @include dark();
   }
 }
-body[data-theme='light'] {
+body[data-theme='goose_theme-light'] {
   @include light();
 }
-body[data-theme='dark'] {
+body[data-theme='goose_theme-dark'] {
   @include dark();
 }

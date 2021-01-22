@@ -16,11 +16,8 @@
 export default {
   name: 'GMessage',
   computed: {
-    status() {
-      return this.$store.state.messageStatus;
-    },
     messages() {
-      return this.$store.state.messages;
+      return this.$store.state.MESSAGE.messages;
     },
   },
 };

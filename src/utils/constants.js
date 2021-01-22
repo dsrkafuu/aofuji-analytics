@@ -1,14 +1,17 @@
 /* theme */
-export const THEME_BODY_ATTR = 'data-theme'; // body attribute name
-export const THEME_STORAGE_KEY = 'goose-theme'; // local storage key
+// body attribute name
+export const THEME_BODY_ATTR = 'data-theme';
+// local storage key
+export const THEME_STORAGE_KEY = 'goose_theme';
+// available themes
 export const THEME_TYPES = {
-  AUTO: 'auto',
-  LIGHT: 'light',
-  DARK: 'dark',
-}; // available themes
+  AUTO: 'goose_theme-auto',
+  LIGHT: 'goose_theme-light',
+  DARK: 'goose_theme-dark',
+};
 
 /* settings */
 export const SETTING_TYPES = {
-  USER: 'user',
-  WEBSITE: 'website',
+  USER: 'goose_user',
+  WEBSITE: 'goose_website',
 };

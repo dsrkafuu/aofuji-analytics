@@ -57,7 +57,7 @@ export default {
   computed: {
     // current tab object
     curTab() {
-      switch (this.$store.state.editing.type) {
+      switch (this.$store.state.SETTINGS.editing.type) {
         case WEBSITE:
           return WebsiteEdit;
         case USER:

@@ -27,14 +27,10 @@ module.exports = (router) => {
       response.db = results;
 
       // geodb check
-      const internal = { ip: '1.1.1.1', ...maxmind.get('1.1.1.1') };
-      response.maxmind = {
-        internal,
-      };
       const userIP = requestIP(req);
       if (userIP) {
         const user = maxmind.get(userIP);
-        response.maxmind.user = { ip: userIP, ...user };
+        response.maxmind = { ip: userIP, ...user };
       }
 
       // send response

@@ -1,3 +1,5 @@
+require('./utils/env.js')();
+
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? process.env.BASE_URL || '/' : '/',
   productionSourceMap: false,

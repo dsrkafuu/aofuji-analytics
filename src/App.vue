@@ -8,6 +8,7 @@
 export default {
   name: 'App',
   created() {
+    // init theme to dom
     this.$store.dispatch('INIT_THEME');
   },
 };

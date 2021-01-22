@@ -2,6 +2,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+
 /* components */
 import Base from '../views/Base/Base.vue';
 import Login from '../views/Login.vue';

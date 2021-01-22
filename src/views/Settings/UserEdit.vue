@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     id() {
-      return this.$store.state.editing.id;
+      return this.$store.state.SETTINGS.editing.id;
     },
   },
   methods: {

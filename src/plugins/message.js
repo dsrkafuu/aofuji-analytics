@@ -1,5 +1,5 @@
 import GMessage from '../components/GMessage.vue';
-import store from '../store';
+import store from '../store/index.js';
 
 export default {
   /**
