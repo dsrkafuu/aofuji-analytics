@@ -3,44 +3,49 @@
     <GHeader text="user settings">
       <GButton @click="handleAdd"><GIconPlus /></GButton>
     </GHeader>
-    <GList :data="data" control @edit="handleEdit" @delete="handleDelete"></GList>
+    <GList :data="users" control @edit="handleEdit" @delete="handleDelete"></GList>
   </div>
 </template>
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/logger.js';
-import { SETTING_TYPES } from '../../utils/constants.js';
-const { USER } = SETTING_TYPES;
+import { logInfo, logError } from '../../utils/loggers.js';
+import { SETTINGS_TYPES } from '../../utils/constants.js';
+const { USER } = SETTINGS_TYPES;
 
 export default {
   name: 'UserSettings',
-  data() {
-    return {
-      data: [],
-    };
+  computed: {
+    users() {
+      const ret = [];
+      const users = this.$store.state.SETTINGS.users;
+      if (users && Array.isArray(users)) {
+        for (let i = 0; i < users.length; i++) {
+          const user = {};
+          user.id = users[i]._id;
+          user.text = users[i].username;
+          user.label = users[i].isAdmin ? 'admin' : 'user';
+          ret.push(user);
+        }
+      }
+      return ret;
+    },
   },
   methods: {
     /**
      * fetch users data when first mounted
      */
     async fetchUsers() {
-      let res;
+      let res, buf;
       try {
         res = await this.$axios.get('/user');
+        this.$store.commit('UPDATE_ALL_USERS', { data: res.data });
+        buf = 'user list initialized';
+        logInfo(buf);
       } catch (e) {
-        this.$error(`failed to fetch users`);
-        logError(`failed to fetch users`, e);
-        res = null;
-      }
-      if (res && Array.isArray(res.data)) {
-        for (let i = 0; i < res.data.length; i++) {
-          const user = res.data[i];
-          user.id = user._id;
-          user.text = user.username;
-          user.label = user.isAdmin ? 'admin' : 'user';
-        }
-        this.data = res.data;
+        buf = 'failed to fetch user list';
+        this.$error(buf);
+        logError(buf, e);
       }
     },
     /**
@@ -51,23 +56,22 @@ export default {
       this.$error('multi-user feature coming soon');
     },
     /**
+     * handle user edit
+     * @param {string} id
+     */
+    handleEdit(id) {
+      this.$store.commit('TRIGGER_EDITING', { type: USER, id });
+    },
+    /**
      * [TODO]
      * handle user delete
      */
     handleDelete() {
       this.$error("you can't delete root user");
     },
-    /**
-     * handle user edit
-     * @param {string} id
-     */
-    handleEdit(id) {
-      this.$store.dispatch('EDIT_SETTING', { type: USER, id });
-    },
   },
-  async activated() {
+  async mounted() {
     await this.fetchUsers();
-    logInfo('users data initialized');
   },
 };
 </script>

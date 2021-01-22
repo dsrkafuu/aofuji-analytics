@@ -8,9 +8,10 @@ export const SETTINGS = {
     // currently editing state
     editing: { type: '', id: '' },
     // settings data
-    user: [],
+    users: [],
     websites: [],
   }),
+
   mutations: {
     // go to editing page
     // payload: { type, id }
@@ -24,6 +25,24 @@ export const SETTINGS = {
     // exit editing page
     EXIT_EDITING(state) {
       state.editing = { type: '', id: '' };
+    },
+
+    // update all users
+    // payload: { data }
+    UPDATE_ALL_USERS(state, payload) {
+      if (payload && Array.isArray(payload.data)) {
+        state.users = payload.data;
+      }
+    },
+    // update a user
+    // payload: { id, date }
+    UPDATE_USER(state, payload) {
+      if (payload && payload.id && payload.data?._id) {
+        const index = findObjectIndexInArray(state.users, '_id', payload.id);
+        if (!Number.isNaN(index)) {
+          state.users.splice(index, 1, payload.data);
+        }
+      }
     },
 
     // update all websites
@@ -61,5 +80,6 @@ export const SETTINGS = {
       }
     },
   },
+
   actions: {},
 };

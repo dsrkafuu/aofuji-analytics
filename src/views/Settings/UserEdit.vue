@@ -21,7 +21,7 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '../../utils/loggers.js';
 
 export default {
   name: 'UserEdit',
@@ -39,9 +39,9 @@ export default {
   },
   methods: {
     /**
-     * fetch user data with id when activated
+     * init user data with id when activated
      */
-    fetchUser() {
+    initUser() {
       this.username = 'admin';
     },
     /**
@@ -58,10 +58,11 @@ export default {
           password: this.password,
           isAdmin: this.isAdmin,
         });
+        this.$store.commit('UPDATE_USER', { id: this.id, data: res.data });
         buf = 'user modified';
         this.$info(buf);
-        logInfo(buf, res.data);
-        this.$store.dispatch('EDIT_SETTING'); // exit editing
+        logInfo(buf, res.data._id);
+        this.handleExit();
       } catch (e) {
         buf = 'failed to modify user';
         this.$error(buf);
@@ -72,14 +73,13 @@ export default {
      * exit editing
      */
     handleExit() {
-      this.$store.dispatch('EDIT_SETTING');
+      this.$store.commit('EXIT_EDITING');
     },
   },
   async activated() {
     // if editing instead of creating
     if (this.id) {
-      await this.fetchUser();
-      logInfo(`user ${this.id} initialized`);
+      this.initUser();
     }
   },
   deactivated() {
