@@ -13,7 +13,7 @@
   }
   const GOOSE_API = `${_API}${_API.endsWith('/') ? '' : '/'}collect`;
   const GOOSE_BASE = (() => {
-    if (_BASE.startsWith('/')) {
+    if (_BASE && _BASE.startsWith('/')) {
       return removeTrail(_BASE);
     }
     return '/';
