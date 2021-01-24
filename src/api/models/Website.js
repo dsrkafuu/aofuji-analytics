@@ -8,6 +8,6 @@ module.exports = (mongoose) => {
   });
 
   schema.index({ _date: -1 });
-
+  schema.index({ _user: 1 });
   return mongoose.model('Website', schema);
 };

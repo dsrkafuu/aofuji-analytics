@@ -1,126 +1,150 @@
 /*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
 
-((window, navigator, location, document) => {
+(function () {
   /* init */
 
-  // get window props
-  const dpr = window.devicePixelRatio || 1;
-
-  // get tracker settings
-  const { GOOSE_ID, GOOSE_API: _API, GOOSE_BASE: _BASE, GOOSE_SPA: _SPA } = window;
-  if (!_API || !GOOSE_ID || navigator.doNotTrack === '1') {
+  const { GOOSE_ID: _ID, GOOSE_API: __API, GOOSE_BASE: __BASE, GOOSE_SPA: _SPA } = window;
+  if (!__API || !__API.startsWith('http') || !_ID || navigator.doNotTrack === '1') {
     return;
   }
-  const GOOSE_API = `${_API}${_API.endsWith('/') ? '' : '/'}collect`;
-  const GOOSE_BASE = (() => {
-    if (_BASE && _BASE.startsWith('/')) {
-      return removeTrail(_BASE);
-    }
-    return '/';
-  })();
-  const GOOSE_SPA = _SPA || false;
+  const _API = `${__API}${__API.endsWith('/') ? '' : '/'}collect`;
+  const _BASE = __BASE && __BASE.startsWith('/') ? formatPath(__BASE) : '/';
+  const [LS_KEY, LS_SID, LS_CACHE] = ['goose_data', 'sid', 'cache'];
+  const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
 
   /* functions */
 
   /**
    * send data to api
    * @param {string} type
+   * @param {string} path
    * @param {Object} payload
-   * @return {Promise}
    */
-  async function sendData(type, payload) {
+  function sendData(type, path, payload) {
+    // get session id
+    let sid = getLS(LS_SID);
+    if (!sid || sid.length !== 24) {
+      sid = undefined;
+      // if sid not exist and not sending `view` data
+      if (type !== 'view') {
+        return;
+      }
+    }
+    // construct data
     const blob = new Blob(
       [
         JSON.stringify({
-          type,
-          id: GOOSE_ID,
-          date: Date.now(),
-          data: payload,
+          t: type, // type
+          id: _ID, // id
+          sid, // session id
+          d: Date.now(), // date
+          p: removeBase(path), // pathname
+          ...payload,
         }),
       ],
       { type: 'application/json' }
     );
-    return new Promise((reslove, reject) => {
-      if (navigator.sendBeacon) {
-        const res = navigator.sendBeacon(GOOSE_API, blob);
-        !res && reject();
-        reslove();
-      } else {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', GOOSE_API, true);
-        xhr.onload = () => reslove(xhr);
-        xhr.onerror = () => reject();
-        xhr.send(blob);
+    // when sid exist and `sendBeacon` available
+    if (sid && navigator.sendBeacon) {
+      const res = navigator.sendBeacon(_API, blob);
+      if (!res) {
+        logError('beacon request failed');
       }
-    });
-  }
-
-  /**
-   * remove trailing slash
-   * @param {string} pathname
-   * @return {string}
-   */
-  function removeTrail(pathname) {
-    const exp = /^(\/.*[^/])\/?$/.exec(pathname);
-    if (exp && exp[1]) {
-      return exp[1];
     } else {
-      return '/';
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', _API);
+      xhr.responseType = 'json';
+      xhr.onload = () => {
+        // when got session from api
+        if (xhr.response.sid && xhr.status === 201) {
+          setLS(LS_SID, xhr.response.sid);
+        }
+      };
+      xhr.onerror = () => logError('xhr request failed');
+      xhr.send(blob);
     }
   }
 
   /**
    * format pathname
-   * @param {string} pathname
+   * @param {string} path
    * @return {string}
    */
-  function formatPath(pathname) {
-    pathname = removeTrail(pathname);
-    // only remove trail if spa
-    if (GOOSE_SPA) {
-      return pathname;
+  function formatPath(path) {
+    if (!path.startsWith('/')) {
+      path = `/${path}`;
     }
-    // remove base url if not spa
-    if (GOOSE_BASE === '/') {
-      return pathname;
+    // remove search params
+    let exp = path.split('?');
+    if (exp.length >= 2) {
+      path = exp[0];
     }
-    return pathname.split(GOOSE_BASE)[1] || '/';
+    // remove trailing slash
+    exp = /^(\/.*[^/])\/?$/.exec(path);
+    if (exp && exp[1]) {
+      path = exp[1];
+    } else {
+      path = '/';
+    }
+    return path;
   }
-
   /**
    * format referrer
-   * @param {string} referrer
+   * @param {string} ref
    * @return {string}
    */
-  function formatRef(referrer) {
-    // if spa same site
-    if (GOOSE_SPA && referrer.startsWith('/')) {
-      return removeTrail(referrer);
+  function formatRef(ref) {
+    // if passing pathname
+    if (ref.startsWith('/')) {
+      // [OLD] return removeBase(ref);
+      return '';
     }
-    if (referrer.startsWith('http')) {
+    // if passing full url
+    else if (/:\/\//i.exec(ref)) {
+      const url = new URL(ref);
       // samesite
-      if (referrer.includes(location.host)) {
-        const url = new URL(referrer);
-        return formatPath(url.pathname);
+      if (url.hostname === location.hostname) {
+        // [OLD] return removeBase(ref);
+        return '';
       }
       // other site
-      return referrer;
+      return url.hostname;
     }
     return '';
   }
+  /**
+   * remove base url, include `formatPath`
+   * @param {string} path
+   */
+  function removeBase(path) {
+    path = formatPath(path);
+    if (_BASE !== '/') {
+      path = path.split(_BASE)[1] || '/';
+    }
+    return path;
+  }
 
+  /**
+   * log an error
+   * @param {...any} args
+   */
+  function logError(...args) {
+    console.error('[goose analytics]', ...args);
+  }
   /**
    * set local storage
    * @param {string} key
    */
   function setLS(key, value) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+      data[key] = value;
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
     } catch {
+      logError('failed to set local stoarge');
       return;
     }
   }
-
   /**
    * get local storage
    * @param {string} key
@@ -128,8 +152,10 @@
    */
   function getLS(key) {
     try {
-      return JSON.parse(localStorage.getItem(key));
+      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+      return data[key];
     } catch {
+      logError('failed to get local stoarge');
       return null;
     }
   }
@@ -137,7 +163,7 @@
   /* tracker */
 
   // init pvt data
-  const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
+
   const pvtCtrl = {
     stat: PVT_INACTIVE, // active status
     strt: 0, // start time
@@ -179,45 +205,41 @@
 
   /**
    * send view data
-   * @param {string} pathname
-   * @param {string} referrer
+   * @param {string} path
+   * @param {string} ref
    */
-  const gooseView = (pathname, referrer) => {
+  const gooseView = (path, ref) => {
     // start pvt
     pvtCtrl.init();
     // those need to send every time
     const data = {
-      path: formatPath(pathname),
-      ref: formatRef(referrer) || undefined,
+      r: formatRef(ref) || undefined, // referrer
     };
-    // those do not need to send every time
-    let cache = Number(getLS('goose_cache'));
-    if (Number.isNaN(cache)) {
-      cache = -Infinity;
-    }
+    // those need to send first time or after 1 day
+    const cacheTime = getLS(LS_CACHE) || -Infinity;
     const now = Date.now();
-    if (Math.abs(now - cache) > 3600000 * 12) {
-      data.lang = navigator.language || undefined;
+    if (now - cacheTime > 86400 * 1000) {
+      data.lng = navigator.language || undefined; // language
+      // screen size
+      const dpr = devicePixelRatio || 1;
       if (screen.width) {
-        data.scrn = screen.width * dpr + 'x' + screen.height * dpr || undefined;
+        data.scn = screen.width * dpr + 'x' + screen.height * dpr || undefined;
       }
-      setLS('goose_cache', now);
+      setLS(LS_CACHE, now);
     }
     // send view data
-    sendData('view', data);
+    sendData('view', path, data);
   };
 
   /**
    * send leave data
-   * @param {string} pathname
+   * @param {string} path
    */
-  const gooseLeave = (pathname) => {
-    const data = {
-      path: formatPath(pathname),
-    };
+  const gooseLeave = (path) => {
+    const data = {};
     const pvt = pvtCtrl.end();
     data.pvt = pvt || undefined;
-    sendData('leave', data);
+    sendData('leave', path, data);
   };
 
   /**
@@ -225,11 +247,11 @@
    * @param {string} name
    * @param {Event|string} e
    */
-  const gooseEvent = (name, e) => {
+  const gooseEvent = (path, name, e) => {
     if (name) {
-      sendData('event', {
-        name: name,
-        type: (typeof e === 'string' ? e : e.type) || undefined,
+      sendData('event', path, {
+        en: name, // event name
+        et: (typeof e === 'string' ? e : e.type) || undefined, // event type
       });
     }
   };
@@ -240,13 +262,13 @@
   window.gooseLeave = gooseLeave;
   window.gooseEvent = gooseEvent;
 
-  if (!GOOSE_SPA) {
+  if (!_SPA) {
     // legacy mode
-    const pathname = location.pathname;
+    const path = location.pathname;
     // start view
-    gooseView(pathname, document.referrer);
+    gooseView(path, document.referrer);
     window.addEventListener('beforeunload', () => {
-      gooseLeave(pathname);
+      gooseLeave(path);
     });
   }
-})(window, window.navigator, window.location, window.document);
+})();

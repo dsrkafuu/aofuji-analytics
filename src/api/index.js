@@ -11,9 +11,9 @@ app.use(require('cookie-parser')());
 // compression
 app.use(require('compression')());
 // [TODO] cache control
-if (process.env.VERCEL) {
-  app.use(require('./middlewares/cacheControl.js')());
-}
+// if (process.env.VERCEL) {
+//   app.use(require('./middlewares/cacheControl.js')());
+// }
 
 /* routes */
 app.use('/api', require('./router.js'));
