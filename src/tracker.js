@@ -52,33 +52,34 @@
   function sendData(type, path, payload) {
     // get session id
     let sid = getLS(LS_SID);
-    if (!sid || sid.length !== 24) {
-      sid = undefined;
-      // if sid not exist and not sending `view` data
-      if (type !== 'view') {
-        return;
-      }
-    }
     // construct data
     const ec = encodeURIComponent;
-    let url = `${_API}?t=${type}&id=${_ID}&sid=${sid}&d=${Date.now()}`;
+    let url = `${_API}?t=${type}&id=${_ID}&d=${Date.now()}`;
+    if (sid) {
+      url += `&sid=${sid}`;
+    }
     url += `&p=${ec(removeBase(path))}`;
     for (let key in payload) {
       if (payload[key]) {
         url += `&${key}=${ec(payload[key])}`;
       }
     }
-    // when sid exist and `sendBeacon` available
-    if (sid && navigator.sendBeacon) {
+    // when not view type and `sendBeacon` available
+    if (type !== 'view' && navigator.sendBeacon) {
       navigator.sendBeacon(url);
     } else {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url);
-      xhr.responseType = 'json';
+      // [IE11 FIX] xhr.responseType = 'json';
       xhr.onload = () => {
         // when got session from api
-        if (xhr.response.sid && xhr.status === 201) {
-          setLS(LS_SID, xhr.response.sid);
+        if (xhr.response && xhr.status === 201) {
+          try {
+            const sid = JSON.parse(xhr.response).sid;
+            sid && setLS(LS_SID, sid);
+          } catch {
+            return;
+          }
         }
       };
       xhr.send();
@@ -117,7 +118,10 @@
     // get hostname
     const exp = /\/\/([^:/]*)/i.exec(ref);
     if (exp && exp[1]) {
-      return exp[1];
+      const refHost = exp[1];
+      if (location.hostname !== refHost) {
+        return refHost;
+      }
     }
     return undefined;
   }
@@ -188,10 +192,10 @@
     const data = {
       r: formatRef(ref), // referrer
     };
-    // those need to send first time or after 1 day
+    // those need to send first time or after 7 day
     const cacheTime = getLS(LS_CACHE) || -Infinity;
     const now = Date.now();
-    if (now - cacheTime > 86400 * 1000) {
+    if (now - cacheTime > 604800 * 1000) {
       data.lng = navigator.language || undefined; // language
       // screen size
       const dpr = devicePixelRatio || 1;

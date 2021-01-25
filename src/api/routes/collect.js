@@ -13,14 +13,33 @@ const corsOptions = {
   maxAge: 86400, // 1 day
 };
 
+/**
+ * check query type
+ * @param {string} type
+ * @param {any} value
+ */
+const checkType = (type, value) => {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  switch (type) {
+    case 'string':
+      return typeof value === 'string' ? value : String(value);
+    case 'number':
+      return typeof value === 'number' ? value : Number(value);
+    default:
+      return undefined;
+  }
+};
+
 const collectRoute = () => async (req, res) => {
   // get basic params
   let { t: type, id, sid, d: date, p: pathname } = req.query;
-  typeof type !== 'string' && (type = String(type));
-  typeof id !== 'string' && (id = String(id));
-  typeof sid !== 'string' && (sid = String(sid));
-  typeof date !== 'number' && (date = Number(date));
-  typeof pathname !== 'string' && (pathname = String(pathname));
+  type = checkType('string', type);
+  id = checkType('string', id);
+  sid = checkType('string', sid);
+  date = checkType('number', date);
+  pathname = checkType('string', pathname);
 
   // init website and session
   const initWebsite = async () => {
@@ -48,7 +67,11 @@ const collectRoute = () => async (req, res) => {
       needNewSession = true;
     }
     if (needNewSession) {
-      session = await Session.create({ _date: date });
+      if (type === 'view') {
+        session = await Session.create({ _date: date });
+      } else {
+        throw buildError(403, 'session init not allowed except view request');
+      }
     }
     return session;
   };
@@ -61,10 +84,10 @@ const collectRoute = () => async (req, res) => {
         const works = [];
         // get params
         let { r: referrer, lng: language, scn: screen } = req.query;
-        typeof referrer !== 'string' && (referrer = String(referrer));
-        typeof language !== 'string' && (language = String(language));
-        typeof screen !== 'string' && (screen = String(screen));
-        // not add same page view from same user in 5 minute
+        referrer = checkType('string', referrer);
+        language = checkType('string', language);
+        screen = checkType('string', screen);
+        // not add same page view from same user in 10 minute
         const lastView = await View.findOne({
           _date: { $lt: date },
           _session: session._id,
@@ -73,7 +96,7 @@ const collectRoute = () => async (req, res) => {
         })
           .sort({ _date: -1 })
           .lean();
-        if (!lastView || date - lastView._date > 300 * 1000) {
+        if (!lastView || date - lastView._date > 600 * 1000) {
           // save view
           const newView = {
             _date: date,
@@ -85,7 +108,7 @@ const collectRoute = () => async (req, res) => {
           works.push(View.create(newView));
         }
         // check whether need to update session data
-        if (language || screen) {
+        if (needNewSession || language || screen) {
           // load deps needed
           const path = require('path');
           const fs = require('fs');
@@ -114,7 +137,7 @@ const collectRoute = () => async (req, res) => {
 
       case 'leave': {
         let { pvt } = req.query;
-        typeof pvt !== 'number' && (pvt = Number(pvt));
+        pvt = checkType('number', pvt);
         if (pvt > 0) {
           // update pvt to last view
           await View.findOneAndUpdate(
