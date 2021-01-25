@@ -1,3 +1,7 @@
+/* deps */
+const isLocalhost = require('is-localhost-ip');
+const isBot = require('isbot');
+
 /* utils */
 const requestIP = require('../utils/requestIP.js');
 const buildError = require('../utils/buildError.js');
@@ -18,7 +22,7 @@ const corsOptions = {
  * @param {string} type
  * @param {any} value
  */
-const checkType = (type, value) => {
+function checkType(type, value) {
   if (value === undefined || value === null) {
     return undefined;
   }
@@ -30,7 +34,7 @@ const checkType = (type, value) => {
     default:
       return undefined;
   }
-};
+}
 
 const collectRoute = () => async (req, res) => {
   // get basic params
@@ -41,20 +45,20 @@ const collectRoute = () => async (req, res) => {
   date = checkType('number', date);
   pathname = checkType('string', pathname);
 
-  // init website and session
+  // init website
   const initWebsite = async () => {
     let website = null;
     try {
       website = await Website.findById(id).lean();
     } catch {
       website = null;
-      throw buildError(403, 'request website not allowed');
     }
     if (!website) {
-      throw buildError(403, 'request website not allowed');
+      throw buildError(400, 'request website not allowed');
     }
     return website;
   };
+  // init session
   let needNewSession = false;
   const initSession = async () => {
     let session = null;
@@ -70,12 +74,45 @@ const collectRoute = () => async (req, res) => {
       if (type === 'view') {
         session = await Session.create({ _date: date });
       } else {
-        throw buildError(403, 'session init not allowed except view request');
+        throw buildError(400, 'session init not allowed except view request');
       }
     }
     return session;
   };
-  const [website, session] = await Promise.all([initWebsite(), initSession()]);
+  // ip check
+  const clientIP = requestIP(req);
+  const checkIP = async () => {
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+    if (clientIP) {
+      let result = false;
+      try {
+        result = await isLocalhost(clientIP);
+      } catch {
+        result = true;
+      }
+      if (result) {
+        res.status(202).send();
+      }
+    }
+  };
+  // bot check
+  const clientUA = req.get('User-Agent');
+  const checkBot = async () => {
+    const result = isBot(clientUA);
+    if (result) {
+      res.status(202).send();
+    }
+  };
+
+  // parallel works
+  const [website, session] = await Promise.all([
+    initWebsite(),
+    initSession(),
+    checkIP(),
+    checkBot(),
+  ]);
 
   try {
     // data process
@@ -123,12 +160,15 @@ const collectRoute = () => async (req, res) => {
           session.screen = screen;
           // browser & system & platform
           const bowser = Bowser.parse(req.get('User-Agent'));
-          session.browser = (bowser.browser.name || '').toLowerCase() || undefined;
-          session.system = (bowser.os.name || '').toLowerCase() || undefined;
-          session.platform = (bowser.platform.type || '').toLowerCase() || undefined;
+          const fmtBowser = (str) => (str || '').toLowerCase().replace(/ +/gi, '-') || undefined;
+          session.browser = fmtBowser(bowser.browser.name);
+          session.system = fmtBowser(bowser.os.name);
+          session.platform = fmtBowser(bowser.platform.type);
           // location
-          const gd = maxmind.get(requestIP(req));
-          session.location = gd && gd.country ? gd.country.iso_code : undefined;
+          if (clientIP) {
+            const gd = maxmind.get(clientIP);
+            session.location = gd && gd.country ? gd.country.iso_code : undefined;
+          }
           works.push(session.save());
         }
         await Promise.all(works);

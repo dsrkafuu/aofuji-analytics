@@ -1,6 +1,7 @@
 /**
  * get request ip
- * @param {*} req express request
+ * @param {Object} req express request
+ * @return {string}
  */
 module.exports = (req) =>
   (

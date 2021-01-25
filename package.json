@@ -1,6 +1,6 @@
 {
   "name": "goose-analytics",
-  "version": "0.3.3",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "lint:web": "vue-cli-service lint",
@@ -23,11 +23,12 @@
     "cookie-parser": "~1.4.5",
     "cors": "~2.8.5",
     "express": "~5.0.0-alpha.8",
+    "is-localhost-ip": "~1.4.0",
+    "isbot": "~3.0.23",
     "maxmind": "~4.3.1",
     "mongoose": "~5.11.13",
     "normalize.css": "~8.0.1",
     "on-headers": "~1.0.2",
-    "uuid": "~8.3.2",
     "vue": "~2.6.12",
     "vue-router": "~3.4.9",
     "vuex": "~3.6.0"
