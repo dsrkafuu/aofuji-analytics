@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const buildError = require('../utils/buildError.js');
 
 // compile models
 const Event = require('../models/Event.js')(mongoose);
@@ -11,8 +12,7 @@ const Website = require('../models/Website.js')(mongoose);
 (function connectDB() {
   const dbURL = process.env.DATABASE_URL;
   if (!dbURL) {
-    console.error('[goose api] environment variable DATABASE_URL not set');
-    return;
+    throw buildError(500, 'environment variable DATABASE_URL not set');
   }
   mongoose.set('returnOriginal', false);
   mongoose
@@ -25,12 +25,12 @@ const Website = require('../models/Website.js')(mongoose);
     .catch((e) => {
       console.error(e.stack);
       if (process.env.SERVERLESS) {
-        console.error('[goose api] mongoose connection failed');
+        throw buildError(500, 'mongoose connection failed');
       } else {
-        console.error('[goose api] mongoose connection failed, try again after 1 minute');
         setTimeout(() => {
           connectDB();
         }, 60 * 1000);
+        throw buildError(500, 'mongoose connection failed');
       }
     });
 })();

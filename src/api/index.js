@@ -17,5 +17,6 @@ app.use(require('compression')());
 
 /* routes */
 app.use('/api', require('./router.js'));
+app.use(require('./middlewares/errorHandler.js')());
 
 module.exports = app;

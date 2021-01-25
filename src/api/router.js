@@ -19,6 +19,5 @@ require('./routes/debug.js')(router);
 router.get('/*', async () => {
   throw buildError(404, 'route not found');
 });
-router.use(require('./middlewares/errorHandler.js')());
 
 module.exports = router;
