@@ -1,15 +1,7 @@
 /* utils */
-const path = require('path');
-const fs = require('fs');
 const requestIP = require('../utils/requestIP.js');
 const buildError = require('../utils/buildError.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
-
-/* deps */
-const Bowser = require('bowser');
-const { Reader } = require('maxmind');
-const gdb = fs.readFileSync(path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb'));
-const maxmind = new Reader(gdb);
 
 /* middlewares */
 const cors = require('cors');
@@ -89,6 +81,15 @@ module.exports = (router) => {
           }
           // check whether need to update session data
           if (language || screen) {
+            // load deps needed
+            const path = require('path');
+            const fs = require('fs');
+            const Bowser = require('bowser');
+            const { Reader } = require('maxmind');
+            const gdb = fs.readFileSync(
+              path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb')
+            );
+            const maxmind = new Reader(gdb);
             // language & screen
             session.language = language;
             session.screen = screen;
