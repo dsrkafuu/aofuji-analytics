@@ -4,13 +4,42 @@
   /* init */
 
   const { GOOSE_ID: _ID, GOOSE_API: __API, GOOSE_BASE: __BASE, GOOSE_SPA: _SPA } = window;
-  if (!__API || !__API.startsWith('http') || !_ID || navigator.doNotTrack === '1') {
+  if (!__API || !/^https?:\/\//i.exec(__API) || !_ID || navigator.doNotTrack === '1') {
     return;
   }
-  const _API = `${__API}${__API.endsWith('/') ? '' : '/'}collect`;
-  const _BASE = __BASE && __BASE.startsWith('/') ? formatPath(__BASE) : '/';
+  const _API = `${__API}${/\/$/i.exec(__API) ? '' : '/'}collect`;
+  const _BASE = __BASE && /^\//i.exec(__BASE) ? formatPath(__BASE) : '/';
   const [LS_KEY, LS_SID, LS_CACHE] = ['goose_data', 'sid', 'cache'];
   const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
+
+  /* utils */
+
+  /**
+   * set local storage
+   * @param {string} key
+   */
+  function setLS(key, value) {
+    try {
+      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+      data[key] = value;
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
+    } catch {
+      return;
+    }
+  }
+  /**
+   * get local storage
+   * @param {string} key
+   * @return {any}
+   */
+  function getLS(key) {
+    try {
+      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+      return data[key];
+    } catch {
+      return null;
+    }
+  }
 
   /* functions */
 
@@ -31,28 +60,20 @@
       }
     }
     // construct data
-    const blob = new Blob(
-      [
-        JSON.stringify({
-          t: type, // type
-          id: _ID, // id
-          sid, // session id
-          d: Date.now(), // date
-          p: removeBase(path), // pathname
-          ...payload,
-        }),
-      ],
-      { type: 'application/json' }
-    );
+    const ec = encodeURIComponent;
+    let url = `${_API}?t=${type}&id=${_ID}&sid=${sid}&d=${Date.now()}`;
+    url += `&p=${ec(removeBase(path))}`;
+    for (let key in payload) {
+      if (payload[key]) {
+        url += `&${key}=${ec(payload[key])}`;
+      }
+    }
     // when sid exist and `sendBeacon` available
     if (sid && navigator.sendBeacon) {
-      const res = navigator.sendBeacon(_API, blob);
-      if (!res) {
-        logError('beacon request failed');
-      }
+      navigator.sendBeacon(url);
     } else {
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', _API);
+      xhr.open('GET', url);
       xhr.responseType = 'json';
       xhr.onload = () => {
         // when got session from api
@@ -60,8 +81,7 @@
           setLS(LS_SID, xhr.response.sid);
         }
       };
-      xhr.onerror = () => logError('xhr request failed');
-      xhr.send(blob);
+      xhr.send();
     }
   }
 
@@ -71,7 +91,7 @@
    * @return {string}
    */
   function formatPath(path) {
-    if (!path.startsWith('/')) {
+    if (!/^\//i.exec(path)) {
       path = `/${path}`;
     }
     // remove search params
@@ -80,7 +100,7 @@
       path = exp[0];
     }
     // remove trailing slash
-    exp = /^(\/.*[^/])\/?$/.exec(path);
+    exp = /^(\/.*[^/])\/?$/i.exec(path);
     if (exp && exp[1]) {
       path = exp[1];
     } else {
@@ -91,26 +111,15 @@
   /**
    * format referrer
    * @param {string} ref
-   * @return {string}
+   * @return {string|undefined}
    */
   function formatRef(ref) {
-    // if passing pathname
-    if (ref.startsWith('/')) {
-      // [OLD] return removeBase(ref);
-      return '';
+    // get hostname
+    const exp = /\/\/([^:/]*)/i.exec(ref);
+    if (exp && exp[1]) {
+      return exp[1];
     }
-    // if passing full url
-    else if (/:\/\//i.exec(ref)) {
-      const url = new URL(ref);
-      // samesite
-      if (url.hostname === location.hostname) {
-        // [OLD] return removeBase(ref);
-        return '';
-      }
-      // other site
-      return url.hostname;
-    }
-    return '';
+    return undefined;
   }
   /**
    * remove base url, include `formatPath`
@@ -122,42 +131,6 @@
       path = path.split(_BASE)[1] || '/';
     }
     return path;
-  }
-
-  /**
-   * log an error
-   * @param {...any} args
-   */
-  function logError(...args) {
-    console.error('[goose analytics]', ...args);
-  }
-  /**
-   * set local storage
-   * @param {string} key
-   */
-  function setLS(key, value) {
-    try {
-      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
-      data[key] = value;
-      localStorage.setItem(LS_KEY, JSON.stringify(data));
-    } catch {
-      logError('failed to set local stoarge');
-      return;
-    }
-  }
-  /**
-   * get local storage
-   * @param {string} key
-   * @return {any}
-   */
-  function getLS(key) {
-    try {
-      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
-      return data[key];
-    } catch {
-      logError('failed to get local stoarge');
-      return null;
-    }
   }
 
   /* tracker */
@@ -213,7 +186,7 @@
     pvtCtrl.init();
     // those need to send every time
     const data = {
-      r: formatRef(ref) || undefined, // referrer
+      r: formatRef(ref), // referrer
     };
     // those need to send first time or after 1 day
     const cacheTime = getLS(LS_CACHE) || -Infinity;
