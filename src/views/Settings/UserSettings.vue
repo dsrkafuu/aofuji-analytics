@@ -10,15 +10,13 @@
 <script>
 /* utils */
 import { logInfo, logError } from '../../utils/loggers.js';
-import { SETTINGS_TYPES } from '../../utils/constants.js';
-const { USER } = SETTINGS_TYPES;
 
 export default {
   name: 'UserSettings',
   computed: {
     users() {
       const ret = [];
-      const users = this.$store.state.SETTINGS.users;
+      const users = this.$store.state.USER.users;
       if (users && Array.isArray(users)) {
         for (let i = 0; i < users.length; i++) {
           const user = {};
@@ -60,7 +58,7 @@ export default {
      * @param {string} id
      */
     handleEdit(id) {
-      this.$store.commit('TRIGGER_EDITING', { type: USER, id });
+      this.$store.commit('EDIT_USER', { _id: id });
     },
     /**
      * [TODO]

@@ -1,12 +1,12 @@
 <template>
   <div class="user-edit">
-    <GHeader :text="`${id ? 'editing' : 'adding'} user`">
+    <GHeader :text="`${_id ? 'editing' : 'adding'} user`">
       <GButton @click="handleExit"><GIconTimes /></GButton>
       <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
-    <div class="user-edit-line" v-show="id">
+    <div class="user-edit-line" v-show="_id">
       <span>id</span>
-      <GLabel>{{ id }}</GLabel>
+      <GLabel>{{ _id }}</GLabel>
     </div>
     <div class="user-edit-line">
       <span>username</span>
@@ -21,7 +21,7 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/loggers.js';
+import { logInfo, logError } from '@/utils/loggers.js';
 
 export default {
   name: 'UserEdit',
@@ -33,8 +33,8 @@ export default {
     };
   },
   computed: {
-    id() {
-      return this.$store.state.SETTINGS.editing.id;
+    _id() {
+      return this.$store.state.USER.editing._id;
     },
   },
   methods: {
@@ -48,17 +48,17 @@ export default {
      * add a new user or modify website data
      */
     async handleCheck() {
-      if (!this.id) {
+      if (!this._id) {
         return;
       }
       let res, buf;
       try {
-        res = await this.$axios.put(`/user/${this.id}`, {
+        res = await this.$axios.put(`/user/${this._id}`, {
           username: this.username,
           password: this.password,
           isAdmin: this.isAdmin,
         });
-        this.$store.commit('UPDATE_USER', { id: this.id, data: res.data });
+        this.$store.commit('UPDATE_USER', { _id: this._id, data: res.data });
         buf = 'user modified';
         this.$info(buf);
         logInfo(buf, res.data._id);
@@ -73,18 +73,19 @@ export default {
      * exit editing
      */
     handleExit() {
-      this.$store.commit('EXIT_EDITING');
+      this.$store.commit('EXIT_EDIT_USER');
     },
   },
   async activated() {
     // if editing instead of creating
-    if (this.id) {
+    if (this._id) {
       this.initUser();
     }
   },
   deactivated() {
     this.username = '';
     this.password = '';
+    this.isAdmin = true;
   },
 };
 </script>

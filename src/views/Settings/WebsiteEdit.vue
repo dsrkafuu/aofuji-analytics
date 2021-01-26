@@ -1,12 +1,12 @@
 <template>
   <div class="website-edit">
-    <GHeader :text="`${id ? 'editing' : 'adding'} website`">
+    <GHeader :text="`${_id ? 'editing' : 'adding'} website`">
       <GButton @click="handleExit"><GIconTimes /></GButton>
       <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
-    <div class="website-edit-line" v-show="id">
+    <div class="website-edit-line" v-show="_id">
       <span>id</span>
-      <GLabel>{{ id }}</GLabel>
+      <GLabel>{{ _id }}</GLabel>
     </div>
     <div class="website-edit-line">
       <span>name</span>
@@ -22,7 +22,6 @@
 <script>
 /* utils */
 import { logInfo, logError } from '@/utils/loggers.js';
-import { findObjectIndexInArray } from '@/utils/finders.js';
 
 export default {
   name: 'WebsiteEdit',
@@ -34,8 +33,8 @@ export default {
     };
   },
   computed: {
-    id() {
-      return this.$store.state.SETTINGS.editing.id;
+    _id() {
+      return this.$store.state.WEBSITE.editing._id;
     },
   },
   methods: {
@@ -43,12 +42,10 @@ export default {
      * init website data with id when activated
      */
     initWebsite() {
-      const sites = this.$store.state.SETTINGS.websites;
-      const index = findObjectIndexInArray(sites, '_id', this.id);
-      if (!Number.isNaN(index)) {
-        const site = sites[index];
-        this.name = site.name;
-        this.domain = site.domain;
+      const editing = this.$store.state.WEBSITE.editing;
+      if (editing) {
+        this.name = editing.name || '';
+        this.domain = editing.domain || '';
       }
     },
     /**
@@ -57,13 +54,13 @@ export default {
     async handleCheck() {
       let res, buf;
       try {
-        if (this.id) {
-          res = await this.$axios.put(`/website/${this.id}`, {
+        if (this._id) {
+          res = await this.$axios.put(`/website/${this._id}`, {
             name: this.name,
             domain: this.domain,
             isPublic: this.isPublic,
           });
-          this.$store.commit('UPDATE_WEBSITE', { id: this.id, data: res.data });
+          this.$store.commit('UPDATE_WEBSITE', { _id: this._id, data: res.data });
           buf = 'website modified';
         } else {
           res = await this.$axios.post('/website', {
@@ -79,7 +76,7 @@ export default {
         logInfo(buf, res.data._id);
         this.handleExit();
       } catch (e) {
-        buf = `failed to ${this.id ? 'modify website' : 'add new website'}`;
+        buf = `failed to ${this._id ? 'modify website' : 'add new website'}`;
         this.$error(buf);
         logError(buf, e);
       }
@@ -88,12 +85,12 @@ export default {
      * exit editing
      */
     handleExit() {
-      this.$store.commit('EXIT_EDITING');
+      this.$store.commit('EXIT_EDIT_WEBSITE');
     },
   },
   activated() {
     // if editing instead of creating
-    if (this.id) {
+    if (this._id) {
       this.initWebsite();
     }
   },
@@ -101,6 +98,7 @@ export default {
     // clear data when exit
     this.name = '';
     this.domain = '';
+    this.isPublic = false;
   },
 };
 </script>

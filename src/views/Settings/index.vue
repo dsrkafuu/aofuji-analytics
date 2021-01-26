@@ -31,10 +31,6 @@ import About from './About.vue';
 import WebsiteEdit from './WebsiteEdit.vue';
 import UserEdit from './UserEdit.vue';
 
-/* utils */
-import { SETTINGS_TYPES } from '../../utils/constants.js';
-const { USER, WEBSITE } = SETTINGS_TYPES;
-
 export default {
   name: 'Settings',
   components: {
@@ -57,13 +53,12 @@ export default {
   computed: {
     // current tab object
     curTab() {
-      switch (this.$store.state.SETTINGS.editing.type) {
-        case WEBSITE:
-          return WebsiteEdit;
-        case USER:
-          return UserEdit;
-        default:
-          return this.tabs[this.curIndex].component;
+      if (this.$store.state.WEBSITE.editing) {
+        return WebsiteEdit;
+      } else if (this.$store.state.USER.editing) {
+        return UserEdit;
+      } else {
+        return this.tabs[this.curIndex].component;
       }
     },
   },
@@ -73,7 +68,13 @@ export default {
      * @param {number} newIndex
      */
     changeTab(newIndex) {
-      this.$store.commit('EXIT_EDITING'); // exit editing
+      // exit editing
+      if (this.$store.state.WEBSITE.editing) {
+        this.$store.commit('EXIT_EDIT_WEBSITE');
+      }
+      if (this.$store.state.USER.editing) {
+        this.$store.commit('EXIT_EDIT_USER');
+      }
       this.curIndex = newIndex;
     },
   },

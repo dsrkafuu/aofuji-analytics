@@ -10,15 +10,13 @@
 <script>
 /* utils */
 import { logInfo, logError } from '../../utils/loggers.js';
-import { SETTINGS_TYPES } from '../../utils/constants.js';
-const { WEBSITE } = SETTINGS_TYPES;
 
 export default {
   name: 'WebsiteSettings',
   computed: {
     websites() {
       const ret = [];
-      const websites = this.$store.state.SETTINGS.websites;
+      const websites = this.$store.state.WEBSITE.websites;
       if (websites && Array.isArray(websites)) {
         for (let i = 0; i < websites.length; i++) {
           const site = {};
@@ -53,14 +51,14 @@ export default {
      * handle website add
      */
     handleAdd() {
-      this.$store.commit('TRIGGER_EDITING', { type: WEBSITE });
+      this.$store.commit('EDIT_WEBSITE', {});
     },
     /**
      * handle website edit
      * @param {string} id
      */
     handleEdit(id) {
-      this.$store.commit('TRIGGER_EDITING', { type: WEBSITE, id });
+      this.$store.commit('EDIT_WEBSITE', { _id: id });
     },
     /**
      * handle website delete
@@ -69,7 +67,7 @@ export default {
       let buf;
       try {
         await this.$axios.delete(`/website/${id}`);
-        this.$store.commit('REMOVE_WEBSITE', { id });
+        this.$store.commit('REMOVE_WEBSITE', { _id: id });
         buf = 'website removed';
         this.$info(buf);
         logInfo(buf, id);
