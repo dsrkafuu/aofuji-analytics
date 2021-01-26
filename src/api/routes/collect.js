@@ -45,6 +45,33 @@ const collectRoute = () => async (req, res) => {
   date = checkType('number', date);
   pathname = checkType('string', pathname);
 
+  // ip check
+  const clientIP = requestIP(req);
+  const checkIP = async () => {
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+    if (clientIP) {
+      let result = false;
+      try {
+        result = await isLocalhost(clientIP);
+      } catch {
+        result = true;
+      }
+      if (result) {
+        res.status(202).send();
+      }
+    }
+  };
+  // bot check
+  const clientUA = req.get('User-Agent');
+  const checkBot = async () => {
+    const result = isBot(clientUA);
+    if (result) {
+      res.status(202).send();
+    }
+  };
+
   // init website
   const initWebsite = async () => {
     let website = null;
@@ -79,40 +106,10 @@ const collectRoute = () => async (req, res) => {
     }
     return session;
   };
-  // ip check
-  const clientIP = requestIP(req);
-  const checkIP = async () => {
-    if (process.env.NODE_ENV !== 'production') {
-      return;
-    }
-    if (clientIP) {
-      let result = false;
-      try {
-        result = await isLocalhost(clientIP);
-      } catch {
-        result = true;
-      }
-      if (result) {
-        res.status(202).send();
-      }
-    }
-  };
-  // bot check
-  const clientUA = req.get('User-Agent');
-  const checkBot = async () => {
-    const result = isBot(clientUA);
-    if (result) {
-      res.status(202).send();
-    }
-  };
 
   // parallel works
-  const [website, session] = await Promise.all([
-    initWebsite(),
-    initSession(),
-    checkIP(),
-    checkBot(),
-  ]);
+  await Promise.all([checkIP(), checkBot()]);
+  const [website, session] = await Promise.all([initWebsite(), initSession()]);
 
   try {
     // data process
