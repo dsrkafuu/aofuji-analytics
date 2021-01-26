@@ -1,6 +1,6 @@
 <template>
   <div class="website-edit">
-    <GHeader :text="`${_id ? 'editing' : 'adding'} website`">
+    <GHeader :text="`${_id ? 'Edit' : 'Add'} Website`">
       <GButton @click="handleExit"><GIconTimes /></GButton>
       <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     _id() {
-      return this.$store.state.WEBSITE.editing._id;
+      return this.$store.state.WEBSITE.editing?._id;
     },
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="website-settings">
-    <GHeader text="website settings">
+    <GHeader text="Websites">
       <GButton @click="handleAdd"><GIconPlus /></GButton>
     </GHeader>
     <GList :data="websites" control type="extend" @edit="handleEdit" @delete="handleDelete"></GList>

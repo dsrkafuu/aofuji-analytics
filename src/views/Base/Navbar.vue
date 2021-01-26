@@ -8,11 +8,11 @@
       </div>
       <div class="navbar-menu">
         <div class="navbar-start">
-          <GRouterLink class="navbar-item" :to="{ name: 'Dashboard' }" type="full-height">
-            Dashboard
-          </GRouterLink>
           <GRouterLink class="navbar-item" :to="{ name: 'Realtime' }" type="full-height">
             Realtime
+          </GRouterLink>
+          <GRouterLink class="navbar-item" :to="{ name: 'Dashboard' }" type="full-height">
+            Dashboard
           </GRouterLink>
           <GRouterLink class="navbar-item" :to="{ name: 'Settings' }" type="full-height">
             Settings

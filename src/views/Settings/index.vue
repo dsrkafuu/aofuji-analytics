@@ -42,15 +42,20 @@ export default {
   },
   data() {
     return {
+      tabQuerys: ['websites', 'users', 'about'],
       tabs: [
         { name: 'Websites', component: WebsiteSettings },
         { name: 'Users', component: UserSettings },
         { name: 'About', component: About },
       ],
-      curIndex: 0, // current index
     };
   },
   computed: {
+    curIndex() {
+      const tabQuery = this.$route.query.tab;
+      const tabIndex = this.tabQuerys.indexOf(tabQuery);
+      return tabIndex >= 0 ? tabIndex : 0;
+    },
     // current tab object
     curTab() {
       if (this.$store.state.WEBSITE.editing) {
@@ -75,7 +80,13 @@ export default {
       if (this.$store.state.USER.editing) {
         this.$store.commit('EXIT_EDIT_USER');
       }
-      this.curIndex = newIndex;
+      const tabQuery = this.tabQuerys[newIndex];
+      this.$router.push({
+        name: 'Settings',
+        query: {
+          tab: tabQuery,
+        },
+      });
     },
   },
 };

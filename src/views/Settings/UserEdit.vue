@@ -1,6 +1,6 @@
 <template>
   <div class="user-edit">
-    <GHeader :text="`${_id ? 'editing' : 'adding'} user`">
+    <GHeader :text="`${_id ? 'Edit' : 'Add'} User`">
       <GButton @click="handleExit"><GIconTimes /></GButton>
       <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     _id() {
-      return this.$store.state.USER.editing._id;
+      return this.$store.state.USER.editing?._id;
     },
   },
   methods: {

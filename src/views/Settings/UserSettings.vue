@@ -1,6 +1,6 @@
 <template>
   <div class="user-settings">
-    <GHeader text="user settings">
+    <GHeader text="Users">
       <GButton @click="handleAdd"><GIconPlus /></GButton>
     </GHeader>
     <GList :data="users" control @edit="handleEdit" @delete="handleDelete"></GList>

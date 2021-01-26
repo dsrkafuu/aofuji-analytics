@@ -1,5 +1,6 @@
 <template>
   <div class="about">
+    <GHeader text="About"></GHeader>
     <div class="test">
       <GButton @click="handleTest">click here to test api</GButton>
       <div class="test-api" v-if="testAPI">
@@ -41,7 +42,7 @@ export default {
 
 <style lang="scss">
 .about {
-  margin: $space-base;
+  margin: $space-lg;
 
   .test {
     span {
