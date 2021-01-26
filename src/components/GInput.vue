@@ -35,20 +35,19 @@ export default {
         blur: () => (this.focused = false),
       });
     },
+    valid() {
+      let valid = true;
+      if (this.validator) {
+        valid = this.validator(this.value);
+      }
+      return valid;
+    },
     // classes
     classes() {
       return [
         'g-input',
         {
-          'g-input-error': !(() => {
-            if (this.validator) {
-              return this.validator(this.value);
-            }
-            switch (this.type) {
-              default:
-                return true;
-            }
-          }),
+          'g-input-error': !this.valid,
           'g-input-password': this.type === 'password',
           'g-input-focus': this.focused,
         },
@@ -67,10 +66,6 @@ export default {
   height: 1.5rem + $space-xs * 2;
   position: relative;
 
-  &.g-input-focus {
-    background-color: var(--color-hover);
-  }
-
   input {
     width: 100%;
     outline: none;
@@ -81,9 +76,13 @@ export default {
     background: transparent;
     color: var(--color-font);
   }
+}
 
-  &.g-input-password input {
-    font-family: initial !important;
-  }
+.g-input-focus {
+  background-color: var(--color-hover);
+}
+
+.g-input-error {
+  background-color: var(--color-error) !important;
 }
 </style>

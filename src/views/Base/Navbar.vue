@@ -32,9 +32,7 @@
 export default {
   name: 'Navbar',
   computed: {
-    /**
-     * site title from environment variables
-     */
+    // site title from environment variables
     siteTitle() {
       return process.env.VUE_APP_TITLE || 'Goose Analytics';
     },

@@ -6,6 +6,7 @@ $colors-light: (
   'font': #3f4551,
   'primary': #8aa2d3,
   'secondary': #8b81c3,
+  'error': rgba(255, 0, 0, 0.1),
 );
 @mixin light {
   @each $key, $value in $colors-light {
@@ -24,6 +25,7 @@ $colors-dark: (
   'font': rgba(255, 255, 255, 0.75),
   'primary': #8aa2d3,
   'secondary': #bab1df,
+  'error': rgba(255, 0, 0, 0.1),
 );
 @mixin dark {
   @each $key, $value in $colors-dark {

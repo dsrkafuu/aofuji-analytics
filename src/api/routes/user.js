@@ -1,28 +1,13 @@
 /* utils */
 const buildError = require('../utils/buildError.js');
-const { User, select } = require('../utils/mongoose.js');
+const { User } = require('../utils/mongoose.js');
 
 const selectKeys = 'username isAdmin';
 
 module.exports = (router) => {
-  // init routes
-  router.get('/init', async (req, res) => {
-    const admin = await User.findOne({ username: 'admin' }).lean();
-    if (admin) {
-      throw buildError(400, 'no need to init admin');
-    } else {
-      const result = await User.create({
-        username: 'admin',
-        password: '123456',
-        isAdmin: true,
-      });
-      res.status(201).send(select(result, selectKeys));
-    }
-  });
-
   // get all users
   router.get('/user', async (req, res) => {
-    const result = await User.find({}).select(selectKeys).lean();
+    const result = await User.find({}).select(selectKeys).limit(10).lean();
     res.send(result);
   });
 

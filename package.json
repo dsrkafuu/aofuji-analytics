@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "axios": "~0.21.1",
+    "bcrypt": "~5.0.0",
     "bowser": "~2.11.0",
     "compression": "~1.7.4",
     "connect-history-api-fallback": "~1.6.0",
@@ -25,6 +26,7 @@
     "express": "~5.0.0-alpha.8",
     "is-localhost-ip": "~1.4.0",
     "isbot": "~3.0.23",
+    "jsonwebtoken": "^8.5.1",
     "maxmind": "~4.3.1",
     "mongoose": "~5.11.13",
     "normalize.css": "~8.0.1",

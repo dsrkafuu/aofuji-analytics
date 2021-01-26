@@ -12,8 +12,8 @@ const cors = require('cors');
 // collect route cors settings
 const corsOptions = {
   origin: true,
-  methods: 'POST',
-  credentials: true,
+  methods: ['GET', 'POST'],
+  credentials: false,
   maxAge: 86400, // 1 day
 };
 

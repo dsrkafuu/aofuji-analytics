@@ -8,6 +8,8 @@ router.use(mongoose());
 /* routes */
 // collect route
 require('./routes/collect.js')(router);
+// login
+require('./routes/login.js')(router);
 // user
 require('./routes/user.js')(router);
 // website
