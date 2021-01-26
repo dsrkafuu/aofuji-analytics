@@ -18,7 +18,8 @@ export default {
   name: 'GMessage',
   computed: {
     messages() {
-      return this.$store.state.MESSAGE.messages;
+      const messages = [...this.$store.state.MESSAGE.messages].reverse();
+      return messages;
     },
   },
   methods: {
@@ -35,9 +36,9 @@ export default {
 
 <style lang="scss">
 .g-message-wrapper {
-  position: absolute;
+  position: fixed;
   right: 2rem;
-  top: 2rem;
+  bottom: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
