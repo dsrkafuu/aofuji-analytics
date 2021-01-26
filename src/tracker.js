@@ -200,7 +200,11 @@
       // screen size
       const dpr = devicePixelRatio || 1;
       if (screen.width) {
-        data.scn = screen.width * dpr + 'x' + screen.height * dpr || undefined;
+        const width = Math.round(screen.width * dpr);
+        const height = Math.round(screen.height * dpr);
+        if (!Number.isNaN(width + height)) {
+          data.scn = `${width}x${height}`;
+        }
       }
       setLS(LS_CACHE, now);
     }
