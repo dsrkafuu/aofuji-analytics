@@ -45,6 +45,25 @@ const collectRoute = () => async (req, res) => {
   date = checkType('number', date);
   pathname = checkType('string', pathname);
 
+  // origin check
+  const origin = req.get('Origin');
+  const checkOrigin = async () => {
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+    if (origin) {
+      let result = false;
+      try {
+        const url = new URL(origin);
+        result = await isLocalhost(url.hostname);
+      } catch {
+        result = true;
+      }
+      if (result) {
+        res.status(202).send();
+      }
+    }
+  };
   // ip check
   const clientIP = requestIP(req);
   const checkIP = async () => {
@@ -108,7 +127,7 @@ const collectRoute = () => async (req, res) => {
   };
 
   // parallel works
-  await Promise.all([checkIP(), checkBot()]);
+  await Promise.all([checkOrigin(), checkIP(), checkBot()]);
   const [website, session] = await Promise.all([initWebsite(), initSession()]);
 
   try {
