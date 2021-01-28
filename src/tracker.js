@@ -145,10 +145,9 @@
     if (now - cacheTime > 604800 * 1000) {
       data.lng = navigator.language || undefined; // language
       // screen size
-      const dpr = devicePixelRatio || 1;
       if (screen.width) {
-        const width = Math.round(screen.width * dpr);
-        const height = Math.round(screen.height * dpr);
+        const width = Math.round(screen.width || 0);
+        const height = Math.round(screen.height || 0);
         if (!Number.isNaN(width + height)) {
           data.scn = `${width}x${height}`;
         }
