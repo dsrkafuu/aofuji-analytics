@@ -2,7 +2,7 @@
 const buildError = require('../utils/buildError.js');
 const { Website, Account, select } = require('../utils/mongoose.js');
 
-const selectKeys = 'name link base isPublic';
+const selectKeys = 'name url base isPublic';
 
 module.exports = (router) => {
   // get all websites
