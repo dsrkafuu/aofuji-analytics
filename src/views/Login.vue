@@ -83,6 +83,9 @@ export default {
         });
         this.$info(`logging in as ${res.data?.username}`);
         logInfo(res.data);
+        this.$router.push({
+          name: 'Realtime',
+        });
       } catch (e) {
         this.$error('wrong username or password');
         logError(e);

@@ -4,7 +4,7 @@ require('../utils/env')();
 /* deps */
 import Vue from 'vue';
 Vue.config.productionTip = false;
-import router from './router';
+import { router } from './router/index.js';
 import store from './store';
 
 /* css */

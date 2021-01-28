@@ -15,3 +15,6 @@ export const SETTINGS_TYPES = {
   USER: 'goose_user',
   WEBSITE: 'goose_website',
 };
+
+/* auth */
+export const AUTH_COOKIE_KEY = 'goose_token';

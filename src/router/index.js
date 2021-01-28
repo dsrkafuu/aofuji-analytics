@@ -3,51 +3,16 @@ import Vue from 'vue';
 import Router from 'vue-router';
 Vue.use(Router);
 
-/* components */
-import Base from '../views/Base/index.vue';
-import Login from '../views/Login.vue';
-import NotFound from '../views/NotFound.vue';
-import Realtime from '../views/Realtime/Realtime.vue';
-import Dashboard from '../views/Dashboard/Dashboard.vue';
-import Settings from '../views/Settings/index.vue';
+/* deps */
+import Cookie from 'js-cookie';
 
-const routes = [
-  {
-    path: '/',
-    name: 'Base',
-    component: Base,
-    redirect: '/realtime',
-    children: [
-      {
-        path: '/realtime',
-        name: 'Realtime',
-        component: Realtime,
-      },
-      {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
-      },
+/* utils */
+import { AUTH_COOKIE_KEY } from '@/utils/constants.js';
 
-      {
-        path: '/settings',
-        name: 'Settings',
-        component: Settings,
-      },
-    ],
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-  },
-  {
-    path: '/*',
-    name: 'NotFound',
-    component: NotFound,
-  },
-];
+/* routes */
+import { routes } from './routes.js';
 
+/* fix */
 // only throw error when NavigationFailure
 // https://github.com/vuejs/vue-router/issues/2881#issuecomment-520554378
 const originalPush = Router.prototype.push;
@@ -63,8 +28,22 @@ Router.prototype.push = function push(location, onResolve, onReject) {
   });
 };
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.SERVER_BASE_URL,
   routes,
 });
+
+/* guards */
+router.beforeEach((to, from, next) => {
+  // login check
+  if (to.name !== 'Login' && !Cookie.get(AUTH_COOKIE_KEY)) {
+    next({ name: 'Login' });
+  }
+  // default behavior
+  else {
+    next();
+  }
+});
+
+export { router };
