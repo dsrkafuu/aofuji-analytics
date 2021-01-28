@@ -2,8 +2,12 @@
 
 /**
  * custom error handler
+ * @param {Error} err custom express error
+ * @param {Object} req express request
+ * @param {Object} req express response
+ * @param {Function} req express next
  */
-module.exports = () => async (err, req, res, next) => {
+async function errorHandler(err, req, res, next) {
   new Promise((resolve) => {
     console.log(err.stack);
     resolve();
@@ -16,4 +20,6 @@ module.exports = () => async (err, req, res, next) => {
   else {
     next(err);
   }
-};
+}
+
+module.exports = { errorHandler };

@@ -4,8 +4,10 @@
  * @param {string} statusText
  * @return {Error}
  */
-module.exports = (status, statusText) => {
+function buildError(status, statusText) {
   const err = new Error(statusText);
   err.status = status;
   return err;
-};
+}
+
+module.exports = { buildError };

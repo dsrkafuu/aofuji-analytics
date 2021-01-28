@@ -4,19 +4,22 @@ const app = express();
 
 /* middlewares */
 // response time logger
-app.use(require('./middlewares/responseTime.js')());
+const { responseTime } = require('./middlewares/responseTime.js');
+app.use(responseTime);
 // body parser and cookie parser
 app.use(express.json());
 app.use(require('cookie-parser')());
 // compression
 app.use(require('compression')());
-// [TODO] cache control
-// if (process.env.VERCEL) {
-//   app.use(require('./middlewares/cacheControl.js')());
-// }
+// cache control
+const { cacheControl } = require('./middlewares/cacheControl.js');
+app.use(cacheControl);
 
 /* routes */
-app.use('/api', require('./router.js'));
-app.use(require('./middlewares/errorHandler.js')());
+const { router } = require('./router.js');
+app.use('/api', router);
+
+const { errorHandler } = require('./middlewares/errorHandler.js');
+app.use(errorHandler);
 
 module.exports = app;

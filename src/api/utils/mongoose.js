@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const buildError = require('../utils/buildError.js');
+const { buildError } = require('../utils/buildError.js');
 
 // compile models
 const Event = require('../models/Event.js')(mongoose);
@@ -36,8 +36,13 @@ const Website = require('../models/Website.js')(mongoose);
 })();
 
 module.exports = {
-  // mongoose instance middleware
-  mongoose: () => (req, res, next) => {
+  /**
+   * mongoose middleware
+   * @param {Object} req express request
+   * @param {Object} req express response
+   * @param {Function} req express next
+   */
+  mongoose: (req, res, next) => {
     req.mongoose = mongoose;
     next();
   },
@@ -47,7 +52,11 @@ module.exports = {
   Account,
   View,
   Website,
-  // select for `create()`
+  /**
+   * select for `create()`
+   * @param {Object} result mongoose document
+   * @param {string} keys
+   */
   select: (result, keys) => {
     let ret = result;
     ret.toObject && (ret = ret.toObject());

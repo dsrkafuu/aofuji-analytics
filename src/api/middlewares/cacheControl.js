@@ -1,8 +1,11 @@
 /**
- * append `Cache-Control` headers for vercel CDN
- * https://vercel.com/docs/serverless-functions/edge-caching#recommended-cache-control
+ * @param {Object} req express request
+ * @param {Object} req express response
+ * @param {Function} req express next
  */
-module.exports = () => async (req, res, next) => {
-  res.append('Cache-Control', 's-maxage=1, stale-while-revalidate');
+async function cacheControl(req, res, next) {
+  res.append('Cache-Control', 'public, s-maxage=1, must-revalidate');
   next();
-};
+}
+
+module.exports = { cacheControl };

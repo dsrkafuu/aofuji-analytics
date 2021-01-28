@@ -1,5 +1,5 @@
 /* utils */
-const buildError = require('../utils/buildError.js');
+const { buildError } = require('../utils/buildError.js');
 const { Website, Account, select } = require('../utils/mongoose.js');
 
 const selectKeys = 'name url base isPublic';

@@ -3,8 +3,8 @@
  * @param {Object} req express request
  * @return {string}
  */
-module.exports = (req) =>
-  (
+function requestIP(req) {
+  return (
     req.get('X-Client-IP') ||
     req.get('X-Forwarded-For') ||
     req.get('Cf-Connecting-IP') ||
@@ -14,3 +14,6 @@ module.exports = (req) =>
   )
     .split(',')[0]
     .trim();
+}
+
+module.exports = { requestIP };

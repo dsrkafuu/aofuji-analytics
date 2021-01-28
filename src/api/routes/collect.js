@@ -3,8 +3,8 @@ const isLocalhost = require('is-localhost-ip');
 const isBot = require('isbot');
 
 /* utils */
-const requestIP = require('../utils/requestIP.js');
-const buildError = require('../utils/buildError.js');
+const { requestIP } = require('../utils/requestIP.js');
+const { buildError } = require('../utils/buildError.js');
 const { formatQuery } = require('../utils/formatQuery.js');
 const { formatPath } = require('../utils/formatPath.js');
 const { formatRef } = require('../utils/formatRef.js');

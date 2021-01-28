@@ -1,9 +1,10 @@
-/* utils */
 const { Router } = require('express');
 const router = Router();
-const buildError = require('./utils/buildError.js');
+
+/* utils */
+const { buildError } = require('./utils/buildError.js');
 const { mongoose } = require('./utils/mongoose.js');
-router.use(mongoose());
+router.use(mongoose);
 
 /* routes */
 // collect route
@@ -22,4 +23,4 @@ router.get('/*', async () => {
   throw buildError(404, 'route not found');
 });
 
-module.exports = router;
+module.exports = { router };

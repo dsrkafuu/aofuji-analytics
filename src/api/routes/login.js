@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 /* utils */
-const buildError = require('../utils/buildError.js');
+const { buildError } = require('../utils/buildError.js');
 const { Account, select } = require('../utils/mongoose.js');
 
 const selectKeys = 'username';

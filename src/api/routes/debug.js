@@ -1,6 +1,6 @@
 /* utils */
-const buildError = require('../utils/buildError.js');
-const requestIP = require('../utils/requestIP.js');
+const { buildError } = require('../utils/buildError.js');
+const { requestIP } = require('../utils/requestIP.js');
 const { Website, Account } = require('../utils/mongoose.js');
 
 /* deps */
