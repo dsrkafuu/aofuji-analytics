@@ -3,12 +3,11 @@
 (function () {
   /* init */
 
-  const { GOOSE_ID: _ID, GOOSE_API: __API, GOOSE_BASE: __BASE, GOOSE_SPA: _SPA } = window;
+  const { GOOSE_ID: _ID, GOOSE_API: __API, GOOSE_SPA: _SPA } = window;
   if (!__API || !/^https?:\/\//i.exec(__API) || !_ID || navigator.doNotTrack === '1') {
     return;
   }
   const _API = `${__API}${/\/$/i.exec(__API) ? '' : '/'}collect`;
-  const _BASE = __BASE && /^\//i.exec(__BASE) ? formatPath(__BASE) : '/';
   const [LS_KEY, LS_SID, LS_CACHE] = ['goose_data', 'sid', 'cache'];
   const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
 
@@ -27,6 +26,7 @@
       return;
     }
   }
+
   /**
    * get local storage
    * @param {string} key
@@ -40,8 +40,6 @@
       return null;
     }
   }
-
-  /* functions */
 
   /**
    * send data to api
@@ -58,7 +56,7 @@
     if (sid) {
       url += `&sid=${sid}`;
     }
-    url += `&p=${ec(removeBase(path))}`;
+    url += `&p=${ec(path)}`;
     for (let key in payload) {
       if (payload[key]) {
         url += `&${key}=${ec(payload[key])}`;
@@ -84,57 +82,6 @@
       };
       xhr.send();
     }
-  }
-
-  /**
-   * format pathname
-   * @param {string} path
-   * @return {string}
-   */
-  function formatPath(path) {
-    if (!/^\//i.exec(path)) {
-      path = `/${path}`;
-    }
-    // remove search params
-    let exp = path.split('?');
-    if (exp.length >= 2) {
-      path = exp[0];
-    }
-    // remove trailing slash
-    exp = /^(\/.*[^/])\/?$/i.exec(path);
-    if (exp && exp[1]) {
-      path = exp[1];
-    } else {
-      path = '/';
-    }
-    return path;
-  }
-  /**
-   * format referrer
-   * @param {string} ref
-   * @return {string|undefined}
-   */
-  function formatRef(ref) {
-    // get hostname
-    const exp = /\/\/([^:/]*)/i.exec(ref);
-    if (exp && exp[1]) {
-      const refHost = exp[1];
-      if (location.hostname !== refHost) {
-        return refHost;
-      }
-    }
-    return undefined;
-  }
-  /**
-   * remove base url, include `formatPath`
-   * @param {string} path
-   */
-  function removeBase(path) {
-    path = formatPath(path);
-    if (_BASE !== '/') {
-      path = path.split(_BASE)[1] || '/';
-    }
-    return path;
   }
 
   /* tracker */
@@ -190,7 +137,7 @@
     pvtCtrl.init();
     // those need to send every time
     const data = {
-      r: formatRef(ref), // referrer
+      r: ref, // referrer
     };
     // those need to send first time or after 7 day
     const cacheTime = getLS(LS_CACHE) || -Infinity;

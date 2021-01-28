@@ -5,45 +5,27 @@ const isBot = require('isbot');
 /* utils */
 const requestIP = require('../utils/requestIP.js');
 const buildError = require('../utils/buildError.js');
+const { formatQuery } = require('../utils/formatQuery.js');
+const { formatPath } = require('../utils/formatPath.js');
+const { formatRef } = require('../utils/formatRef.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
 
 /* middlewares */
-const cors = require('cors');
-// collect route cors settings
-const corsOptions = {
+const cors = require('cors')({
   origin: true,
   methods: ['GET', 'POST'],
   credentials: false,
   maxAge: 86400, // 1 day
-};
+});
 
-/**
- * check query type
- * @param {string} type
- * @param {any} value
- */
-function checkType(type, value) {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-  switch (type) {
-    case 'string':
-      return typeof value === 'string' ? value : String(value);
-    case 'number':
-      return typeof value === 'number' ? value : Number(value);
-    default:
-      return undefined;
-  }
-}
-
-const collectRoute = () => async (req, res) => {
+const collectRoute = async (req, res) => {
   // get basic params
-  let { t: type, id, sid, d: date, p: pathname } = req.query;
-  type = checkType('string', type);
-  id = checkType('string', id);
-  sid = checkType('string', sid);
-  date = checkType('number', date);
-  pathname = checkType('string', pathname);
+  let { t: type, id, sid, d: date, p: path } = req.query;
+  type = formatQuery('string', type);
+  id = formatQuery('string', id);
+  sid = formatQuery('string', sid);
+  date = formatQuery('number', date);
+  path = formatQuery('string', path);
 
   // origin check
   const origin = req.get('Origin');
@@ -90,6 +72,7 @@ const collectRoute = () => async (req, res) => {
       res.status(202).send();
     }
   };
+  await Promise.all([checkOrigin(), checkIP(), checkBot()]);
 
   // init website
   const initWebsite = async () => {
@@ -125,9 +108,6 @@ const collectRoute = () => async (req, res) => {
     }
     return session;
   };
-
-  // parallel works
-  await Promise.all([checkOrigin(), checkIP(), checkBot()]);
   const [website, session] = await Promise.all([initWebsite(), initSession()]);
 
   try {
@@ -136,16 +116,16 @@ const collectRoute = () => async (req, res) => {
       case 'view': {
         const works = [];
         // get params
-        let { r: referrer, lng: language, scn: screen } = req.query;
-        referrer = checkType('string', referrer);
-        language = checkType('string', language);
-        screen = checkType('string', screen);
+        let { r: ref, lng, scn } = req.query;
+        ref = formatQuery('string', ref);
+        lng = formatQuery('string', lng);
+        scn = formatQuery('string', scn);
         // not add same page view from same user in 10 minute
         const lastView = await View.findOne({
           _date: { $lt: date },
           _session: session._id,
           _website: website._id,
-          pathname,
+          pathname: formatPath(path, website.base),
         })
           .sort({ _date: -1 })
           .lean();
@@ -155,13 +135,13 @@ const collectRoute = () => async (req, res) => {
             _date: date,
             _session: session._id,
             _website: website._id,
-            pathname,
-            referrer,
+            pathname: formatPath(path, website.base),
+            referrer: formatRef(ref, website.url),
           };
           works.push(View.create(newView));
         }
         // check whether need to update session data
-        if (needNewSession || language || screen) {
+        if (needNewSession || lng || scn) {
           // load deps needed
           const path = require('path');
           const fs = require('fs');
@@ -172,14 +152,14 @@ const collectRoute = () => async (req, res) => {
           );
           const maxmind = new Reader(gdb);
           // language & screen
-          session.language = language;
-          session.screen = screen;
+          session.language = lng;
+          session.screen = scn;
           // browser & system & platform
-          const bowser = Bowser.parse(req.get('User-Agent'));
-          const fmtBowser = (str) => (str || '').toLowerCase().replace(/ +/gi, '-') || undefined;
-          session.browser = fmtBowser(bowser.browser.name);
-          session.system = fmtBowser(bowser.os.name);
-          session.platform = fmtBowser(bowser.platform.type);
+          const bowser = Bowser.parse(clientUA);
+          const formatBowser = (str) => (str || '').toLowerCase().replace(/ +/gi, '-') || undefined;
+          session.browser = formatBowser(bowser.browser.name);
+          session.system = formatBowser(bowser.os.name);
+          session.platform = formatBowser(bowser.platform.type);
           // location
           if (clientIP) {
             const gd = maxmind.get(clientIP);
@@ -193,7 +173,7 @@ const collectRoute = () => async (req, res) => {
 
       case 'leave': {
         let { pvt } = req.query;
-        pvt = checkType('number', pvt);
+        pvt = formatQuery('number', pvt);
         if (pvt > 0) {
           // update pvt to last view
           await View.findOneAndUpdate(
@@ -202,7 +182,7 @@ const collectRoute = () => async (req, res) => {
               _date: { $lt: date },
               _session: session._id,
               _website: website._id,
-              pathname,
+              pathname: formatPath(path, website.base),
             },
             // add new page view time (not replace)
             { $inc: { pvt } }
@@ -226,8 +206,7 @@ const collectRoute = () => async (req, res) => {
 };
 
 module.exports = (router) => {
-  router.options('/collect', cors(corsOptions));
-
-  router.post('/collect', cors(corsOptions), collectRoute());
-  router.get('/collect', cors(corsOptions), collectRoute());
+  router.options('/collect', cors);
+  router.post('/collect', cors, collectRoute);
+  router.get('/collect', cors, collectRoute);
 };

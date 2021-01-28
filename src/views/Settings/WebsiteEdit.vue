@@ -5,16 +5,20 @@
       <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
     <div class="line" v-show="_id">
-      <span class="keyname">id</span>
+      <span class="keyname">ID</span>
       <GLabel>{{ _id }}</GLabel>
     </div>
     <div class="line">
-      <span class="keyname">name</span>
+      <span class="keyname">Name</span>
       <GInput class="name" v-model="name" />
     </div>
     <div class="line">
-      <span class="keyname">url</span>
-      <GInput class="domain" v-model="domain" />
+      <span class="keyname">URL</span>
+      <GInput class="domain" v-model="url" />
+    </div>
+    <div class="line">
+      <span class="keyname">Base URL</span>
+      <GInput class="domain" v-model="base" />
     </div>
   </div>
 </template>
@@ -28,7 +32,8 @@ export default {
   data() {
     return {
       name: '',
-      domain: '',
+      url: '',
+      base: '',
       isPublic: false,
     };
   },
@@ -45,7 +50,9 @@ export default {
       const editing = this.$store.state.WEBSITE.editing;
       if (editing) {
         this.name = editing.name || '';
-        this.domain = editing.domain || '';
+        this.url = editing.url || '';
+        this.base = editing.base || '';
+        this.isPublic = editing.isPublic || false;
       }
     },
     /**
@@ -57,16 +64,17 @@ export default {
         if (this._id) {
           res = await this.$axios.put(`/website/${this._id}`, {
             name: this.name,
-            domain: this.domain,
+            url: this.url,
+            base: this.base,
             isPublic: this.isPublic,
           });
           this.$store.commit('UPDATE_WEBSITE', { _id: this._id, data: res.data });
           buf = 'website modified';
         } else {
           res = await this.$axios.post('/website', {
-            username: 'admin',
             name: this.name,
-            domain: this.domain,
+            url: this.url,
+            base: this.base,
             isPublic: this.isPublic,
           });
           this.$store.commit('ADD_WEBSITE', { data: res.data });
@@ -96,7 +104,8 @@ export default {
   deactivated() {
     // clear data when exit
     this.name = '';
-    this.domain = '';
+    this.url = '';
+    this.base = '';
     this.isPublic = false;
   },
 };

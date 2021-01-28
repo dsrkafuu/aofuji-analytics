@@ -2,7 +2,7 @@
 const buildError = require('../utils/buildError.js');
 const { Website, Account, select } = require('../utils/mongoose.js');
 
-const selectKeys = 'name domain isPublic';
+const selectKeys = 'name link base isPublic';
 
 module.exports = (router) => {
   // get all websites
@@ -19,13 +19,14 @@ module.exports = (router) => {
 
   // create a new website
   router.post('/website', async (req, res) => {
-    const { name, domain, isPublic } = req.body;
+    const { name, url, base, isPublic } = req.body;
     const account = await Account.findOne({}).lean();
     if (account) {
       const result = await Website.create({
         _account: account._id,
         name,
-        domain,
+        url,
+        base,
         isPublic,
         _date: Date.now(),
       });
@@ -37,10 +38,11 @@ module.exports = (router) => {
 
   // modify a website
   router.put('/website/:id', async (req, res) => {
-    const { name, domain, isPublic } = req.body;
+    const { name, url, base, isPublic } = req.body;
     const result = await Website.findByIdAndUpdate(req.params.id, {
       name,
-      domain,
+      url,
+      base,
       isPublic,
       _date: Date.now(),
     })

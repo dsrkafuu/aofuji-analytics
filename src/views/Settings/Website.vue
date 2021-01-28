@@ -22,7 +22,7 @@ export default {
           const site = {};
           site.id = websites[i]._id;
           site.text = websites[i].name;
-          site.sub = websites[i].domain;
+          site.sub = websites[i].url;
           site.label = websites[i].isPublic ? 'public' : 'private';
           ret.push(site);
         }
