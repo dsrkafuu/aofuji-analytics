@@ -1,7 +1,7 @@
 /* utils */
 const buildError = require('../utils/buildError.js');
 const requestIP = require('../utils/requestIP.js');
-const { Website, User } = require('../utils/mongoose.js');
+const { Website, Account } = require('../utils/mongoose.js');
 
 /* deps */
 const fs = require('fs');
@@ -23,7 +23,7 @@ module.exports = (router) => {
       response.bowser = bowser;
 
       // database check
-      const results = await Promise.all([Website.findOne({}).lean(), User.findOne({}).lean()]);
+      const results = await Promise.all([Website.findOne({}).lean(), Account.findOne({}).lean()]);
       response.db = results;
 
       // geodb check
