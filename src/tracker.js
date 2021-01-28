@@ -194,7 +194,10 @@
     const path = location.pathname;
     // start view
     gooseView(path, document.referrer);
-    window.addEventListener('beforeunload', () => {
+    // [safari fix]
+    // safari doesn't fire the `visibilitychange` and `beforeunload`
+    // when navigating away from a document
+    window.addEventListener('pagehide', () => {
       gooseLeave(path);
     });
   }
