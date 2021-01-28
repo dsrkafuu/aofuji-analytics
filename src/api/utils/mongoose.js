@@ -4,7 +4,7 @@ const buildError = require('../utils/buildError.js');
 // compile models
 const Event = require('../models/Event.js')(mongoose);
 const Session = require('../models/Session.js')(mongoose);
-const User = require('../models/User.js')(mongoose);
+const Account = require('../models/Account.js')(mongoose);
 const View = require('../models/View.js')(mongoose);
 const Website = require('../models/Website.js')(mongoose);
 
@@ -44,7 +44,7 @@ module.exports = {
   // models
   Event,
   Session,
-  User,
+  Account,
   View,
   Website,
   // select for `create()`

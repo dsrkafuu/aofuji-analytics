@@ -1,6 +1,6 @@
 <template>
-  <div class="website-settings">
-    <GHeader text="Websites">
+  <div class="website">
+    <GHeader text="Website">
       <GButton @click="handleAdd"><GIconPlus /></GButton>
     </GHeader>
     <GList :data="websites" control type="extend" @edit="handleEdit" @delete="handleDelete"></GList>
@@ -9,10 +9,10 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/loggers.js';
+import { logInfo, logError } from '@/utils/loggers.js';
 
 export default {
-  name: 'WebsiteSettings',
+  name: 'Website',
   computed: {
     websites() {
       const ret = [];
@@ -35,16 +35,14 @@ export default {
      * fetch website data when first mounted
      */
     async fetchWebsites() {
-      let res, buf;
+      let res;
       try {
         res = await this.$axios.get('/website');
         this.$store.commit('UPDATE_ALL_WEBSITES', { data: res.data });
-        buf = 'website list initialized';
-        logInfo(buf);
+        logInfo(res.data);
       } catch (e) {
-        buf = 'failed to fetch website list';
-        this.$error(buf);
-        logError(buf, e);
+        this.$error('failed to fetch website list');
+        logError(e);
       }
     },
     /**
@@ -64,17 +62,13 @@ export default {
      * handle website delete
      */
     async handleDelete(id) {
-      let buf;
       try {
         await this.$axios.delete(`/website/${id}`);
         this.$store.commit('REMOVE_WEBSITE', { _id: id });
-        buf = 'website removed';
-        this.$info(buf);
-        logInfo(buf, id);
+        this.$info('website removed');
       } catch (e) {
-        buf = 'failed to remove website';
-        this.$error(buf);
-        logError(buf, e);
+        this.$error('failed to remove website');
+        logError(e);
       }
     },
   },
@@ -85,7 +79,7 @@ export default {
 </script>
 
 <style lang="scss">
-.website-settings {
+.website {
   margin: $space-lg;
 }
 </style>

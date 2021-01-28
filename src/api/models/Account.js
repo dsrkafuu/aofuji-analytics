@@ -16,5 +16,5 @@ module.exports = (mongoose) => {
 
   schema.index({ _date: -1 });
   schema.index({ username: 1 }, { unique: true });
-  return mongoose.model('User', schema);
+  return mongoose.model('Account', schema);
 };

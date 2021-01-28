@@ -1,6 +1,6 @@
 /* utils */
 const buildError = require('../utils/buildError.js');
-const { Website, User, select } = require('../utils/mongoose.js');
+const { Website, Account, select } = require('../utils/mongoose.js');
 
 const selectKeys = 'name domain isPublic';
 
@@ -19,11 +19,11 @@ module.exports = (router) => {
 
   // create a new website
   router.post('/website', async (req, res) => {
-    const { username, name, domain, isPublic } = req.body;
-    const user = await User.findOne({ username }).lean();
-    if (user) {
+    const { name, domain, isPublic } = req.body;
+    const account = await Account.findOne({}).lean();
+    if (account) {
       const result = await Website.create({
-        _user: user._id,
+        _account: account._id,
         name,
         domain,
         isPublic,
@@ -31,7 +31,7 @@ module.exports = (router) => {
       });
       res.status(201).send(select(result, selectKeys));
     } else {
-      throw buildError(403, 'website user not found');
+      throw buildError(403, 'website account not found');
     }
   });
 

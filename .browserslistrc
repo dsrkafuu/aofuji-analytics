@@ -1,9 +1,9 @@
-# https://github.com/browserslist/browserslist#readme
+# https://github.com/browserslist/browserslist#full-list
 
->= 1%
-last 1 major version
+> 0.5%
+last 2 major versions
+firefox esr
 not dead
-chrome >= 60
-firefox >= 60
-edge >= 80
+not edge <= 18
 not ie <= 11
+not op_mini all

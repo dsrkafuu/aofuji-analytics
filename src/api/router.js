@@ -11,7 +11,7 @@ require('./routes/collect.js')(router);
 // login
 require('./routes/login.js')(router);
 // user
-require('./routes/user.js')(router);
+require('./routes/account.js')(router);
 // website
 require('./routes/website.js')(router);
 // debug

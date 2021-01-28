@@ -25,27 +25,25 @@
 
 <script>
 /* components */
-import WebsiteSettings from './WebsiteSettings.vue';
-import UserSettings from './UserSettings.vue';
-import About from './About.vue';
+import Website from './Website.vue';
 import WebsiteEdit from './WebsiteEdit.vue';
-import UserEdit from './UserEdit.vue';
+import Account from './Account.vue';
+import About from './About.vue';
 
 export default {
   name: 'Settings',
   components: {
-    WebsiteSettings,
-    UserSettings,
-    About,
+    Website,
     WebsiteEdit,
-    UserEdit,
+    Account,
+    About,
   },
   data() {
     return {
-      tabQuerys: ['websites', 'users', 'about'],
+      tabQuerys: ['website', 'account', 'about'],
       tabs: [
-        { name: 'Websites', component: WebsiteSettings },
-        { name: 'Users', component: UserSettings },
+        { name: 'Website', component: Website },
+        { name: 'Account', component: Account },
         { name: 'About', component: About },
       ],
     };
@@ -60,8 +58,6 @@ export default {
     curTab() {
       if (this.$store.state.WEBSITE.editing) {
         return WebsiteEdit;
-      } else if (this.$store.state.USER.editing) {
-        return UserEdit;
       } else {
         return this.tabs[this.curIndex].component;
       }
@@ -77,9 +73,7 @@ export default {
       if (this.$store.state.WEBSITE.editing) {
         this.$store.commit('EXIT_EDIT_WEBSITE');
       }
-      if (this.$store.state.USER.editing) {
-        this.$store.commit('EXIT_EDIT_USER');
-      }
+      // change tab
       const tabQuery = this.tabQuerys[newIndex];
       this.$router.push({
         name: 'Settings',

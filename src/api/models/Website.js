@@ -1,6 +1,6 @@
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema({
-    _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    _account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
     name: { type: String },
     domain: { type: String }, // clean domain of website (no protocol, port and trailing slash)
     isPublic: { type: Boolean }, // whether can be viewed in public page

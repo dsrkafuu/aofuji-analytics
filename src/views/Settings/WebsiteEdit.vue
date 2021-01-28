@@ -4,17 +4,17 @@
       <GButton @click="handleExit"><GIconTimes /></GButton>
       <GButton @click="handleCheck"><GIconCheck /></GButton>
     </GHeader>
-    <div class="website-edit-line" v-show="_id">
-      <span>id</span>
+    <div class="line" v-show="_id">
+      <span class="keyname">id</span>
       <GLabel>{{ _id }}</GLabel>
     </div>
-    <div class="website-edit-line">
-      <span>name</span>
-      <GInput class="website-name" v-model="name" />
+    <div class="line">
+      <span class="keyname">name</span>
+      <GInput class="name" v-model="name" />
     </div>
-    <div class="website-edit-line">
-      <span>url</span>
-      <GInput class="website-domain" v-model="domain" />
+    <div class="line">
+      <span class="keyname">url</span>
+      <GInput class="domain" v-model="domain" />
     </div>
   </div>
 </template>
@@ -73,12 +73,11 @@ export default {
           buf = 'new website added';
         }
         this.$info(buf);
-        logInfo(buf, res.data._id);
+        logInfo(res.data);
         this.handleExit();
       } catch (e) {
-        buf = `failed to ${this._id ? 'modify website' : 'add new website'}`;
-        this.$error(buf);
-        logError(buf, e);
+        this.$error(`failed to ${this._id ? 'modify website' : 'add new website'}`);
+        logError(e);
       }
     },
     /**
@@ -107,7 +106,7 @@ export default {
 .website-edit {
   padding: $space-lg;
 
-  .website-edit-line {
+  .line {
     display: flex;
     align-items: center;
     padding: 0 $space-sm;
@@ -126,7 +125,7 @@ export default {
       padding: 0 $space-xs * 1.75;
     }
 
-    span:first-child {
+    .keyname {
       font-weight: 500;
       height: 2.5rem;
       line-height: 2.5rem;

@@ -2,9 +2,13 @@
   <div class="login">
     <GCard class="card">
       <GHeader :text="siteTitle"></GHeader>
-      <div class="form">
+      <div class="line">
+        <span>Username</span>
+        <GInput v-model="username" :validator="validUsername"></GInput>
+      </div>
+      <div class="line">
         <span>Password</span>
-        <GInput v-model="password" type="password" :validator="pwValidator"></GInput>
+        <GInput v-model="password" type="password" :validator="validPassword"></GInput>
       </div>
       <GButton class="submit" type="full-width" @click="handleLogin">Login</GButton>
     </GCard>
@@ -13,12 +17,16 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../utils/loggers.js';
+import { logInfo, logError } from '@/utils/loggers.js';
+import { validUsername, validPassword } from '@/utils/validators.js';
 
 export default {
   name: 'Login',
   data() {
     return {
+      validUsername,
+      validPassword,
+      username: '',
       password: '',
     };
   },
@@ -30,53 +38,54 @@ export default {
   },
   methods: {
     /**
-     * validate password
-     * @param {string} value
-     * @return {boolean}
-     */
-    pwValidator(value) {
-      if (value.length > 20) {
-        return false;
-      }
-      return Boolean(/^[a-z0-9-_.]*$/gi.exec(value));
-    },
-    /**
-     * try init user
      * @return {Promise<void>}
      */
-    async initUser() {
-      let res, buf;
+    async initAccount() {
+      let res;
       try {
         res = await this.$axios.get('/init');
         if (res.status === 201) {
-          res = await this.$axios.post('/init', { pw: this.password });
-          buf = 'admin inited';
-          this.$info(buf);
-          logInfo(buf);
+          let res;
+          try {
+            res = await this.$axios.post('/init', {
+              username: this.username,
+              password: this.password,
+            });
+            logInfo(res.data);
+          } catch (e) {
+            this.$error('failed to init account');
+            logError(e);
+          }
         }
       } catch (e) {
-        buf = 'failed to init user';
-        this.$error(buf);
-        logError(buf, e);
+        this.$error('failed to init account');
+        logError(e);
       }
     },
+    /**
+     * @return {Promise<void>}
+     */
     async handleLogin() {
-      if (this.password && this.pwValidator(this.password)) {
-        await this.initUser();
-        let res, buf;
-        try {
-          res = await this.$axios.post('/login', { pw: this.password });
-          res = res.data;
-          buf = `logging in as ${res.username}`;
-          this.$info(buf);
-          logInfo(buf);
-        } catch (e) {
-          buf = 'wrong username or password';
-          this.$error(buf);
-          logError(buf, e);
-        }
-      } else {
+      if (!this.username || !validUsername(this.username)) {
+        this.$error('not a valid username');
+        return;
+      }
+      if (!this.password || !validPassword(this.password)) {
         this.$error('not a valid password');
+        return;
+      }
+      await this.initAccount();
+      let res;
+      try {
+        res = await this.$axios.post('/login', {
+          username: this.username,
+          password: this.password,
+        });
+        this.$info(`logging in as ${res.data?.username}`);
+        logInfo(res.data);
+      } catch (e) {
+        this.$error('wrong username or password');
+        logError(e);
       }
     },
   },
@@ -108,8 +117,13 @@ export default {
     margin-bottom: $space-xs;
   }
 
-  .form span {
-    margin-right: $space-base;
+  .line {
+    margin-top: $space-sm;
+
+    span {
+      display: inline-block;
+      width: 7rem;
+    }
   }
 
   .submit {
