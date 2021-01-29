@@ -51,36 +51,48 @@
     // get session id
     let sid = getLS(LS_SID);
     // construct data
-    const ec = encodeURIComponent;
+    const encode = encodeURIComponent;
     let url = `${_API}?t=${type}&id=${_ID}&d=${Date.now()}`;
     if (sid) {
       url += `&sid=${sid}`;
     }
-    url += `&p=${ec(path)}`;
+    url += `&p=${encode(path)}`;
     for (let key in payload) {
       if (payload[key]) {
-        url += `&${key}=${ec(payload[key])}`;
+        url += `&${key}=${encode(payload[key])}`;
       }
     }
+    // whether need to care response or wait
+    const needResponse = type === 'view';
+    const needWait = type === 'leave';
     // when not view type and `sendBeacon` available
-    if (type !== 'view' && navigator.sendBeacon) {
+    if (!needResponse && navigator.sendBeacon) {
       navigator.sendBeacon(url);
+    } else if (fetch) {
+      const req = fetch(url, { method: 'GET', keepalive: needWait });
+      if (needResponse) {
+        req.then((res) => {
+          if (res.status === 201) {
+            res.json().then((data) => {
+              const { sid } = data;
+              sid && setLS(LS_SID, sid);
+            });
+          }
+        });
+      }
     } else {
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', url);
-      // [IE11 FIX] xhr.responseType = 'json';
-      xhr.onload = () => {
-        // when got session from api
-        if (xhr.response && xhr.status === 201) {
-          try {
-            const sid = JSON.parse(xhr.response).sid;
+      xhr.open('GET', url, !needWait);
+      // [ie fix] xhr.responseType = 'json';
+      if (needResponse) {
+        xhr.onload = () => {
+          if (xhr.status === 201) {
+            const { sid } = JSON.parse(xhr.response);
             sid && setLS(LS_SID, sid);
-          } catch {
-            return;
           }
-        }
-      };
-      xhr.send();
+        };
+      }
+      xhr.send(null);
     }
   }
 
