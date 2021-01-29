@@ -101,41 +101,45 @@
   // init pvt data
 
   const pvtCtrl = {
-    stat: PVT_INACTIVE, // active status
-    strt: 0, // start time
-    tott: 0, // total time
-    init() {
-      if (this.stat === PVT_INACTIVE) {
-        this.stat = PVT_ACTIVE;
-        this.strt = Date.now();
-        this.tott = 0;
+    t: PVT_INACTIVE, // active status
+    s: 0, // start time
+    a: 0, // total time
+    // init
+    it() {
+      if (this.t === PVT_INACTIVE) {
+        this.t = PVT_ACTIVE;
+        this.s = Date.now();
+        this.a = 0;
       }
     },
-    pause() {
-      if (this.stat === PVT_ACTIVE) {
-        this.stat = PVT_PAUSE;
-        this.tott += Date.now() - this.strt;
+    // pause
+    ps() {
+      if (this.t === PVT_ACTIVE) {
+        this.t = PVT_PAUSE;
+        this.a += Date.now() - this.s;
       }
     },
-    start() {
-      if (this.stat === PVT_PAUSE) {
-        this.stat = PVT_ACTIVE;
-        this.strt = Date.now();
+    // start
+    st() {
+      if (this.t === PVT_PAUSE) {
+        this.t = PVT_ACTIVE;
+        this.s = Date.now();
       }
     },
-    end() {
-      if (this.stat === PVT_ACTIVE) {
-        this.tott += Date.now() - this.strt; // if active, add new time
+    //end
+    ed() {
+      if (this.t === PVT_ACTIVE) {
+        this.a += Date.now() - this.s; // if active, add new time
       }
-      this.stat = PVT_INACTIVE;
-      return this.tott > 0 ? this.tott : undefined;
+      this.t = PVT_INACTIVE;
+      return this.a > 0 ? this.a : undefined;
     },
   };
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
-      pvtCtrl.pause();
+      pvtCtrl.ps();
     } else {
-      pvtCtrl.start();
+      pvtCtrl.st();
     }
   });
 
@@ -146,7 +150,7 @@
    */
   const gooseView = (path, ref) => {
     // start pvt
-    pvtCtrl.init();
+    pvtCtrl.it();
     // those need to send every time
     const data = {
       r: ref, // referrer
@@ -160,9 +164,8 @@
       if (screen.width) {
         const width = Math.round(screen.width || 0);
         const height = Math.round(screen.height || 0);
-        if (!Number.isNaN(width + height)) {
-          data.scn = `${width}x${height}`;
-        }
+        // [ie fix] Number.isNaN()
+        data.scn = `${width}x${height}`;
       }
       setLS(LS_CACHE, now);
     }
@@ -176,7 +179,7 @@
    */
   const gooseLeave = (path) => {
     const data = {};
-    const pvt = pvtCtrl.end();
+    const pvt = pvtCtrl.ed();
     data.pvt = pvt || undefined;
     sendData('leave', path, data);
   };
