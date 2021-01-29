@@ -62,7 +62,7 @@ export default {
       let res, buf;
       try {
         if (this._id) {
-          res = await this.$axios.put(`/website/${this._id}`, {
+          res = await this.$axios.put(`/admin/website/${this._id}`, {
             name: this.name,
             url: this.url,
             base: this.base,
@@ -71,7 +71,7 @@ export default {
           this.$store.commit('UPDATE_WEBSITE', { _id: this._id, data: res.data });
           buf = 'website modified';
         } else {
-          res = await this.$axios.post('/website', {
+          res = await this.$axios.post('/admin/website', {
             name: this.name,
             url: this.url,
             base: this.base,

@@ -1,17 +1,17 @@
-import GIconAdjust from '../assets/icons/adjust.svg';
-import GIconCheck from '../assets/icons/check.svg';
-import GIconEdit from '../assets/icons/edit.svg';
-import GIconPlus from '../assets/icons/plus.svg';
-import GIconTimes from '../assets/icons/times.svg';
-import GIconTrash from '../assets/icons/trash.svg';
+import GIconAdjust from '@/assets/icons/adjust.svg';
+import GIconCheck from '@/assets/icons/check.svg';
+import GIconEdit from '@/assets/icons/edit.svg';
+import GIconPlus from '@/assets/icons/plus.svg';
+import GIconTimes from '@/assets/icons/times.svg';
+import GIconTrash from '@/assets/icons/trash.svg';
 
-import GButton from '../components/GButton.vue';
-import GCard from '../components/GCard.vue';
-import GHeader from '../components/GHeader.vue';
-import GInput from '../components/GInput.vue';
-import GLabel from '../components/GLabel.vue';
-import GList from '../components/GList.vue';
-import GRouterLink from '../components/GRouterLink.vue';
+import GButton from '@/components/GButton.vue';
+import GCard from '@/components/GCard.vue';
+import GHeader from '@/components/GHeader.vue';
+import GInput from '@/components/GInput.vue';
+import GLabel from '@/components/GLabel.vue';
+import GList from '@/components/GList.vue';
+import GRouterLink from '@/components/GRouterLink.vue';
 
 export default {
   /**

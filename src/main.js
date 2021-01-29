@@ -1,11 +1,11 @@
 /*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
-require('../utils/env')();
+require('../utils/env.js')();
 
 /* deps */
 import Vue from 'vue';
 Vue.config.productionTip = false;
 import { router } from './router/index.js';
-import store from './store';
+import store from './store/index.js';
 
 /* css */
 import 'normalize.css';

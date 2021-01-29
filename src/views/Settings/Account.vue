@@ -41,7 +41,7 @@ export default {
     async fetchAccount() {
       let res;
       try {
-        res = await this.$axios.get('/account');
+        res = await this.$axios.get('/admin/account');
         this.id = res.data._id;
         this.username = res.data.username;
         logInfo(res.data);
@@ -64,7 +64,7 @@ export default {
       }
       let res;
       try {
-        res = await this.$axios.put(`/account/${this.id}`, {
+        res = await this.$axios.put(`/admin/account/${this.id}`, {
           username: this.username,
           password: this.password,
         });

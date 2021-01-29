@@ -42,7 +42,7 @@ module.exports = {
    * @param {Object} req express response
    * @param {Function} req express next
    */
-  mongoose: (req, res, next) => {
+  mongoose: () => async (req, res, next) => {
     req.mongoose = mongoose;
     next();
   },

@@ -1,11 +1,16 @@
-/**
- * @param {Object} req express request
- * @param {Object} req express response
- * @param {Function} req express next
- */
-async function cacheControl(req, res, next) {
-  res.append('Cache-Control', 'public, s-maxage=1, must-revalidate');
-  next();
+function cacheControl(options = {}) {
+  const { allowCache } = options;
+  if (allowCache) {
+    return async (req, res, next) => {
+      res.append('Cache-Control', 'public, s-maxage=1, stale-while-revalidate');
+      next();
+    };
+  } else {
+    return async (req, res, next) => {
+      res.append('Cache-Control', 'public, s-maxage=1, must-revalidate');
+      next();
+    };
+  }
 }
 
 module.exports = { cacheControl };

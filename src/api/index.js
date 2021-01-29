@@ -5,21 +5,22 @@ const app = express();
 /* middlewares */
 // response time logger
 const { responseTime } = require('./middlewares/responseTime.js');
-app.use(responseTime);
+app.use(responseTime());
 // body parser and cookie parser
 app.use(express.json());
-app.use(require('cookie-parser')());
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 // compression
-app.use(require('compression')());
+const compression = require('compression');
+app.use(compression());
 // cache control
 const { cacheControl } = require('./middlewares/cacheControl.js');
-app.use(cacheControl);
+app.use(cacheControl());
 
 /* routes */
 const { router } = require('./router.js');
 app.use('/api', router);
-
 const { errorHandler } = require('./middlewares/errorHandler.js');
-app.use(errorHandler);
+app.use(errorHandler());
 
 module.exports = app;

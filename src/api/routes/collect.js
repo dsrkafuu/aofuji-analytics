@@ -1,6 +1,9 @@
 /* deps */
+const { Router } = require('express');
+const router = Router();
 const isLocalhost = require('is-localhost-ip');
 const isBot = require('isbot');
+const cors = require('cors');
 
 /* utils */
 const { requestIP } = require('../utils/requestIP.js');
@@ -10,15 +13,7 @@ const { formatPath } = require('../utils/formatPath.js');
 const { formatRef } = require('../utils/formatRef.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
 
-/* middlewares */
-const cors = require('cors')({
-  origin: true,
-  methods: ['GET', 'POST'],
-  credentials: false,
-  maxAge: 86400, // 1 day
-});
-
-const collectRoute = async (req, res) => {
+const route = async (req, res) => {
   // get basic params
   let { t: type, id, sid, d: date, p: path } = req.query;
   type = formatQuery('string', type);
@@ -220,8 +215,16 @@ const collectRoute = async (req, res) => {
   }
 };
 
-module.exports = (router) => {
-  router.options('/collect', cors);
-  router.post('/collect', cors, collectRoute);
-  router.get('/collect', cors, collectRoute);
+/* middlewares */
+const options = {
+  origin: true,
+  methods: ['GET', 'POST'],
+  credentials: false,
+  maxAge: 86400, // 1 day
 };
+
+router.options('/', cors(options));
+router.post('/', cors(options), route);
+router.get('/', cors(options), route);
+
+module.exports = { router };

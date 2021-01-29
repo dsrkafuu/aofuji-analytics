@@ -12,7 +12,7 @@
 
 <script>
 /* utils */
-import { logInfo, logError } from '../../utils/loggers.js';
+import { logInfo, logError } from '@/utils/loggers.js';
 
 export default {
   name: 'About',
@@ -23,17 +23,15 @@ export default {
   },
   methods: {
     async handleTest() {
-      let res, buf;
+      let res;
       try {
-        res = await this.$axios.get('/debug?nocache=1');
+        res = await this.$axios.get('/admin/debug?cache=0');
         this.testAPI = res.data;
-        buf = 'debug test data got';
-        this.$info(buf);
-        logInfo(buf, res.data);
+        this.$info('debug data fetched');
+        logInfo(res.data);
       } catch (e) {
-        buf = 'failed to proceed debug test';
-        this.$error('failed to proceed debug test');
-        logError(buf, e);
+        this.$error('failed to process debug test');
+        logError(e);
       }
     },
   },

@@ -1,25 +1,26 @@
+/* deps */
 const { Router } = require('express');
 const router = Router();
 
 /* utils */
 const { buildError } = require('./utils/buildError.js');
 const { mongoose } = require('./utils/mongoose.js');
-router.use(mongoose);
+router.use(mongoose());
 
 /* routes */
-// collect route
-require('./routes/collect.js')(router);
-// login
-require('./routes/login.js')(router);
-// user
-require('./routes/account.js')(router);
-// website
-require('./routes/website.js')(router);
-// debug
-require('./routes/debug.js')(router);
+const { router: collect } = require('./routes/collect.js');
+const { router: login } = require('./routes/login.js');
+router.use('/collect', collect);
+router.use('/login', login);
+const { router: adminWebsite } = require('./routes/admin/website.js');
+const { router: adminAccount } = require('./routes/admin/account.js');
+const { router: adminDebug } = require('./routes/admin/debug.js');
+router.use('/admin/website', adminWebsite);
+router.use('/admin/account', adminAccount);
+router.use('/admin/debug', adminDebug);
 
 /* fallback */
-router.get('/*', async () => {
+router.use('/*', async () => {
   throw buildError(404, 'route not found');
 });
 
