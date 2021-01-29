@@ -68,7 +68,7 @@
     // when not view type and `sendBeacon` available
     if (!needResponse && navigator.sendBeacon) {
       navigator.sendBeacon(url);
-    } else if (fetch) {
+    } else if (window.fetch) {
       const req = fetch(url, { method: 'GET', keepalive: needWait });
       if (needResponse) {
         req.then((res) => {
