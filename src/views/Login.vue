@@ -4,11 +4,16 @@
       <GHeader :text="siteTitle"></GHeader>
       <div class="line">
         <span>Username</span>
-        <GInput v-model="username" :validator="validUsername"></GInput>
+        <GInput v-model="username" :validator="validUsername" @keyup.enter="handleLogin"></GInput>
       </div>
       <div class="line">
         <span>Password</span>
-        <GInput v-model="password" type="password" :validator="validPassword"></GInput>
+        <GInput
+          v-model="password"
+          type="password"
+          :validator="validPassword"
+          @keyup.enter="handleLogin"
+        ></GInput>
       </div>
       <GButton class="submit" type="full-width" @click="handleLogin">Login</GButton>
     </GCard>

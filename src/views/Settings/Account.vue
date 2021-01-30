@@ -21,7 +21,6 @@
 <script>
 /* deps */
 import Cookie from 'js-cookie';
-
 /* utils */
 import { logInfo, logError } from '@/utils/loggers.js';
 import { validUsername, validPassword } from '@/utils/validators.js';

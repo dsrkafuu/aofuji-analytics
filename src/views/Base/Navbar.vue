@@ -19,8 +19,11 @@
           </GRouterLink>
         </div>
         <div class="navbar-end">
-          <GButton class="navbar-item" type="full-height" @click.prevent="handleThemeSwitch">
-            <GIconAdjust class="g-icon" />
+          <GButton class="navbar-item" type="full-height" v-if="showSignOut" @click="handleSignOut">
+            <GIconSignOut />
+          </GButton>
+          <GButton class="navbar-item" type="full-height" @click="handleThemeSwitch">
+            <GIconAdjust />
           </GButton>
         </div>
       </div>
@@ -29,12 +32,21 @@
 </template>
 
 <script>
+/* deps */
+import Cookie from 'js-cookie';
+/* utils */
+import { COOKIE_TOKEN } from '@/utils/constants.js';
+
 export default {
   name: 'Navbar',
   computed: {
     // site title from environment variables
     siteTitle() {
       return process.env.VUE_APP_TITLE || 'Goose Analytics';
+    },
+    // should show sign out button
+    showSignOut() {
+      return Boolean(this.$store.state.COMMON.account._id);
     },
   },
   methods: {
@@ -43,6 +55,16 @@ export default {
      */
     handleThemeSwitch() {
       this.$store.commit('SWITCH_THEME');
+    },
+    /**
+     * signout and go login
+     */
+    handleSignOut() {
+      this.$store.commit('M_COMMON_ACCOUNT', {});
+      Cookie.remove(COOKIE_TOKEN, { sameSite: 'Lax' });
+      this.$router.push({
+        name: 'Login',
+      });
     },
   },
 };

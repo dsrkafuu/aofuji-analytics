@@ -2,6 +2,7 @@ import GIconAdjust from '@/assets/icons/adjust.svg';
 import GIconCheck from '@/assets/icons/check.svg';
 import GIconEdit from '@/assets/icons/edit.svg';
 import GIconPlus from '@/assets/icons/plus.svg';
+import GIconSignOut from '@/assets/icons/sign-out.svg';
 import GIconTimes from '@/assets/icons/times.svg';
 import GIconTrash from '@/assets/icons/trash.svg';
 
@@ -22,9 +23,10 @@ export default {
     Vue.component('GIconAdjust', GIconAdjust);
     Vue.component('GIconCheck', GIconCheck);
     Vue.component('GIconEdit', GIconEdit);
+    Vue.component('GIconPlus', GIconPlus);
+    Vue.component('GIconSignOut', GIconSignOut);
     Vue.component('GIconTimes', GIconTimes);
     Vue.component('GIconTrash', GIconTrash);
-    Vue.component('GIconPlus', GIconPlus);
 
     /* basic */
     Vue.component('GButton', GButton);
