@@ -1,18 +1,15 @@
-/* vue */
+/* deps */
 import Vue from 'vue';
 import Router from 'vue-router';
 Vue.use(Router);
-
-/* deps */
 import Cookie from 'js-cookie';
 
 /* utils */
-import { AUTH_COOKIE_KEY } from '@/utils/constants.js';
+import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 /* routes */
 import { routes } from './routes.js';
 
-/* fix */
 // only throw error when NavigationFailure
 // https://github.com/vuejs/vue-router/issues/2881#issuecomment-520554378
 const originalPush = Router.prototype.push;
@@ -37,7 +34,7 @@ const router = new Router({
 /* guards */
 router.beforeEach((to, from, next) => {
   // login check
-  if (to.name !== 'Login' && !Cookie.get(AUTH_COOKIE_KEY)) {
+  if (to.name !== 'Login' && !Cookie.get(COOKIE_TOKEN)) {
     next({ name: 'Login' });
   }
   // default behavior

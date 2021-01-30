@@ -1,20 +1,11 @@
-/* theme */
-// body attribute name
-export const THEME_BODY_ATTR = 'data-theme';
-// local storage key
-export const THEME_STORAGE_KEY = 'goose_theme';
-// available themes
-export const THEME_TYPES = {
-  AUTO: 'goose_theme-auto',
-  LIGHT: 'goose_theme-light',
-  DARK: 'goose_theme-dark',
-};
+/* dom */
+export const DOM_ATTR_THEME = 'data-theme';
 
-/* settings */
-export const SETTINGS_TYPES = {
-  USER: 'goose_user',
-  WEBSITE: 'goose_website',
-};
+/* cookie */
+export const COOKIE_TOKEN = 'goose_token';
 
-/* auth */
-export const AUTH_COOKIE_KEY = 'goose_token';
+/* storage */
+export const LS_KEY = 'goose_ldata';
+export const SS_KEY = 'goose_sdata';
+export const STORAGE_THEME = 'theme';
+export const STORAGE_ACCOUNT = 'account';

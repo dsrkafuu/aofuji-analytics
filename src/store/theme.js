@@ -1,54 +1,45 @@
 /* utils */
-import { getLS, setLS } from '../utils/storage.js';
-import { THEME_STORAGE_KEY, THEME_BODY_ATTR, THEME_TYPES } from '../utils/constants.js';
-const { AUTO, LIGHT, DARK } = THEME_TYPES;
+import { getLS, setLS } from '@/utils/storage.js';
+import { STORAGE_THEME, DOM_ATTR_THEME } from '@/utils/constants.js';
 
 export const THEME = {
   state: () => ({
     // init theme from `localStorage`
-    theme: getLS(THEME_STORAGE_KEY) || AUTO,
+    theme: getLS(STORAGE_THEME) || 'auto',
   }),
   mutations: {
     /**
-     * update new theme into state
-     */
-    UPDATE_THEME(state, payload) {
-      const { newTheme } = payload;
-      document.body.setAttribute(THEME_BODY_ATTR, newTheme);
-      state.theme = newTheme;
-      setLS(THEME_STORAGE_KEY, newTheme);
-    },
-  },
-  actions: {
-    /**
      * init theme to dom
      */
-    async INIT_THEME({ state }) {
-      document.body.setAttribute(THEME_BODY_ATTR, state.theme);
+    INIT_THEME(state) {
+      document.body.setAttribute(DOM_ATTR_THEME, state.theme);
     },
+
     /**
      * trigger theme switch
      */
-    async SWITCH_THEME({ commit, state }) {
+    SWITCH_THEME(state) {
       // get the current theme of app
       const curTheme = state.theme;
       // get system perfered theme
-      const sysTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? DARK : LIGHT;
+      const sysTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       // calculate the new theme
       let newTheme;
-      if (curTheme === AUTO) {
+      if (curTheme === 'auto') {
         // if in auto mode, switch to custom mode
-        newTheme = sysTheme === LIGHT ? DARK : LIGHT;
+        newTheme = sysTheme === 'light' ? 'dark' : 'light';
       } else {
         // if in custom mode
-        newTheme = curTheme === LIGHT ? DARK : LIGHT;
+        newTheme = curTheme === 'light' ? 'dark' : 'light';
         if (newTheme === sysTheme) {
           // if target theme is the system perfered theme, back to auto
-          newTheme = AUTO;
+          newTheme = 'auto';
         }
       }
       // commit theme change
-      commit('UPDATE_THEME', { newTheme });
+      document.body.setAttribute(DOM_ATTR_THEME, newTheme);
+      state.theme = newTheme;
+      setLS(STORAGE_THEME, newTheme);
     },
   },
 };

@@ -42,7 +42,7 @@ export default {
      * switch the theme
      */
     handleThemeSwitch() {
-      this.$store.dispatch('SWITCH_THEME');
+      this.$store.commit('SWITCH_THEME');
     },
   },
 };
