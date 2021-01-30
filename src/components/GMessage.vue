@@ -28,7 +28,7 @@ export default {
      * @param {string} id
      */
     handleClose(id) {
-      this.$store.dispatch('CLOSE_MESSAGE', { id });
+      this.$store.dispatch('A_CLOSE_MESSAGE', { id });
     },
   },
 };

@@ -13,8 +13,10 @@ const { authCheck } = require('./middlewares/authCheck.js');
 /* routes */
 const { router: collect } = require('./routes/collect.js');
 const { router: login } = require('./routes/login.js');
+const { router: common } = require('./routes/common.js');
 router.use('/collect', collect);
 router.use('/login', login);
+router.use('/common', /*authCheck({ checkPublic: true }),*/ common);
 const { router: adminWebsite } = require('./routes/admin/website.js');
 const { router: adminAccount } = require('./routes/admin/account.js');
 const { router: adminDebug } = require('./routes/admin/debug.js');

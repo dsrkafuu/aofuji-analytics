@@ -11,19 +11,18 @@ export const MESSAGE = {
   mutations: {
     // add a new message
     // payload: { id, timeout, type, text }
-    ADD_MESSAGE(state, payload) {
-      const { id, timeout, type, text } = payload;
-      state.messages.push({ id, timeout, type, text });
+    M_ADD_MESSAGE(state, payload) {
+      state.messages.push({ ...payload });
     },
     // remove oldest message
-    SHIFT_MESSAGE(state) {
+    M_SHIFT_MESSAGE(state) {
       const message = state.messages.shift();
       message.timeout && clearTimeout(message.timeout);
       rIDManager.remove(message.id);
     },
     // remove a message
     // payload: { id }
-    REMOVE_MESSAGE(state, payload) {
+    M_REMOVE_MESSAGE(state, payload) {
       const index = findObjectIndexInArray(state.messages, 'id', payload.id);
       state.messages[index].timeout && clearTimeout(state.messages[index].timeout);
       rIDManager.remove(state.messages[index].id);
@@ -32,16 +31,18 @@ export const MESSAGE = {
   },
   actions: {
     // trigger a message
-    async TRIGGER_MESSAGE({ commit }, payload) {
-      payload.id = rIDManager.get();
-      payload.timeout = setTimeout(() => commit('SHIFT_MESSAGE'), 10000);
-      commit('ADD_MESSAGE', payload);
+    // payload: { id, text }
+    async A_TRIGGER_MESSAGE({ commit }, payload) {
+      const pl = { ...payload };
+      pl.id = rIDManager.get();
+      pl.timeout = setTimeout(() => commit('M_SHIFT_MESSAGE'), 10000);
+      commit('M_ADD_MESSAGE', pl);
     },
     // close a selected message
     // payload: { id }
-    async CLOSE_MESSAGE({ commit }, payload) {
+    async A_CLOSE_MESSAGE({ commit }, payload) {
       if (payload && payload.id) {
-        commit('REMOVE_MESSAGE', payload);
+        commit('M_REMOVE_MESSAGE', payload);
       }
     },
   },

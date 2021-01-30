@@ -19,9 +19,13 @@
 </template>
 
 <script>
+/* deps */
+import Cookie from 'js-cookie';
+
 /* utils */
 import { logInfo, logError } from '@/utils/loggers.js';
 import { validUsername, validPassword } from '@/utils/validators.js';
+import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 export default {
   name: 'Account',
@@ -68,13 +72,15 @@ export default {
           username: this.username,
           password: this.password,
         });
-        // re-login after account changed
-        res = await this.$axios.post('/login', {
-          username: this.username,
-          password: this.password,
-        });
         this.$info('account modified');
         logInfo(res.data);
+        // log out after account changed
+        this.$store.commit('M_COMMON_ACCOUNT', {});
+        Cookie.remove(COOKIE_TOKEN, { sameSite: 'Lax' });
+        this.$router.push({
+          name: 'Login',
+        });
+        this.$info('please log-in again');
       } catch (e) {
         this.$error('failed to modify account');
         logError(e);

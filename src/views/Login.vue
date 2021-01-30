@@ -83,6 +83,8 @@ export default {
         });
         this.$info(`logging in as ${res.data?.username}`);
         logInfo(res.data);
+        // write data to vuex
+        this.$store.commit('M_COMMON_ACCOUNT', res.data);
         this.$router.push({
           name: 'Realtime',
         });

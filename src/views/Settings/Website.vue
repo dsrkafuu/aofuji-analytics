@@ -38,7 +38,7 @@ export default {
       let res;
       try {
         res = await this.$axios.get('/admin/website');
-        this.$store.commit('UPDATE_ALL_WEBSITES', { data: res.data });
+        this.$store.commit('M_UPDATE_ALL_WEBSITES', res.data);
         logInfo(res.data);
       } catch (e) {
         this.$error('failed to fetch website list');
@@ -49,14 +49,14 @@ export default {
      * handle website add
      */
     handleAdd() {
-      this.$store.commit('EDIT_WEBSITE', {});
+      this.$store.commit('M_EDIT_WEBSITE', {});
     },
     /**
      * handle website edit
      * @param {string} id
      */
     handleEdit(id) {
-      this.$store.commit('EDIT_WEBSITE', { _id: id });
+      this.$store.commit('M_EDIT_WEBSITE', { _id: id });
     },
     /**
      * handle website delete
@@ -64,7 +64,7 @@ export default {
     async handleDelete(id) {
       try {
         await this.$axios.delete(`/admin/website/${id}`);
-        this.$store.commit('REMOVE_WEBSITE', { _id: id });
+        this.$store.commit('M_REMOVE_WEBSITE', { _id: id });
         this.$info('website removed');
       } catch (e) {
         this.$error('failed to remove website');

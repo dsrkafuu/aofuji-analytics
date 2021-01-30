@@ -68,7 +68,7 @@ export default {
             base: this.base,
             isPublic: this.isPublic,
           });
-          this.$store.commit('UPDATE_WEBSITE', { _id: this._id, data: res.data });
+          this.$store.commit('M_UPDATE_WEBSITE', res.data);
           buf = 'website modified';
         } else {
           res = await this.$axios.post('/admin/website', {
@@ -77,7 +77,7 @@ export default {
             base: this.base,
             isPublic: this.isPublic,
           });
-          this.$store.commit('ADD_WEBSITE', { data: res.data });
+          this.$store.commit('M_ADD_WEBSITE', res.data);
           buf = 'new website added';
         }
         this.$info(buf);
@@ -92,7 +92,7 @@ export default {
      * exit editing
      */
     handleExit() {
-      this.$store.commit('EXIT_EDIT_WEBSITE');
+      this.$store.commit('M_EXIT_EDIT_WEBSITE');
     },
   },
   activated() {

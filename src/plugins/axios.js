@@ -25,5 +25,4 @@ export default {
   install(Vue) {
     Vue.prototype.$axios = axiosInst;
   },
-  axios: axiosInst,
 };

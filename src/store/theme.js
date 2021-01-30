@@ -11,14 +11,14 @@ export const THEME = {
     /**
      * init theme to dom
      */
-    INIT_THEME(state) {
+    M_INIT_THEME(state) {
       document.body.setAttribute(DOM_ATTR_THEME, state.theme);
     },
 
     /**
      * trigger theme switch
      */
-    SWITCH_THEME(state) {
+    M_SWITCH_THEME(state) {
       // get the current theme of app
       const curTheme = state.theme;
       // get system perfered theme

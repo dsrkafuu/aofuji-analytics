@@ -17,10 +17,10 @@ export default {
 
     // add global functions
     Vue.prototype.$info = (text) => {
-      store.dispatch('TRIGGER_MESSAGE', { type: 'default', text });
+      store.dispatch('A_TRIGGER_MESSAGE', { type: 'default', text });
     };
     Vue.prototype.$error = (text) => {
-      store.dispatch('TRIGGER_MESSAGE', { type: 'error', text });
+      store.dispatch('A_TRIGGER_MESSAGE', { type: 'error', text });
     };
   },
 };

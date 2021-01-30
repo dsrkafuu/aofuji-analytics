@@ -71,7 +71,7 @@ export default {
     changeTab(newIndex) {
       // exit editing
       if (this.$store.state.WEBSITE.editing) {
-        this.$store.commit('EXIT_EDIT_WEBSITE');
+        this.$store.commit('M_EXIT_EDIT_WEBSITE');
       }
       // change tab
       const tabQuery = this.tabQuerys[newIndex];

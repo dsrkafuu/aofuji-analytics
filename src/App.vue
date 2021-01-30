@@ -9,7 +9,7 @@ export default {
   name: 'App',
   created() {
     // init theme to dom
-    this.$store.commit('INIT_THEME');
+    this.$store.commit('M_INIT_THEME');
   },
   mounted() {},
 };
