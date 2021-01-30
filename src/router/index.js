@@ -34,7 +34,8 @@ const router = new Router({
 /* guards */
 router.beforeEach((to, from, next) => {
   // login check
-  if (to.name !== 'Login' && !Cookie.get(COOKIE_TOKEN)) {
+  // only when not going to login/404
+  if (to.name !== 'NotFound' && to.name !== 'Login' && !Cookie.get(COOKIE_TOKEN)) {
     next({ name: 'Login' });
   }
   // default behavior
