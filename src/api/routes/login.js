@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const { buildError } = require('../utils/buildError.js');
 const { Account, select } = require('../utils/mongoose.js');
 
+const secret = process.env.TOKEN_SECRET || 'goose_token-secret';
 const selectKeys = 'username';
 
 // check init status
@@ -55,7 +56,6 @@ router.post('/', async (req, res) => {
     }
   };
   const genToken = async () => {
-    const secret = process.env.TOKEN_SECRET || 'goose_token-secret';
     const token = jwt.sign({ _id: account._id, username: account.username }, secret, {
       algorithm: 'HS256',
     });
