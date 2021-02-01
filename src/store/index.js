@@ -9,7 +9,7 @@ import { COMMON } from './common.js';
 import { MESSAGE } from './message.js';
 import { WEBSITE } from './website.js';
 
-export default new Vuex.Store({
+export const store = new Vuex.Store({
   modules: {
     THEME,
     COMMON,

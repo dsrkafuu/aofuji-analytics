@@ -2,8 +2,8 @@
 import Base from '@/views/Base/index.vue';
 import Login from '@/views/Login.vue';
 import NotFound from '@/views/NotFound.vue';
-import Realtime from '@/views/Realtime/Realtime.vue';
-import Dashboard from '@/views/Dashboard/Dashboard.vue';
+import Realtime from '@/views/Realtime/index.vue';
+import Dashboard from '@/views/Dashboard/index.vue';
 import Settings from '@/views/Settings/index.vue';
 
 export const routes = [

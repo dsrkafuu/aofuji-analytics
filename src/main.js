@@ -5,7 +5,7 @@ require('../utils/env.js')();
 import Vue from 'vue';
 Vue.config.productionTip = false;
 import { router } from './router/index.js';
-import store from './store/index.js';
+import { store } from './store/index.js';
 
 /* css */
 import 'normalize.css';

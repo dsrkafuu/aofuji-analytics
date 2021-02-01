@@ -20,7 +20,7 @@
         </div>
         <div class="end">
           <div class="select">
-            <GSelect :data="list" v-model="value" />
+            <GSelect :data="commonWebsites" v-model="selectedWebsite" />
           </div>
           <div class="ctrl">
             <GButton class="item" type="full-height" v-if="showSignOut" @click="handleSignOut">
@@ -39,27 +39,15 @@
 <script>
 /* deps */
 import Cookie from 'js-cookie';
+import { cloneDeep } from 'lodash';
 /* utils */
 import { COOKIE_TOKEN } from '@/utils/constants.js';
+import { findObjectIndexInArray } from '@/utils/finders';
 
 export default {
   name: 'Navbar',
   data() {
     return {
-      list: [
-        {
-          value: '1',
-          text: 'website 1',
-        },
-        {
-          value: '2',
-          text: 'website 2',
-        },
-        {
-          value: '12334566788903412121212',
-          text: 'website 123345667889034211212121212212121',
-        },
-      ],
       value: '',
     };
   },
@@ -71,6 +59,36 @@ export default {
     // should show sign out button
     showSignOut() {
       return Boolean(this.$store.state.COMMON.account._id);
+    },
+    // common website select list
+    commonWebsites() {
+      let data = this.$store.state.COMMON.websites;
+      data = cloneDeep(data);
+      for (let i = 0; i < data.length; i++) {
+        data[i].value = data[i]._id;
+        data[i].text = data[i].name;
+      }
+      return data;
+    },
+    // value for v-model bind select
+    // sync with vuex
+    selectedWebsite: {
+      get() {
+        return this.$store.state.COMMON.selectedWebsite?._id || '';
+      },
+      set(val) {
+        const index = findObjectIndexInArray(this.commonWebsites, 'value', val);
+        if (!Number.isNaN(index)) {
+          this.$store.commit('M_SELECT_WEBSITE', {
+            _id: this.commonWebsites[index]._id,
+            name: this.commonWebsites[index].name,
+          });
+          // update url search param
+          this.$router.replace({
+            query: { website: this.commonWebsites[index]._id },
+          });
+        }
+      },
     },
   },
   methods: {

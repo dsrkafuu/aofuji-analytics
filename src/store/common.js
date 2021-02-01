@@ -11,6 +11,7 @@ export const COMMON = {
     account: getLS(STORAGE_ACCOUNT) || {},
     // avaliable websites data
     websites: [],
+    selectedWebsite: null,
   }),
 
   mutations: {
@@ -27,6 +28,14 @@ export const COMMON = {
     M_COMMON_WEBSITES(state, payload) {
       if (Array.isArray(payload)) {
         state.websites = cloneDeep(payload);
+      }
+    },
+
+    // payload: { _id, name }
+    M_SELECT_WEBSITE(state, payload) {
+      const { _id, name } = payload;
+      if (_id && name) {
+        state.selectedWebsite = { _id, name };
       }
     },
   },

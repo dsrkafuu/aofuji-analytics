@@ -30,6 +30,16 @@ export default {
         res = await this.$axios.get('/common');
         this.$store.commit('M_COMMON_WEBSITES', res.data);
         logInfo(res.data);
+        // init default selected website
+        if (res.data[0]) {
+          this.$store.commit('M_SELECT_WEBSITE', res.data[0]);
+          // update url search param
+          if (!this.$route.query.website) {
+            this.$router.replace({
+              query: { website: res.data[0]._id },
+            });
+          }
+        }
       } catch (e) {
         this.$error('failed to fetch common data');
         logError(e);
