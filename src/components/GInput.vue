@@ -63,15 +63,15 @@ export default {
   padding: $space-xs $space-xs * 1.75;
   background-color: var(--color-wrapper);
   border-radius: $radius;
-  height: 1.5rem + $space-xs * 2;
+  height: $input-height;
   position: relative;
 
   input {
-    width: 100%;
+    width: $input-min-width;
     outline: none;
     border: none;
-    height: 1.5rem;
-    line-height: 1.5rem;
+    height: $input-inner-height;
+    line-height: $input-inner-height;
     font-size: $font-size-sm;
     background: transparent;
     color: var(--color-font);

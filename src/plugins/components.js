@@ -5,12 +5,15 @@ import GIconPlus from '@/assets/icons/plus.svg';
 import GIconSignOut from '@/assets/icons/sign-out.svg';
 import GIconTimes from '@/assets/icons/times.svg';
 import GIconTrash from '@/assets/icons/trash.svg';
+import GIconChevronDown from '@/assets/icons/chevron-down.svg';
+import GIconChevronUp from '@/assets/icons/chevron-up.svg';
 
 import GButton from '@/components/GButton.vue';
 import GCard from '@/components/GCard.vue';
 import GHeader from '@/components/GHeader.vue';
 import GInput from '@/components/GInput.vue';
 import GLabel from '@/components/GLabel.vue';
+import GSelect from '@/components/GSelect.vue';
 import GList from '@/components/GList.vue';
 import GRouterLink from '@/components/GRouterLink.vue';
 
@@ -27,6 +30,8 @@ export default {
     Vue.component('GIconSignOut', GIconSignOut);
     Vue.component('GIconTimes', GIconTimes);
     Vue.component('GIconTrash', GIconTrash);
+    Vue.component('GIconChevronDown', GIconChevronDown);
+    Vue.component('GIconChevronUp', GIconChevronUp);
 
     /* basic */
     Vue.component('GButton', GButton);
@@ -34,6 +39,7 @@ export default {
     Vue.component('GInput', GInput);
     Vue.component('GLabel', GLabel);
     Vue.component('GHeader', GHeader);
+    Vue.component('GSelect', GSelect);
 
     /* derived */
     Vue.component('GRouterLink', GRouterLink);

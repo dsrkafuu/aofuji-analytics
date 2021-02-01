@@ -1,30 +1,35 @@
 <template>
   <nav class="navbar">
     <div class="g-container">
-      <div class="navbar-brand">
-        <GRouterLink class="navbar-item" :to="{ name: 'Base' }" type="full-height">
+      <div class="brand">
+        <GRouterLink class="item" :to="{ name: 'Base' }" type="full-height">
           {{ siteTitle }}
         </GRouterLink>
       </div>
-      <div class="navbar-menu">
-        <div class="navbar-start">
-          <GRouterLink class="navbar-item" :to="{ name: 'Realtime' }" type="full-height">
+      <div class="menu">
+        <div class="start">
+          <GRouterLink class="item" :to="{ name: 'Realtime' }" type="full-height">
             Realtime
           </GRouterLink>
-          <GRouterLink class="navbar-item" :to="{ name: 'Dashboard' }" type="full-height">
+          <GRouterLink class="item" :to="{ name: 'Dashboard' }" type="full-height">
             Dashboard
           </GRouterLink>
-          <GRouterLink class="navbar-item" :to="{ name: 'Settings' }" type="full-height">
+          <GRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
             Settings
           </GRouterLink>
         </div>
-        <div class="navbar-end">
-          <GButton class="navbar-item" type="full-height" v-if="showSignOut" @click="handleSignOut">
-            <GIconSignOut />
-          </GButton>
-          <GButton class="navbar-item" type="full-height" @click="handleThemeSwitch">
-            <GIconAdjust />
-          </GButton>
+        <div class="end">
+          <div class="select">
+            <GSelect :data="list" v-model="value" />
+          </div>
+          <div class="ctrl">
+            <GButton class="item" type="full-height" v-if="showSignOut" @click="handleSignOut">
+              <GIconSignOut />
+            </GButton>
+            <GButton class="item" type="full-height" @click="handleThemeSwitch">
+              <GIconAdjust />
+            </GButton>
+          </div>
         </div>
       </div>
     </div>
@@ -39,6 +44,25 @@ import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 export default {
   name: 'Navbar',
+  data() {
+    return {
+      list: [
+        {
+          value: '1',
+          text: 'website 1',
+        },
+        {
+          value: '2',
+          text: 'website 2',
+        },
+        {
+          value: '12334566788903412121212',
+          text: 'website 123345667889034211212121212212121',
+        },
+      ],
+      value: '',
+    };
+  },
   computed: {
     // site title from environment variables
     siteTitle() {
@@ -85,30 +109,37 @@ export default {
   @media screen and (max-width: $responsive-tablet + $responsive-offset) {
     height: $navbar-height-sm * 2;
   }
-}
 
-.navbar-brand {
-  flex: 0 0 auto;
-  font-size: $font-size-md;
-  font-weight: 500;
+  .brand {
+    flex: 0 0 auto;
+    font-size: $font-size-md;
+    font-weight: 500;
 
-  .navbar-item {
-    padding: 0 $space-lg;
-    color: var(--color-font) !important;
+    .item {
+      padding: 0 $space-lg;
+      color: var(--color-font) !important;
+    }
   }
-}
 
-.navbar-menu {
-  flex: 1 1 auto;
-  display: flex;
-}
+  .menu {
+    flex: 1 1 auto;
+    display: flex;
+  }
 
-.navbar-start {
-  flex: 1 1 auto;
-  display: flex;
-}
+  .select {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-.navbar-end {
-  flex: 0 0 auto;
+  .start {
+    flex: 1 1 auto;
+    display: flex;
+  }
+
+  .end {
+    flex: 0 0 auto;
+    display: flex;
+  }
 }
 </style>
