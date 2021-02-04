@@ -2,9 +2,6 @@
 import Base from '@/views/Base/index.vue';
 import Login from '@/views/Login.vue';
 import NotFound from '@/views/NotFound.vue';
-import Realtime from '@/views/Realtime/index.vue';
-import Dashboard from '@/views/Dashboard/index.vue';
-import Settings from '@/views/Settings/index.vue';
 
 export const routes = [
   {
@@ -16,18 +13,17 @@ export const routes = [
       {
         path: '/realtime',
         name: 'Realtime',
-        component: Realtime,
+        component: () => import(/* webpackChunkName: "realtime" */ '@/views/Realtime/index.vue'),
       },
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: Dashboard,
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/Dashboard/index.vue'),
       },
-
       {
         path: '/settings',
         name: 'Settings',
-        component: Settings,
+        component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings/index.vue'),
       },
     ],
   },
