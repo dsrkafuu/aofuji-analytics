@@ -19,6 +19,7 @@
     "axios": "~0.21.1",
     "bcrypt": "~5.0.0",
     "bowser": "~2.11.0",
+    "chart.js": "~2.9.4",
     "compression": "~1.7.4",
     "connect-history-api-fallback": "~1.6.0",
     "cookie-parser": "~1.4.5",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
+    "@types/chart.js": "^2.9.30",
     "@vue/cli-plugin-babel": "~4.5.10",
     "@vue/cli-plugin-eslint": "~4.5.10",
     "@vue/cli-plugin-router": "~4.5.10",
