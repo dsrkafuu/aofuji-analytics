@@ -19,7 +19,7 @@
           </VRouterLink>
         </div>
         <div class="end">
-          <div class="select">
+          <div class="select" v-if="showSelect">
             <VSelect :data="commonWebsites" v-model="selectedWebsite" />
           </div>
           <div class="ctrl">
@@ -59,6 +59,10 @@ export default {
     // should show sign out button
     showSignOut() {
       return Boolean(this.$store.state.COMMON.account._id);
+    },
+    // should show common website select
+    showSelect() {
+      return this.$route.path.startsWith('/realtime') || this.$route.path.startsWith('/dashboard');
     },
     // common website select list
     commonWebsites() {

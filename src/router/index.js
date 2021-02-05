@@ -41,8 +41,8 @@ router.beforeEach((to, from, next) => {
   }
   // if need keep search param exist
   else if (
+    store.state.COMMON.selectedWebsite?._id &&
     !to.query.website &&
-    from.query.website &&
     (to.path.startsWith('/realtime') || to.path.startsWith('/dashboard'))
   ) {
     next({
