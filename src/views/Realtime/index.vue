@@ -1,7 +1,7 @@
 <template>
   <div class="realtime">
     <div class="row">
-      <GCard class="count">
+      <VCard class="count">
         <div class="section">
           <div class="title">Users in Last 15 Minutes</div>
           <div class="data data-uilm">456</div>
@@ -12,8 +12,8 @@
             <canvas ref="dcilm"></canvas>
           </div>
         </div>
-      </GCard>
-      <GCard class="map">2</GCard>
+      </VCard>
+      <VCard class="map">2</VCard>
     </div>
     <div class="row"></div>
   </div>

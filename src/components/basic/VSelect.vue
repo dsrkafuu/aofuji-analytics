@@ -1,11 +1,11 @@
 <template>
-  <div :class="['g-select', { 'g-select-active': active }]">
-    <div class="g-select-input" @click="handleSwitch">
+  <div :class="['v-select', { 'v-select-active': active }]">
+    <div class="v-select-input" @click="handleSwitch">
       <span>{{ selectedText }}</span>
-      <GIconChevronUp v-if="active" />
-      <GIconChevronDown v-else />
+      <VIconChevronUp v-if="active" />
+      <VIconChevronDown v-else />
     </div>
-    <ul class="g-select-list" v-show="active">
+    <ul class="v-select-list" v-show="active">
       <li v-for="item of data" :key="item.value" @click="handleSelect(item)">
         {{ item.text }}
       </li>
@@ -18,7 +18,7 @@
 import { findObjectIndexInArray } from '@/utils/finders';
 
 export default {
-  name: 'GSelect',
+  name: 'VSelect',
   props: {
     data: {
       type: Array,
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss">
-.g-select {
+.v-select {
   display: inline-block;
   background-color: var(--color-wrapper);
   height: $select-height;
@@ -98,7 +98,7 @@ export default {
       text-overflow: ellipsis;
     }
 
-    .g-icon {
+    .v-icon {
       flex: 0 0 auto;
     }
   }
@@ -110,7 +110,6 @@ export default {
     margin: 0;
     min-width: $select-min-width;
     max-width: $select-max-width;
-    background-color: red;
     list-style-type: none;
     padding: $space-xs * 1.75 0;
     cursor: pointer;

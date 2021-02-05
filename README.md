@@ -1,10 +1,10 @@
-# Goose Analytics (Prototype)
+# Vector Analytics
 
-Prototype of WIP Goose Analytics based on Vue.
+\[WIP\] Minimal alternative to Google Analytics.
 
 ## About Vue.js
 
-Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem of v3 and its Composition API is not stable yet.
+Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem is not stable yet.
 
 Options API prop order:
 
@@ -14,10 +14,10 @@ render => name => components => props => data => computed => watch => methods =>
 
 ## Bypass Block Extensions
 
-Add `VUE_APP_TRACKER_FILE` environment variable to customize the tracker script name, for example:
+Add `VUE_APP_TRACKER_FILENAME` environment variable to customize the tracker script name, for example:
 
 ```
-VUE_APP_TRACKER_FILE="jquery.min.js"
+VUE_APP_TRACKER_FILENAME="jquery.min.js"
 ```
 
 ## Local Development
@@ -44,8 +44,8 @@ The varibales below are available both in development mode and production mode:
 ```
 SERVER_PORT=3000  # control panel server port
 DATABASE_URL="mongodb://localhost:27017/goosedb_preview" # database url (mongodb)
-VUE_APP_TRACKER_FILE="goose.min.js" # tracker script file name
-VUE_APP_TITLE="Goose Analytics (Prototype)" # app title on control panel
+VUE_APP_TRACKER_FILENAME="goose.min.js" # tracker script file name
+VUE_APP_TITLE="Vector Analytics" # app title on control panel
 ```
 
 ### Development
@@ -68,6 +68,6 @@ BASE_URL="/"
 
 ## License
 
-This project is released under `Apache License 2.0`, for more information read the [LICENSE](https://github.com/amzrk2/goose-analytics/blob/main/LICENSE).
+This project is released under `Apache License 2.0`, for more information read the [LICENSE](https://github.com/amzrk2/vector-analytics/blob/main/LICENSE).
 
 **Copyright © 2020-present DSRKafuU <https://amzrk2.cc/>**

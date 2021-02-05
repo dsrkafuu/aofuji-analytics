@@ -1,9 +1,9 @@
 <template>
-  <div class="g-header">
-    <span class="g-header-title">
+  <div class="v-header">
+    <span class="v-header-title">
       {{ text }}
     </span>
-    <div class="g-header-ctrl">
+    <div class="v-header-ctrl">
       <slot></slot>
     </div>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'GHeader',
+  name: 'VHeader',
   props: {
     text: String,
   },
@@ -19,19 +19,19 @@ export default {
 </script>
 
 <style lang="scss">
-.g-header {
+.v-header {
   height: 3rem;
   display: flex;
   user-select: none;
   padding: 0 $space-sm;
-}
 
-.g-header-title {
-  flex: 1 1 auto;
-  display: block;
-  height: 3rem;
-  line-height: 2rem;
-  font-size: $font-size-lg;
-  font-weight: 500;
+  &-title {
+    flex: 1 1 auto;
+    display: block;
+    height: 3rem;
+    line-height: 2rem;
+    font-size: $font-size-lg;
+    font-weight: 500;
+  }
 }
 </style>

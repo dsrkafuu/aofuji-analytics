@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const { buildError } = require('../utils/buildError.js');
 const { Account, select } = require('../utils/mongoose.js');
 
-const secret = process.env.TOKEN_SECRET || 'goose_token-secret';
+const secret = process.env.TOKEN_SECRET || 'vector_token-secret';
 const selectKeys = 'username';
 
 // check init status
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
   const [, token] = await Promise.all([checkPassword(), genToken()]);
 
   // send token back
-  res.cookie('goose_token', token, { maxAge: 14 * 86400 * 1000, sameSite: 'Lax' });
+  res.cookie('vector_token', token, { maxAge: 14 * 86400 * 1000, sameSite: 'Lax' });
   res.send(select(account, selectKeys));
 });
 

@@ -1,3 +1,5 @@
+/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
+
 /* utils */
 const express = require('express');
 const app = express();

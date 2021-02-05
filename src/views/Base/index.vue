@@ -1,7 +1,7 @@
 <template>
   <div class="base">
     <Navbar />
-    <main class="g-container">
+    <main class="v-container">
       <keep-alive>
         <router-view />
       </keep-alive>

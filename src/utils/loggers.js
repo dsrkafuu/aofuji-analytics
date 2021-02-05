@@ -3,7 +3,7 @@
  * @param {...any} params
  */
 export function logInfo(info, ...params) {
-  console.info('[goose analytics]', info, ...params);
+  console.info('[vector analytics]', info, ...params);
 }
 
 /**
@@ -11,5 +11,5 @@ export function logInfo(info, ...params) {
  * @param {...any} params
  */
 export function logError(err, ...params) {
-  console.error('[goose analytics]', err, ...params);
+  console.error('[vector analytics]', err, ...params);
 }

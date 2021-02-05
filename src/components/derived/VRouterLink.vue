@@ -1,24 +1,19 @@
 <template>
   <router-link :to="to" v-slot="{ href, navigate, isActive }">
-    <GButton
+    <VButton
       :type="type"
       :href="href"
       @click="navigate"
-      :class="['g-router-link', { 'g-router-active': isActive }]"
+      :class="['v-router-link', { 'v-router-link-active': isActive }]"
     >
       <slot></slot>
-    </GButton>
+    </VButton>
   </router-link>
 </template>
 
 <script>
-/**
- * [vue 3]
- * unknown
- * vue-router need to be upgraded
- */
 export default {
-  name: 'GRouterLink',
+  name: 'VRouterLink',
   props: {
     to: [String, Object],
     type: String,
@@ -27,8 +22,8 @@ export default {
 </script>
 
 <style lang="scss">
-.g-router-link {
-  &.g-router-active {
+.v-router-link {
+  &-active {
     color: var(--color-primary);
   }
 }

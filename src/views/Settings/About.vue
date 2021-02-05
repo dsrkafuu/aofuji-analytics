@@ -1,8 +1,8 @@
 <template>
   <div class="about">
-    <GHeader text="About"></GHeader>
+    <VHeader text="About"></VHeader>
     <div class="test">
-      <GButton @click="handleTest">click here to test api</GButton>
+      <VButton @click="handleTest">click here to test api</VButton>
       <div class="test-api" v-if="testData">
         <pre>{{ testData }}</pre>
       </div>

@@ -1,4 +1,4 @@
-import GMessage from '@/components/GMessage.vue';
+import VMessage from '@/components/VMessage.vue';
 import { store } from '@/store/index.js';
 
 export default {
@@ -7,9 +7,9 @@ export default {
    * @param {Vue} Vue
    */
   install(Vue) {
-    // mount `GMessage` component directly to body
-    const GMessageClass = Vue.extend(GMessage);
-    const message = new GMessageClass({
+    // mount `VMessage` component directly to body
+    const VMessageClass = Vue.extend(VMessage);
+    const message = new VMessageClass({
       store,
     });
     message.$mount();

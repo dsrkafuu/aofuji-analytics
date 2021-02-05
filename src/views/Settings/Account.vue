@@ -1,19 +1,21 @@
 <template>
   <div class="account">
-    <GHeader text="Account">
-      <GButton @click="handleCheck"><GIconCheck /></GButton>
-    </GHeader>
+    <VHeader text="Account">
+      <VButton @click="handleCheck">
+        <VIconCheck />
+      </VButton>
+    </VHeader>
     <div class="line">
       <span class="keyname">ID</span>
-      <GLabel>{{ id }}</GLabel>
+      <VLabel>{{ id }}</VLabel>
     </div>
     <div class="line">
       <span class="keyname">Username</span>
-      <GInput class="name" v-model="username" :validator="validUsername" />
+      <VInput class="name" v-model="username" :validator="validUsername" />
     </div>
     <div class="line">
       <span class="keyname">Password</span>
-      <GInput class="pass" v-model="password" type="password" :validator="validPassword" />
+      <VInput class="pass" v-model="password" type="password" :validator="validPassword" />
     </div>
   </div>
 </template>
@@ -101,14 +103,14 @@ export default {
     align-items: center;
     padding: 0 $space-sm;
 
-    .g-label,
-    .g-input {
+    .v-label,
+    .v-input {
       margin: 0 !important;
       min-width: 20rem;
       text-align: left;
     }
 
-    .g-label {
+    .v-label {
       font-size: $font-size-sm;
       height: 2rem;
       line-height: 2rem;

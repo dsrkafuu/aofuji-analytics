@@ -1,22 +1,22 @@
 <template>
   <div class="login">
-    <GCard class="card">
-      <GHeader :text="siteTitle"></GHeader>
+    <VCard class="card">
+      <VHeader :text="siteTitle" />
       <div class="line">
         <span>Username</span>
-        <GInput v-model="username" :validator="validUsername" @keyup.enter="handleLogin"></GInput>
+        <VInput v-model="username" :validator="validUsername" @keyup.enter="handleLogin" />
       </div>
       <div class="line">
         <span>Password</span>
-        <GInput
+        <VInput
           v-model="password"
           type="password"
           :validator="validPassword"
           @keyup.enter="handleLogin"
-        ></GInput>
+        />
       </div>
-      <GButton class="submit" type="full-width" @click="handleLogin">Login</GButton>
-    </GCard>
+      <VButton class="submit" type="full-width" @click="handleLogin">Login</VButton>
+    </VCard>
   </div>
 </template>
 
@@ -123,7 +123,7 @@ export default {
     padding: $space-lg 0;
   }
 
-  .g-header {
+  .v-header {
     margin-bottom: $space-xs;
   }
 

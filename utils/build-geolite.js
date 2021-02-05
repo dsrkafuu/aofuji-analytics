@@ -77,4 +77,4 @@ async function buildGeoLite() {
   });
 }
 
-module.exports = buildGeoLite;
+module.exports = { buildGeoLite };

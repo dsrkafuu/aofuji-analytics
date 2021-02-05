@@ -1,9 +1,11 @@
 <template>
   <div class="website">
-    <GHeader text="Website">
-      <GButton @click="handleAdd"><GIconPlus /></GButton>
-    </GHeader>
-    <GList :data="websites" control type="extend" @edit="handleEdit" @delete="handleDelete"></GList>
+    <VHeader text="Website">
+      <VButton @click="handleAdd">
+        <VIconPlus />
+      </VButton>
+    </VHeader>
+    <VList :data="websites" control type="extend" @edit="handleEdit" @delete="handleDelete"></VList>
   </div>
 </template>
 

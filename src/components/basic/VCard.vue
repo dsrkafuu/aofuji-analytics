@@ -1,21 +1,17 @@
 <template>
-  <div class="g-card">
+  <div class="v-card">
     <slot></slot>
   </div>
 </template>
 
 <script>
-/**
- * [vue 3]
- * compatible
- */
 export default {
-  name: 'GCard',
+  name: 'VCard',
 };
 </script>
 
 <style lang="scss">
-.g-card {
+.v-card {
   background-color: var(--color-bg);
   box-shadow: var(--shadow);
   border-radius: $radius;

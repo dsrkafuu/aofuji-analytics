@@ -1,8 +1,4 @@
 <script>
-/**
- * [vue 3]
- * unknown
- */
 export default {
   render(h) {
     // init tag
@@ -19,7 +15,7 @@ export default {
 
     return h(tag, options, this.$slots.default);
   },
-  name: 'GButton',
+  name: 'VButton',
   props: {
     active: Boolean,
     disabled: Boolean,
@@ -34,13 +30,13 @@ export default {
   computed: {
     buttonClasses() {
       return [
-        'g-button',
-        `g-button-${this.type}`,
+        'v-button',
+        `v-button-${this.type}`,
         {
-          'g-button-disabled': this.disabled,
+          'v-button-disabled': this.disabled,
         },
         {
-          'g-button-active': this.active,
+          'v-button-active': this.active,
         },
       ];
     },
@@ -54,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss">
-.g-button {
+.v-button {
   color: var(--color-font);
   background-color: transparent;
   text-align: center;
@@ -70,7 +66,7 @@ export default {
     background-color: var(--color-hover);
   }
 
-  &.g-button-default {
+  &-default {
     display: inline-flex;
     border-radius: $radius;
     height: $button-height;
@@ -78,24 +74,24 @@ export default {
     padding: 0 $space-base;
   }
 
-  &.g-button-full-width {
+  &-full-width {
     display: flex;
     width: 100%;
     height: $button-height;
     line-height: $button-height;
   }
 
-  &.g-button-full-height {
+  &-full-height {
     display: inline-flex;
     height: 100%;
     padding: 0 $space-base;
   }
 
-  &.g-button-active {
+  &-active {
     color: var(--color-primary);
   }
 
-  &.g-button-disabled:hover {
+  &-disabled:hover {
     cursor: not-allowed;
     background-color: transparent;
   }

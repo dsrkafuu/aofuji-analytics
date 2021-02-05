@@ -6,7 +6,7 @@ const { buildError } = require('../utils/buildError.js');
 const { Account } = require('../utils/mongoose.js');
 
 const selectKeys = 'username';
-const secret = process.env.TOKEN_SECRET || 'goose_token-secret';
+const secret = process.env.TOKEN_SECRET || 'vector_token-secret';
 const defaultOptions = {
   checkPublic: false, // whether check public websites' `share` search param
 };
@@ -21,7 +21,7 @@ function authCheck(options = defaultOptions) {
       buildError(418, 'TODO');
     } else {
       // check token
-      const { goose_token: token } = req.cookies;
+      const { vector_token: token } = req.cookies;
       if (!token) {
         buildError(403, 'api request unauthorized');
       }

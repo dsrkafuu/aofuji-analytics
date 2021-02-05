@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'GInput',
+  name: 'VInput',
   props: {
     value: String,
     type: String,
@@ -45,11 +45,11 @@ export default {
     // classes
     classes() {
       return [
-        'g-input',
+        'v-input',
         {
-          'g-input-error': !this.valid,
-          'g-input-password': this.type === 'password',
-          'g-input-focus': this.focused,
+          'v-input-error': !this.valid,
+          'v-input-password': this.type === 'password',
+          'v-input-focus': this.focused,
         },
       ];
     },
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss">
-.g-input {
+.v-input {
   display: inline-block;
   padding: $space-xs $space-xs * 1.75;
   background-color: var(--color-wrapper);
@@ -76,13 +76,13 @@ export default {
     background: transparent;
     color: var(--color-font);
   }
-}
 
-.g-input-focus {
-  background-color: var(--color-hover);
-}
+  &-focus {
+    background-color: var(--color-hover);
+  }
 
-.g-input-error {
-  background-color: var(--color-error) !important;
+  &-error {
+    background-color: var(--color-error) !important;
+  }
 }
 </style>

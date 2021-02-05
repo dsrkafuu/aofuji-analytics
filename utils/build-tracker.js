@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const babel = require('@babel/core');
 const terser = require('terser').minify;
-const fileName = process.env.VUE_APP_TRACKER_FILE || 'goose.min.js';
+const fileName = process.env.VUE_APP_TRACKER_FILENAME || 'vector.min.js';
 
 /**
  * build tracker to `dist`
@@ -35,4 +35,4 @@ async function buildTracker() {
   });
 }
 
-module.exports = buildTracker;
+module.exports = { buildTracker };

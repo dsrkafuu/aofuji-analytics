@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <GCard class="not-found">
+    <VCard class="not-found">
       <span>OOPS</span>
       <span>404 PAGE NOT FOUND</span>
-      <GRouterLink :to="{ name: 'Dashboard' }">Back to dashboard</GRouterLink>
-    </GCard>
+      <VRouterLink :to="{ name: 'Dashboard' }">Back to dashboard</VRouterLink>
+    </VCard>
   </div>
 </template>
 

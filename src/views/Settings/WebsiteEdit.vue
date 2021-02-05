@@ -1,24 +1,28 @@
 <template>
   <div class="website-edit">
-    <GHeader :text="`${_id ? 'Edit' : 'Add'} Website`">
-      <GButton @click="handleExit"><GIconTimes /></GButton>
-      <GButton @click="handleCheck"><GIconCheck /></GButton>
-    </GHeader>
+    <VHeader :text="`${_id ? 'Edit' : 'Add'} Website`">
+      <VButton @click="handleExit">
+        <VIconTimes />
+      </VButton>
+      <VButton @click="handleCheck">
+        <VIconCheck />
+      </VButton>
+    </VHeader>
     <div class="line" v-show="_id">
       <span class="keyname">ID</span>
-      <GLabel>{{ _id }}</GLabel>
+      <VLabel>{{ _id }}</VLabel>
     </div>
     <div class="line">
       <span class="keyname">Name</span>
-      <GInput class="name" v-model="name" />
+      <VInput class="name" v-model="name" />
     </div>
     <div class="line">
       <span class="keyname">URL</span>
-      <GInput class="domain" v-model="url" />
+      <VInput class="domain" v-model="url" />
     </div>
     <div class="line">
       <span class="keyname">Base URL</span>
-      <GInput class="domain" v-model="base" />
+      <VInput class="domain" v-model="base" />
     </div>
   </div>
 </template>
@@ -120,14 +124,14 @@ export default {
     align-items: center;
     padding: 0 $space-sm;
 
-    .g-label,
-    .g-input {
+    .v-label,
+    .v-input {
       margin: 0 !important;
       min-width: 20rem;
       text-align: left;
     }
 
-    .g-label {
+    .v-label {
       font-size: $font-size-sm;
       height: 2rem;
       line-height: 2rem;

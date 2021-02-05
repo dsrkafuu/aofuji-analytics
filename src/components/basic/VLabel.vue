@@ -1,21 +1,17 @@
 <template>
-  <span class="g-label">
+  <span class="v-label">
     <slot></slot>
   </span>
 </template>
 
 <script>
-/**
- * [vue 3]
- * compatible
- */
 export default {
-  name: 'GLabel',
+  name: 'VLabel',
 };
 </script>
 
 <style lang="scss">
-.g-label {
+.v-label {
   background-color: var(--color-wrapper);
   padding: $space-xs 1.25 * $space-xs;
   border-radius: $radius;

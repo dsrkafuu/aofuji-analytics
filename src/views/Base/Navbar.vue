@@ -1,34 +1,34 @@
 <template>
   <nav class="navbar">
-    <div class="g-container">
+    <div class="v-container">
       <div class="brand">
-        <GRouterLink class="item" :to="{ name: 'Base' }" type="full-height">
+        <VRouterLink class="item" :to="{ name: 'Base' }" type="full-height">
           {{ siteTitle }}
-        </GRouterLink>
+        </VRouterLink>
       </div>
       <div class="menu">
         <div class="start">
-          <GRouterLink class="item" :to="{ name: 'Realtime' }" type="full-height">
+          <VRouterLink class="item" :to="{ name: 'Realtime' }" type="full-height">
             Realtime
-          </GRouterLink>
-          <GRouterLink class="item" :to="{ name: 'Dashboard' }" type="full-height">
+          </VRouterLink>
+          <VRouterLink class="item" :to="{ name: 'Dashboard' }" type="full-height">
             Dashboard
-          </GRouterLink>
-          <GRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
+          </VRouterLink>
+          <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
             Settings
-          </GRouterLink>
+          </VRouterLink>
         </div>
         <div class="end">
           <div class="select">
-            <GSelect :data="commonWebsites" v-model="selectedWebsite" />
+            <VSelect :data="commonWebsites" v-model="selectedWebsite" />
           </div>
           <div class="ctrl">
-            <GButton class="item" type="full-height" v-if="showSignOut" @click="handleSignOut">
-              <GIconSignOut />
-            </GButton>
-            <GButton class="item" type="full-height" @click="handleThemeSwitch">
-              <GIconAdjust />
-            </GButton>
+            <VButton class="item" type="full-height" v-if="showSignOut" @click="handleSignOut">
+              <VIconSignOut />
+            </VButton>
+            <VButton class="item" type="full-height" @click="handleThemeSwitch">
+              <VIconAdjust />
+            </VButton>
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default {
   computed: {
     // site title from environment variables
     siteTitle() {
-      return process.env.VUE_APP_TITLE || 'Goose Analytics';
+      return process.env.VUE_APP_TITLE || 'Vector Analytics';
     },
     // should show sign out button
     showSignOut() {
@@ -118,7 +118,7 @@ export default {
   height: $navbar-height;
   box-shadow: var(--shadow);
 
-  .g-container {
+  .v-container {
     display: flex;
     height: $navbar-height;
     line-height: $navbar-height;

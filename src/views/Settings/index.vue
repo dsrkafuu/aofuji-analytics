@@ -1,8 +1,8 @@
 <template>
   <div class="settings">
     <div class="settings-ctrl">
-      <GCard>
-        <GButton
+      <VCard>
+        <VButton
           v-for="(tab, index) of tabs"
           :key="tab.name"
           type="full-width"
@@ -10,15 +10,15 @@
           :active="index === curIndex"
         >
           {{ tab.name }}
-        </GButton>
-      </GCard>
+        </VButton>
+      </VCard>
     </div>
     <div class="settings-content">
-      <GCard>
+      <VCard>
         <keep-alive>
           <component :is="curTab"></component>
         </keep-alive>
-      </GCard>
+      </VCard>
     </div>
   </div>
 </template>
@@ -95,7 +95,7 @@ export default {
 .settings-ctrl {
   flex: 0 0 20%;
 
-  .g-card {
+  .v-card {
     padding: $space-base 0;
   }
 }

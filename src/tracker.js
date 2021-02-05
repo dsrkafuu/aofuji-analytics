@@ -1,4 +1,4 @@
-/*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
+/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
 
 (function () {
   /* init */
@@ -8,7 +8,7 @@
     return;
   }
   const _API = `${__API}${/\/$/i.exec(__API) ? '' : '/'}collect`;
-  const [LS_KEY, LS_SID, LS_CACHE] = ['goose_data', 'sid', 'cache'];
+  const [LS_KEY, LS_SID, LS_CACHE] = ['vector_data', 'sid', 'cache'];
   const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
 
   /* utils */
@@ -148,7 +148,7 @@
    * @param {string} path
    * @param {string} ref
    */
-  const gooseView = (path, ref) => {
+  const vecView = (path, ref) => {
     // start pvt
     pvtCtrl.it();
     // those need to send every time
@@ -177,7 +177,7 @@
    * send leave data
    * @param {string} path
    */
-  const gooseLeave = (path) => {
+  const vecLeave = (path) => {
     const data = {};
     const pvt = pvtCtrl.ed();
     data.pvt = pvt || undefined;
@@ -189,7 +189,7 @@
    * @param {string} name
    * @param {Event|string} e
    */
-  const gooseEvent = (path, name, e) => {
+  const vecEvent = (path, name, e) => {
     if (name) {
       sendData('event', path, {
         en: name, // event name
@@ -200,20 +200,20 @@
 
   /* expose tracker */
 
-  window.gooseView = gooseView;
-  window.gooseLeave = gooseLeave;
-  window.gooseEvent = gooseEvent;
+  window.vecView = vecView;
+  window.vecLeave = vecLeave;
+  window.vecEvent = vecEvent;
 
   if (!_SPA) {
     // legacy mode
     const path = location.pathname;
     // start view
-    gooseView(path, document.referrer);
+    vecView(path, document.referrer);
     // [safari fix]
     // safari doesn't fire the `visibilitychange` and `beforeunload`
     // when navigating away from a document
     window.addEventListener('pagehide', () => {
-      gooseLeave(path);
+      vecLeave(path);
     });
   }
 })();

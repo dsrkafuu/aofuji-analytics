@@ -4,8 +4,8 @@ require('./env.js')();
 const startTime = Date.now();
 
 /* builders */
-const buildGeoLite = require('./build-geolite.js');
-const buildTracker = require('./build-tracker.js');
+const { buildGeoLite } = require('./build-geolite.js');
+const { buildTracker } = require('./build-tracker.js');
 
 Promise.all([buildGeoLite(), buildTracker()])
   .then(() => {

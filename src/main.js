@@ -1,4 +1,4 @@
-/*! goose-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
+/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
 require('../utils/env.js')();
 
 /* deps */
@@ -12,17 +12,17 @@ import 'normalize.css';
 import './scss/index.scss';
 
 /* components */
-import App from './App.vue';
-import GComponents from './plugins/components.js';
-Vue.use(GComponents);
-import GMessage from './plugins/message.js';
-Vue.use(GMessage);
+import VComponents from './plugins/components.js';
+Vue.use(VComponents);
+import VMessage from './plugins/message.js';
+Vue.use(VMessage);
 
 /* plugins */
-import AxiosPlugin from './plugins/axios.js';
-Vue.use(AxiosPlugin);
+import Axios from './plugins/axios.js';
+Vue.use(Axios);
 
 /* app */
+import App from './App.vue';
 new Vue({
   router,
   store,
