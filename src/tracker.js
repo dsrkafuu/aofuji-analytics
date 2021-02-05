@@ -48,23 +48,27 @@
    * @param {Object} payload
    */
   function sendData(type, path, payload) {
-    // get session id
-    let sid = getLS(LS_SID);
+    // whether need to care response or wait
+    const needResponse = type === 'view';
+    const needWait = type === 'leave';
+
     // construct data
     const encode = encodeURIComponent;
     let url = `${_API}?t=${type}&id=${_ID}&d=${Date.now()}`;
-    if (sid) {
-      url += `&sid=${sid}`;
+    // get session id
+    let sid = getLS(LS_SID);
+    // no data sent if no sid and not view request
+    if (!sid && !needResponse) {
+      return;
     }
+    sid && (url += `&sid=${sid}`);
     url += `&p=${encode(path)}`;
     for (let key in payload) {
       if (payload[key]) {
         url += `&${key}=${encode(payload[key])}`;
       }
     }
-    // whether need to care response or wait
-    const needResponse = type === 'view';
-    const needWait = type === 'leave';
+
     // when not view type and `sendBeacon` available
     if (!needResponse && navigator.sendBeacon) {
       navigator.sendBeacon(url);
