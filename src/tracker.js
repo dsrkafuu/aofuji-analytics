@@ -3,7 +3,7 @@
 (function () {
   /* init */
 
-  const { GOOSE_ID: _ID, GOOSE_API: __API, GOOSE_SPA: _SPA } = window;
+  const { VEC_ID: _ID, VEC_API: __API, VEC_SPA: _SPA } = window;
   if (!__API || !/^https?:\/\//i.exec(__API) || !_ID || navigator.doNotTrack === '1') {
     return;
   }
