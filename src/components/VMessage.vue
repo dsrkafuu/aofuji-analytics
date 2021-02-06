@@ -54,6 +54,7 @@ export default {
   padding-left: 1rem;
   display: flex;
   align-items: center;
+  z-index: 99;
 
   & > span {
     flex: 1 1 auto;

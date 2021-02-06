@@ -116,6 +116,7 @@ export default {
     background-color: var(--color-bg);
     border-radius: $radius;
     box-shadow: var(--shadow-info);
+    z-index: 99;
 
     li {
       padding: 0 $space-xs * 1.75;
