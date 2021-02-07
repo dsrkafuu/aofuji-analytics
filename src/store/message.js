@@ -1,6 +1,6 @@
 import { findIndex } from '@/utils/lodash.js';
-import { RIDManager } from '@/utils/RIDManager.js';
-const rIDManager = new RIDManager(); // id manager
+import { MessageID } from '@/plugins/message.js';
+const mid = new MessageID(); // message id manager
 
 export const MESSAGE = {
   state: () => ({
@@ -18,7 +18,7 @@ export const MESSAGE = {
     M_SHIFT_MESSAGE(state) {
       const message = state.messages.shift();
       message.timeout && clearTimeout(message.timeout);
-      rIDManager.remove(message.id);
+      mid.remove(message.id);
     },
     // remove a message
     // payload: { id }
@@ -26,7 +26,7 @@ export const MESSAGE = {
       const index = findIndex(state.messages, ['id', payload.id]);
       if (index >= 0) {
         state.messages[index].timeout && clearTimeout(state.messages[index].timeout);
-        rIDManager.remove(state.messages[index].id);
+        mid.remove(state.messages[index].id);
         state.messages.splice(index, 1);
       }
     },
@@ -36,10 +36,10 @@ export const MESSAGE = {
     // trigger a message
     // payload: { id, text }
     async A_TRIGGER_MESSAGE({ commit }, payload) {
-      const pl = { ...payload };
-      pl.id = rIDManager.get();
-      pl.timeout = setTimeout(() => commit('M_SHIFT_MESSAGE'), 10000);
-      commit('M_ADD_MESSAGE', pl);
+      const newPayload = { ...payload };
+      newPayload.id = mid.get();
+      newPayload.timeout = setTimeout(() => commit('M_SHIFT_MESSAGE'), 10000);
+      commit('M_ADD_MESSAGE', newPayload);
     },
     // close a selected message
     // payload: { id }
