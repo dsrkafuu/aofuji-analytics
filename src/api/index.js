@@ -15,13 +15,13 @@ app.use(cookieParser());
 // compression
 const compression = require('compression');
 app.use(compression());
-// cache control
-const { cacheControl } = require('./middlewares/cacheControl.js');
-app.use(cacheControl());
 
 /* routes */
+// route-level cache control
+const { cacheControl } = require('./middlewares/cacheControl.js');
 const { router } = require('./router.js');
-app.use('/api', router);
+app.use('/api', cacheControl(), router);
+// transform error to http response
 const { errorHandler } = require('./middlewares/errorHandler.js');
 app.use(errorHandler());
 

@@ -2,6 +2,7 @@
 require('../utils/env.js')();
 
 const app = require('../src/api/index.js');
+const serverless = require('serverless-http');
 
 /* normal */
 if (!process.env.SERVERLESS) {
@@ -23,4 +24,7 @@ if (!process.env.SERVERLESS) {
 }
 
 /* serverless */
+// vercel
 module.exports = app;
+// aws lambda (netlify etc.)
+module.exports.handler = serverless(app);
