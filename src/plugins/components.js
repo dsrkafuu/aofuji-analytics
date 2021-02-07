@@ -1,7 +1,8 @@
-import { camelCase, upperFirst } from 'lodash';
+import { upperFirst, camelCase } from '@/utils/lodash.js';
 
 /**
  * @param {string} fileName
+ * @return {string}
  */
 function getComponentName(fileName) {
   return upperFirst(
@@ -16,7 +17,6 @@ function getComponentName(fileName) {
 
 export default {
   /**
-   * install global components
    * @param {Vue} Vue
    */
   install(Vue) {

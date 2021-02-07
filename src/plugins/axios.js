@@ -8,7 +8,7 @@ const axiosInst = axios.create({
 
 // interceptors
 axiosInst.interceptors.request.use((req) => {
-  /* search param check */
+  // search param check
   const url = new URL(req.url, 'https://example.org');
   // no cache set
   if (url.searchParams.has('cache') && `${url.searchParams.get('cache')}` === '0') {
@@ -20,7 +20,7 @@ axiosInst.interceptors.request.use((req) => {
 
 export default {
   /**
-   * install axios to global vm
+   * @param {Vue} Vue
    */
   install(Vue) {
     Vue.prototype.$axios = axiosInst;

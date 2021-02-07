@@ -1,6 +1,5 @@
 /* deps */
-import { cloneDeep } from 'lodash';
-
+import { cloneDeep } from '@/utils/lodash.js';
 /* utils */
 import { findObjectIndexInArray } from '@/utils/finders.js';
 

@@ -1,4 +1,3 @@
-/* components */
 import Base from '@/views/Base/index.vue';
 import Login from '@/views/Login.vue';
 import NotFound from '@/views/NotFound.vue';

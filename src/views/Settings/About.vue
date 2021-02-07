@@ -12,8 +12,7 @@
 
 <script>
 /* deps */
-import { cloneDeep } from 'lodash';
-
+import { cloneDeep } from '@/utils/lodash.js';
 /* utils */
 import { logInfo, logError } from '@/utils/loggers.js';
 

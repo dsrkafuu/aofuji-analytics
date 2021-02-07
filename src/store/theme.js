@@ -1,4 +1,3 @@
-/* utils */
 import { getLS, setLS } from '@/utils/storage.js';
 import { STORAGE_THEME, DOM_ATTR_THEME } from '@/utils/constants.js';
 
@@ -7,6 +6,7 @@ export const THEME = {
     // init theme from `localStorage`
     theme: getLS(STORAGE_THEME) || 'auto',
   }),
+
   mutations: {
     /**
      * init theme to dom

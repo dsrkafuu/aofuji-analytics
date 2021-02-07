@@ -3,7 +3,6 @@ import { store } from '@/store/index.js';
 
 export default {
   /**
-   * install message module
    * @param {Vue} Vue
    */
   install(Vue) {

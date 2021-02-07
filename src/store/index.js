@@ -1,8 +1,7 @@
-/* vue */
+/* deps */
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
-
 /* modules */
 import { THEME } from './theme.js';
 import { COMMON } from './common.js';

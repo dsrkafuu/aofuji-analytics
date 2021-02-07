@@ -39,7 +39,7 @@
 <script>
 /* deps */
 import Cookie from 'js-cookie';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from '@/utils/lodash.js';
 /* utils */
 import { COOKIE_TOKEN } from '@/utils/constants.js';
 import { findObjectIndexInArray } from '@/utils/finders';

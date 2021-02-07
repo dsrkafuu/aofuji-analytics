@@ -3,10 +3,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 Vue.use(Router);
 import Cookie from 'js-cookie';
-
 /* utils */
 import { COOKIE_TOKEN } from '@/utils/constants.js';
-
 /* routes */
 import { routes } from './routes.js';
 

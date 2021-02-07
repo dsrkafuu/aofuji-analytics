@@ -1,4 +1,3 @@
-/* utils */
 import { findObjectIndexInArray } from '@/utils/finders.js';
 import { RIDManager } from '@/utils/RIDManager.js';
 const rIDManager = new RIDManager(); // id manager
@@ -8,6 +7,7 @@ export const MESSAGE = {
     // message popup data
     messages: [],
   }),
+
   mutations: {
     // add a new message
     // payload: { id, timeout, type, text }
@@ -29,6 +29,7 @@ export const MESSAGE = {
       state.messages.splice(index, 1);
     },
   },
+
   actions: {
     // trigger a message
     // payload: { id, text }

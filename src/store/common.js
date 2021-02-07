@@ -1,6 +1,5 @@
 /* deps */
-import { cloneDeep } from 'lodash';
-
+import { cloneDeep } from '@/utils/lodash.js';
 /* utils */
 import { getLS, setLS } from '@/utils/storage.js';
 import { STORAGE_ACCOUNT } from '@/utils/constants.js';
