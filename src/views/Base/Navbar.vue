@@ -162,6 +162,7 @@ export default {
   .end {
     flex: 0 0 auto;
     display: flex;
+    gap: $space-sm;
   }
 }
 </style>
