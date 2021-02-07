@@ -1,4 +1,4 @@
-import { findObjectIndexInArray } from '@/utils/finders.js';
+import { findIndex } from '@/utils/lodash.js';
 import { RIDManager } from '@/utils/RIDManager.js';
 const rIDManager = new RIDManager(); // id manager
 
@@ -23,10 +23,12 @@ export const MESSAGE = {
     // remove a message
     // payload: { id }
     M_REMOVE_MESSAGE(state, payload) {
-      const index = findObjectIndexInArray(state.messages, 'id', payload.id);
-      state.messages[index].timeout && clearTimeout(state.messages[index].timeout);
-      rIDManager.remove(state.messages[index].id);
-      state.messages.splice(index, 1);
+      const index = findIndex(state.messages, ['id', payload.id]);
+      if (index >= 0) {
+        state.messages[index].timeout && clearTimeout(state.messages[index].timeout);
+        rIDManager.remove(state.messages[index].id);
+        state.messages.splice(index, 1);
+      }
     },
   },
 

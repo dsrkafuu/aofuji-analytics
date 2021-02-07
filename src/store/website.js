@@ -1,7 +1,7 @@
 /* deps */
 import { cloneDeep } from '@/utils/lodash.js';
 /* utils */
-import { findObjectIndexInArray } from '@/utils/finders.js';
+import { findIndex } from '@/utils/lodash.js';
 
 export const WEBSITE = {
   state: () => ({
@@ -17,8 +17,8 @@ export const WEBSITE = {
     M_EDIT_WEBSITE(state, payload) {
       if (payload) {
         if (payload._id) {
-          const index = findObjectIndexInArray(state.websites, '_id', payload._id);
-          if (!Number.isNaN(index)) {
+          const index = findIndex(state.websites, ['_id', payload._id]);
+          if (index >= 0) {
             state.editing = state.websites[index];
           }
         } else {
@@ -52,8 +52,8 @@ export const WEBSITE = {
     // payload: { _id }
     M_REMOVE_WEBSITE(state, payload) {
       if (payload && payload._id) {
-        const index = findObjectIndexInArray(state.websites, '_id', payload._id);
-        if (!Number.isNaN(index)) {
+        const index = findIndex(state.websites, ['_id', payload._id]);
+        if (index >= 0) {
           state.websites.splice(index, 1);
         }
       }
@@ -63,8 +63,8 @@ export const WEBSITE = {
     // payload: { _id, name, ... }
     M_UPDATE_WEBSITE(state, payload) {
       if (payload && payload._id) {
-        const index = findObjectIndexInArray(state.websites, '_id', payload._id);
-        if (!Number.isNaN(index)) {
+        const index = findIndex(state.websites, ['_id', payload._id]);
+        if (index >= 0) {
           state.websites.splice(index, 1, { ...payload });
         }
       }

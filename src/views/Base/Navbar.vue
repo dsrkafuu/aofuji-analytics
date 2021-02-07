@@ -39,10 +39,9 @@
 <script>
 /* deps */
 import Cookie from 'js-cookie';
-import { cloneDeep } from '@/utils/lodash.js';
 /* utils */
+import { cloneDeep, findIndex } from '@/utils/lodash.js';
 import { COOKIE_TOKEN } from '@/utils/constants.js';
-import { findObjectIndexInArray } from '@/utils/finders';
 
 export default {
   name: 'Navbar',
@@ -81,8 +80,8 @@ export default {
         return this.$store.state.COMMON.selectedWebsite?._id || '';
       },
       set(val) {
-        const index = findObjectIndexInArray(this.commonWebsites, 'value', val);
-        if (!Number.isNaN(index)) {
+        const index = findIndex(this.commonWebsites, ['value', val]);
+        if (index >= 0) {
           this.$store.commit('M_SELECT_WEBSITE', {
             _id: this.commonWebsites[index]._id,
             name: this.commonWebsites[index].name,

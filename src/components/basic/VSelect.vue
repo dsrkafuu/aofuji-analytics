@@ -14,8 +14,7 @@
 </template>
 
 <script>
-/* utils */
-import { findObjectIndexInArray } from '@/utils/finders';
+import { findIndex } from '@/utils/lodash.js';
 
 export default {
   name: 'VSelect',
@@ -38,8 +37,8 @@ export default {
     selectedText() {
       const value = this.value;
       if (value) {
-        const index = findObjectIndexInArray(this.data, 'value', value);
-        if (!Number.isNaN(index)) {
+        const index = findIndex(this.data, ['value', value]);
+        if (index >= 0) {
           return this.data[index].text;
         } else {
           return '';
