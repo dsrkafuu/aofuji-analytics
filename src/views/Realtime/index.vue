@@ -1,14 +1,14 @@
 <template>
   <div class="realtime">
-    <div class="row">
+    <div class="row row-hero">
       <VCard class="count">
         <div class="section">
-          <div class="title">Users in Last 15 Minutes</div>
-          <div class="ctx ctx-uilm">456</div>
+          <div class="title">Users Online</div>
+          <div class="ctx ctx-uo">456</div>
         </div>
         <div class="section">
-          <div class="title">Device Category in Last 15 Minutes</div>
-          <div class="ctx ctx-dcilm">
+          <div class="title">Device Category</div>
+          <div class="ctx ctx-dc">
             <canvas ref="dcilm"></canvas>
           </div>
         </div>
@@ -19,7 +19,20 @@
         </div>
       </VCard>
     </div>
-    <div class="row"></div>
+    <div class="row row-norm">
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Page Views</div>
+          <VList class="ctx ctx-pv" type="dense" :data="pv" graph>123</VList>
+        </div>
+      </VCard>
+      <VCard class="data">
+        <div class="section">
+          <div class="title">User Sources</div>
+          <VList class="ctx ctx-us" type="dense" :data="us" graph>123</VList>
+        </div>
+      </VCard>
+    </div>
   </div>
 </template>
 
@@ -29,6 +42,30 @@ import mapData from '@/assets/json/countries-110m.json';
 
 export default {
   name: 'Realtime',
+  data() {
+    return {
+      pv: [
+        { id: 1, text: '/' },
+        { id: 2, text: '/post' },
+        { id: 3, text: '/post/2020/extract-sf-pingfang' },
+        { id: 4, text: '/post/2020/umami-analytics' },
+        { id: 5, text: '/post/2020/potplayer-with-lav-fliters' },
+        { id: 6, text: '/post/2019/hugo-custom-pagination' },
+        { id: 7, text: '/code' },
+        { id: 8, text: '/code/2' },
+        { id: 9, text: '/code/5' },
+        { id: 10, text: '/post/2' },
+      ],
+      us: [
+        { id: 11, text: '(direct)' },
+        { id: 12, text: 'twelve' },
+        { id: 13, text: 'tt' },
+        { id: 14, text: 'ft' },
+        { id: 15, text: 'ft' },
+        { id: 16, text: 'st' },
+      ],
+    };
+  },
   mounted() {
     new this.$Chart(this.$refs.dcilm, {
       type: 'doughnut',
@@ -109,7 +146,7 @@ export default {
     display: flex;
     gap: $space-base;
 
-    &:first-child {
+    &-hero {
       height: 26rem;
     }
   }
@@ -126,6 +163,7 @@ export default {
     }
   }
 
+  // count
   .count {
     padding: $space-lg;
     flex: 0 0 33%;
@@ -134,24 +172,40 @@ export default {
     gap: $space-lg;
   }
 
-  .ctx-uilm {
+  .ctx-uo {
     font-size: $font-size-xl * 1.5;
     text-align: center;
   }
 
-  .ctx-dcilm {
+  .ctx-dc {
     padding-top: $space-sm;
     max-width: 14.5rem;
     margin: 0 auto;
   }
 
+  // map
   .map {
-    flex: 1 1 66%;
+    flex: 1 1 auto;
   }
 
   .ctx-map {
     position: relative;
     top: -3.25rem;
+  }
+
+  // data
+  .data {
+    flex: 0 1 33%;
+
+    .title {
+      padding: $space-lg;
+      padding-bottom: 0;
+    }
+
+    .ctx {
+      padding: $space-xs $space-sm;
+      padding-bottom: $space-base;
+    }
   }
 }
 </style>
