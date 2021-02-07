@@ -8,36 +8,32 @@
     return;
   }
   const _API = `${__API}${/\/$/i.exec(__API) ? '' : '/'}collect`;
-  const [LS_KEY, LS_SID, LS_CACHE] = ['vector_data', 'sid', 'cache'];
+  const LS_KEY = 'vector_sid';
   const [PVT_INACTIVE, PVT_PAUSE, PVT_ACTIVE] = [0, -1, 1];
 
   /* utils */
 
   /**
-   * set local storage
-   * @param {string} key
+   * save session id
+   * @param {string} value
    */
-  function setLS(key, value) {
+  function setSID(value) {
     try {
-      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
-      data[key] = value;
-      localStorage.setItem(LS_KEY, JSON.stringify(data));
+      localStorage.setItem(LS_KEY, JSON.stringify(value));
     } catch {
       return;
     }
   }
 
   /**
-   * get local storage
-   * @param {string} key
-   * @return {any}
+   * get session id
+   * @return {string}
    */
-  function getLS(key) {
+  function getSID() {
     try {
-      const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
-      return data[key];
+      return JSON.parse(localStorage.getItem(LS_KEY)) || '';
     } catch {
-      return null;
+      return '';
     }
   }
 
@@ -56,7 +52,7 @@
     const encode = encodeURIComponent;
     let url = `${_API}?t=${type}&id=${_ID}&d=${Date.now()}`;
     // get session id
-    let sid = getLS(LS_SID);
+    let sid = getSID();
     // no data sent if no sid and not view request
     if (!sid && !needResponse) {
       return;
@@ -79,7 +75,7 @@
           if (res.status === 201) {
             res.json().then((data) => {
               const { sid } = data;
-              sid && setLS(LS_SID, sid);
+              sid && setSID(sid);
             });
           }
         });
@@ -92,7 +88,7 @@
         xhr.onload = () => {
           if (xhr.status === 201) {
             const { sid } = JSON.parse(xhr.response);
-            sid && setLS(LS_SID, sid);
+            sid && setSID(sid);
           }
         };
       }
@@ -155,23 +151,17 @@
   const vecView = (path, ref) => {
     // start pvt
     pvtCtrl.it();
-    // those need to send every time
+    // data
     const data = {
       r: ref, // referrer
     };
-    // those need to send first time or after 7 day
-    const cacheTime = getLS(LS_CACHE) || -Infinity;
-    const now = Date.now();
-    if (now - cacheTime > 604800 * 1000) {
-      data.lng = navigator.language || undefined; // language
-      // screen size
-      if (screen.width) {
-        const width = Math.round(screen.width || 0);
-        const height = Math.round(screen.height || 0);
-        // [ie fix] Number.isNaN()
-        data.scn = `${width}x${height}`;
-      }
-      setLS(LS_CACHE, now);
+    data.lng = navigator.language || undefined; // language
+    // screen size
+    if (screen.width) {
+      // [ie fix] Number.isNaN()
+      const width = Math.round(screen.width || 0);
+      const height = Math.round(screen.height || 0);
+      data.scn = `${width}x${height}`;
     }
     // send view data
     sendData('view', path, data);
@@ -182,9 +172,9 @@
    * @param {string} path
    */
   const vecLeave = (path) => {
-    const data = {};
-    const pvt = pvtCtrl.ed();
-    data.pvt = pvt || undefined;
+    const data = {
+      pvt: pvtCtrl.ed() || undefined,
+    };
     sendData('leave', path, data);
   };
 

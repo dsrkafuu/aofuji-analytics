@@ -5,16 +5,17 @@ const isLocalhost = require('is-localhost-ip');
  * format referrer
  * @param {string} ref referrer from `document.referrer`
  * @param {string} url website's full url
- * @return {string|undefined} hostname or undefined
+ * @return {Promise<string|undefined>} hostname or undefined
  */
-function formatRef(ref, url) {
+async function formatRef(ref, url) {
   // if not full url, return undefined
   if (!/:\/\//gi.exec(ref)) {
     return undefined;
   }
   // if localhost, return undefined
   const refURL = new URL(ref);
-  if (isLocalhost(refURL.hostname)) {
+  const local = await isLocalhost(refURL.hostname);
+  if (local) {
     return undefined;
   }
   // if samesite, return undefined

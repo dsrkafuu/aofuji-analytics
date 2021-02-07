@@ -25,9 +25,6 @@ const route = async (req, res) => {
   // origin check
   const origin = req.get('Origin');
   const checkOrigin = async () => {
-    if (process.env.NODE_ENV !== 'production') {
-      return true;
-    }
     if (origin) {
       let result = false;
       try {
@@ -43,9 +40,6 @@ const route = async (req, res) => {
   // ip check
   const clientIP = requestIP(req);
   const checkIP = async () => {
-    if (process.env.NODE_ENV !== 'production') {
-      return true;
-    }
     if (clientIP) {
       let result = false;
       try {
@@ -66,11 +60,13 @@ const route = async (req, res) => {
     }
     return true;
   };
-  const [r1, r2, r3] = await Promise.all([checkOrigin(), checkIP(), checkBot()]);
-  if (!(r1 && r2 && r3)) {
-    res.set('Content-Length', 0);
-    res.status(202).send();
-    return; // remember to return
+  if (process.env.NODE_ENV === 'production') {
+    const [r1, r2, r3] = await Promise.all([checkOrigin(), checkIP(), checkBot()]);
+    if (!(r1 && r2 && r3)) {
+      res.set('Content-Length', 0);
+      res.status(202).send();
+      return; // remember to return
+    }
   }
 
   // init website
@@ -113,63 +109,80 @@ const route = async (req, res) => {
   switch (type) {
     case 'view': {
       try {
-        const works = [];
         // get params
         let { r: ref, lng, scn } = req.query;
         ref = formatQuery('string', ref);
         lng = formatQuery('string', lng);
         scn = formatQuery('string', scn);
         const pathname = formatPath(path, website.base);
-        const referrer = formatRef(ref, website.url);
-        // not add (same page) view from (same user) with (same referrer) in 15 minute
-        const lastView = await View.findOne({
-          _date: { $lt: date },
-          _session: session._id,
-          _website: website._id,
-          pathname,
-          referrer,
-        })
-          .sort({ _date: -1 })
-          .lean();
-        if (!lastView || date - lastView._date > 600 * 1000) {
-          // save view
-          const newView = {
-            _date: date,
+        const referrer = await formatRef(ref, website.url);
+
+        // save view
+        const saveView = async () => {
+          // not add (same page) view from (same user) with (same referrer) in 15 minute
+          const lastView = await View.findOne({
+            _date: { $lt: date },
             _session: session._id,
             _website: website._id,
             pathname,
             referrer,
-          };
-          works.push(View.create(newView));
-        }
-        // check whether need to update session data
-        if (needNewSession || lng || scn) {
-          // load deps needed
-          const path = require('path');
-          const fs = require('fs');
-          const Bowser = require('bowser');
-          const { Reader } = require('maxmind');
-          const gdb = fs.readFileSync(
-            path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb')
-          );
-          const maxmind = new Reader(gdb);
-          // language & screen
-          session.language = lng;
-          session.screen = scn;
-          // browser & system & platform
-          const bowser = Bowser.parse(clientUA);
-          const formatBowser = (str) => (str || '').toLowerCase().replace(/ +/gi, '-') || undefined;
-          session.browser = formatBowser(bowser.browser.name);
-          session.system = formatBowser(bowser.os.name);
-          session.platform = formatBowser(bowser.platform.type);
-          // location
-          if (clientIP) {
-            const gd = maxmind.get(clientIP);
-            session.location = gd && gd.country ? gd.country.iso_code : undefined;
+          })
+            .sort({ _date: -1 })
+            .lean();
+          if (!lastView || date - lastView._date > 900 * 1000) {
+            // save view
+            const newView = {
+              _date: date,
+              _session: session._id,
+              _website: website._id,
+              pathname,
+              referrer,
+            };
+            await View.create(newView);
           }
-          works.push(session.save());
-        }
-        await Promise.all(works);
+        };
+        // save session
+        const saveSession = async () => {
+          // check whether need to try update session data
+          let needSave = false;
+          // language & screen
+          if (needNewSession || !session.language || !session.screen) {
+            lng && (session.language = lng);
+            scn && (session.screen = scn);
+            needSave = true;
+          }
+          // browser & system & platform
+          if (needNewSession || !session.browser || !session.system || !session.platform) {
+            const Bowser = require('bowser');
+            const bowser = Bowser.getParser(clientUA);
+            const formatString = (str) =>
+              (str || '').toLowerCase().replace(/ +/gi, '-') || undefined;
+            session.browser = formatString(bowser.getBrowserName());
+            session.system = formatString(bowser.getOSName());
+            session.platform = formatString(bowser.getPlatformType());
+            needSave = true;
+          }
+          // location
+          if (needNewSession || !session.location) {
+            const path = require('path');
+            const fs = require('fs');
+            const { Reader } = require('maxmind');
+            const gdb = fs.readFileSync(
+              path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb')
+            );
+            const maxmind = new Reader(gdb);
+            if (clientIP) {
+              const gd = maxmind.get(clientIP);
+              session.location = gd && gd.country ? gd.country.iso_code : undefined;
+              needSave = true;
+            }
+          }
+          if (needSave) {
+            await session.save();
+          }
+        };
+
+        await Promise.all([saveView(), saveSession()]);
       } catch {
         throw buildError(500, 'error processing view data');
       }
