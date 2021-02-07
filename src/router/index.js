@@ -8,7 +8,6 @@ import Cookie from 'js-cookie';
 import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 /* routes */
-import { store } from '@/store/index.js';
 import { routes } from './routes.js';
 
 // only throw error when NavigationFailure
@@ -38,17 +37,6 @@ router.beforeEach((to, from, next) => {
   // only when not going to login/404
   if (to.name !== 'NotFound' && to.name !== 'Login' && !Cookie.get(COOKIE_TOKEN)) {
     next({ name: 'Login' });
-  }
-  // if need keep search param exist
-  else if (
-    store.state.COMMON.selectedWebsite?._id &&
-    !to.query.website &&
-    (to.path.startsWith('/realtime') || to.path.startsWith('/dashboard'))
-  ) {
-    next({
-      name: to.name,
-      query: { website: store.state.COMMON.selectedWebsite?._id || from.query.website },
-    });
   }
   // default behavior
   else {

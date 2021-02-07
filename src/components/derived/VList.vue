@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="v-list-graph" v-if="graph">
-        <slot :data="data" :dense="dense"></slot>
+        <slot></slot>
       </div>
     </div>
   </div>
