@@ -82,14 +82,18 @@ export default {
       set(val) {
         const index = findIndex(this.commonWebsites, ['value', val]);
         if (index >= 0) {
+          const _id = this.commonWebsites[index]._id;
+          const name = this.commonWebsites[index].name;
           this.$store.commit('M_SELECT_WEBSITE', {
-            _id: this.commonWebsites[index]._id,
-            name: this.commonWebsites[index].name,
+            _id,
+            name,
           });
           // update url search param
-          this.$router.replace({
-            query: { website: this.commonWebsites[index]._id },
-          });
+          if (_id !== this.$route.query.website) {
+            this.$router.replace({
+              query: { website: this.commonWebsites[index]._id },
+            });
+          }
         }
       },
     },
