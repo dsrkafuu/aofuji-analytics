@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="v-list-graph" v-if="graph">
-        <slot name="graph" :data="data" :dense="dense"></slot>
+        <slot :data="data" :dense="dense"></slot>
       </div>
     </div>
   </div>
@@ -93,7 +93,6 @@ export default {
   }
 
   /* dense list */
-
   &-dense {
     .v-list-item {
       height: $list-item-height-sm;
@@ -103,7 +102,6 @@ export default {
   }
 
   /* extend list */
-
   &-extend {
     .v-list-item {
       height: $list-item-height + $list-item-height-sm;

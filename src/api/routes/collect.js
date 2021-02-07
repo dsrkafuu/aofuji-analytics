@@ -121,12 +121,13 @@ const route = async (req, res) => {
         scn = formatQuery('string', scn);
         const pathname = formatPath(path, website.base);
         const referrer = formatRef(ref, website.url);
-        // not add same page view from same user in 10 minute
+        // not add (same page) view from (same user) with (same referrer) in 15 minute
         const lastView = await View.findOne({
           _date: { $lt: date },
           _session: session._id,
           _website: website._id,
           pathname,
+          referrer,
         })
           .sort({ _date: -1 })
           .lean();
