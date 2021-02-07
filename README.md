@@ -63,7 +63,7 @@ SERVER_API_PORT=3001
 Production mode needs `npm run build` first. Both the API server and website files built are provided by express.js on port `SERVER_PORT`.
 
 ```
-BASE_URL="/"
+VUE_APP_BASE_URL="/"
 ```
 
 ## License

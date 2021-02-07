@@ -27,7 +27,7 @@ export default {
     async handleTest() {
       let res;
       try {
-        res = await this.$axios.get('/admin/debug?cache=0');
+        res = await this.$api.get('/admin/debug?cache=0');
         this.testData = cloneDeep(res.data);
         this.$info('debug data fetched');
         logInfo(res.data);

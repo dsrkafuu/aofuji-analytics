@@ -20,8 +20,6 @@ Vue.use(VMessage);
 /* plugins */
 import Axios from './plugins/axios.js';
 Vue.use(Axios);
-import Chart from './plugins/chartjs.js';
-Vue.use(Chart);
 
 /* app */
 import App from './App.vue';

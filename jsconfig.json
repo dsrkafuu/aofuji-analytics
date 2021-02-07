@@ -5,6 +5,5 @@
     "paths": {
       "@/*": ["src/*"]
     }
-  },
-  "include": ["src/**/*.vue", "src/**/*.js", "src/**/*.svg", "src/**/*.json"]
+  }
 }

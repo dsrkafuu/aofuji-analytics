@@ -37,8 +37,7 @@
 </template>
 
 <script>
-import { topojson } from 'chartjs-chart-geo';
-import mapData from '@/assets/json/countries-110m.json';
+import { Chart, topojson } from '@/utils/Chart.js';
 
 export default {
   name: 'Realtime',
@@ -66,8 +65,8 @@ export default {
       ],
     };
   },
-  mounted() {
-    new this.$Chart(this.$refs.dcilm, {
+  async mounted() {
+    new Chart(this.$refs.dcilm, {
       type: 'doughnut',
       data: {
         labels: ['desktop', 'tablet', 'mobile'],
@@ -97,8 +96,12 @@ export default {
       },
     });
 
-    const countries = topojson.feature(mapData, mapData.objects.countries).features;
-    new this.$Chart(this.$refs.map, {
+    let mapTopo = await this.$axios.get(
+      'https://cdn.jsdelivr.net/gh/amzrk2/dsr-cdn@1.0/json/world-110m.json'
+    );
+    mapTopo = mapTopo.data;
+    const countries = topojson.feature(mapTopo, mapTopo.objects.countries).features;
+    new Chart(this.$refs.map, {
       type: 'choropleth',
       data: {
         labels: countries.map((d) => d.properties.name),

@@ -39,7 +39,7 @@ export default {
     async fetchWebsites() {
       let res;
       try {
-        res = await this.$axios.get('/admin/website');
+        res = await this.$api.get('/admin/website');
         this.$store.commit('M_UPDATE_ALL_WEBSITES', res.data);
         logInfo(res.data);
       } catch (e) {
@@ -65,7 +65,7 @@ export default {
      */
     async handleDelete(id) {
       try {
-        await this.$axios.delete(`/admin/website/${id}`);
+        await this.$api.delete(`/admin/website/${id}`);
         this.$store.commit('M_REMOVE_WEBSITE', { _id: id });
         this.$info('website removed');
       } catch (e) {

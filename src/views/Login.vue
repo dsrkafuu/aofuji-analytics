@@ -48,11 +48,11 @@ export default {
     async initAccount() {
       let res;
       try {
-        res = await this.$axios.get('/login/init');
+        res = await this.$api.get('/login/init');
         if (res.status === 201) {
           let res;
           try {
-            res = await this.$axios.post('/login/init', {
+            res = await this.$api.post('/login/init', {
               username: this.username,
               password: this.password,
             });
@@ -82,7 +82,7 @@ export default {
       await this.initAccount();
       let res;
       try {
-        res = await this.$axios.post('/login', {
+        res = await this.$api.post('/login', {
           username: this.username,
           password: this.password,
         });

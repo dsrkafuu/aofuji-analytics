@@ -27,7 +27,7 @@ export default {
     async fetchCommon() {
       let res;
       try {
-        res = await this.$axios.get('/common');
+        res = await this.$api.get('/common');
         this.$store.commit('M_COMMON_WEBSITES', res.data);
         logInfo(res.data);
         // init default selected website
