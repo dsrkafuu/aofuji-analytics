@@ -1,17 +1,17 @@
 /* sync with '@/utils/constants.js' */
 
 /* dom */
-export const DOM_ATTR_THEME = 'data-theme';
+module.exports.DOM_ATTR_THEME = 'data-theme';
 
 /* cookie */
-export const COOKIE_TOKEN = 'vector_token';
+module.exports.COOKIE_TOKEN = 'vector_token';
 
 /* storage */
-export const LS_KEY = 'vector_ldata';
-export const SS_KEY = 'vector_sdata';
-export const STORAGE_THEME = 'theme';
-export const STORAGE_ACCOUNT = 'account';
+module.exports.LS_KEY = 'vector_ldata';
+module.exports.SS_KEY = 'vector_sdata';
+module.exports.STORAGE_THEME = 'theme';
+module.exports.STORAGE_ACCOUNT = 'account';
 
 /* api */
-export const VIEW_EXPIRE_TIME = 15 * 60 * 1000; // 15 minutes
-export const JWT_DEFAULT_SECRET = 'vector_token-secret';
+module.exports.VIEW_EXPIRE_TIME = 15 * 60 * 1000; // 15 minutes
+module.exports.JWT_DEFAULT_SECRET = 'vector_token-secret';
