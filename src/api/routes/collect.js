@@ -120,7 +120,7 @@ const route = async (req, res) => {
 
         // save view
         const saveView = async () => {
-          // not save same page view without referrer in 15 min
+          // not create new view without referrer in 15 min
           const lastView = await View.findOne({
             _date: { $lt: date },
             _session: session._id,
@@ -138,9 +138,10 @@ const route = async (req, res) => {
             };
             await View.create(newView);
           }
-          // has last view && in 15 min (&& has referrer) - update view
-          else if (referrer) {
-            lastView.referrer = referrer;
+          // has last view && in 15 min - update view
+          else {
+            referrer && (lastView.referrer = referrer);
+            lastView._date = date;
             await lastView.save();
           }
         };
