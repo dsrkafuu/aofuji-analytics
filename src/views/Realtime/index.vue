@@ -63,26 +63,13 @@ export default {
       return this.$store.state.COMMON.selectedWebsite?._id;
     },
     dcParsed() {
-      const { desktop, mobile, tablet, tv } = this.dc;
-      const total = desktop + mobile + tablet + tv;
+      const { desktop, mobile, tablet } = this.dc;
+      const total = desktop + mobile + tablet;
       return {
         Desktop: desktop / total,
         Mobile: mobile / total,
         Tablet: tablet / total,
-        TV: tv / total,
       };
-    },
-    mapParsed() {
-      const ret = {};
-      const countries = Object.keys(this.map);
-      let max = 0;
-      countries.forEach((country) => {
-        this.map[country] > max && (max = this.map[country]);
-      });
-      countries.forEach((country) => {
-        ret[country] = this.map[country] / max;
-      });
-      return ret;
     },
   },
   watch: {
@@ -92,8 +79,8 @@ export default {
     async dcParsed() {
       await this.drawDCChart(this.dcParsed);
     },
-    async mapParsed() {
-      await this.drawMapChart(this.mapParsed);
+    async map() {
+      await this.drawMapChart(this.map);
     },
   },
   methods: {
@@ -149,14 +136,14 @@ export default {
             {
               data: [...Object.values(data)],
               backgroundColor: [
-                'rgba(138, 162, 211, 0.6)',
-                'rgba(63, 69, 81, 0.3)',
-                'rgba(139, 129, 195, 0.6)',
+                'rgba(138, 162, 211, 0.6)', // desktop
+                'rgba(139, 129, 195, 0.6)', // mobile
+                'rgba(63, 69, 81, 0.3)', // tablet
               ],
               hoverBackgroundColor: [
-                'rgba(138, 162, 211, 0.8)',
-                'rgba(63, 69, 81, 0.4)',
-                'rgba(139, 129, 195, 0.75)',
+                'rgba(138, 162, 211, 0.6)', // desktop
+                'rgba(139, 129, 195, 0.6)', // mobile
+                'rgba(63, 69, 81, 0.3)', // tablet
               ],
               borderWidth: 1,
             },
@@ -183,7 +170,7 @@ export default {
       // update data
       this.worldTopo.forEach((d) => {
         const ISO = d.properties.ISO_A2;
-        d.properties.VALUE = data[ISO] || 0;
+        data[ISO] && (d.properties.VALUE = data[ISO]);
       });
       // draw chart
       new Chart(this.$refs.map, {
@@ -214,10 +201,13 @@ export default {
             },
             color: {
               display: false, // no color card
+              missing: 'rgba(138, 162, 211, 0.2)',
               // color calculator
               // origin value 0-1
-              // target alpha channel 0.2-1
-              interpolate: (val) => `rgba(138, 162, 211, ${val * 0.8 + 0.2})`,
+              // target alpha channel 0.5-0.8
+              interpolate: (val) => {
+                return `rgba(138, 162, 211, ${0.3 * val + 0.5})`;
+              },
             },
           },
         },

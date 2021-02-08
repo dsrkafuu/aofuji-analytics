@@ -2,23 +2,35 @@
 export default {
   render(h) {
     // init tag
-    const tag = this.$attrs.href ? 'a' : 'div';
+    const tag = this.href ? 'a' : 'div';
 
     // apply classes and dom props
     const options = {
       class: this.buttonClasses,
-      attrs: { ...this.$attrs },
+      attrs: {
+        href: this.href,
+        // inherit all non-prop attributes
+        ...this.$attrs,
+      },
       on: {
         click: this.onClick,
       },
     };
 
+    // if external
+    if (this.external) {
+      options.attrs.target = '_blank';
+      options.attrs.rel = 'noopener';
+    }
+
     return h(tag, options, this.$slots.default);
   },
   name: 'VButton',
   props: {
+    href: String,
     active: Boolean,
     disabled: Boolean,
+    external: Boolean,
     type: {
       type: String,
       validator: (val) => {
@@ -43,7 +55,9 @@ export default {
   },
   methods: {
     onClick(e) {
-      this.$emit('click', e);
+      if (!this.disabled) {
+        this.$emit('click', e);
+      }
     },
   },
 };

@@ -2,9 +2,9 @@
   <nav class="navbar">
     <div class="v-container">
       <div class="brand">
-        <VRouterLink class="item" :to="{ name: 'Base' }" type="full-height">
+        <VButton class="item" type="full-height" href="https://appvector.icu" external>
           {{ siteTitle }}
-        </VRouterLink>
+        </VButton>
       </div>
       <div class="menu">
         <div class="start">

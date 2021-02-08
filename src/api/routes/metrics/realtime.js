@@ -25,10 +25,10 @@ router.get('/', async (req, res) => {
   // find views in 15 min
   let views;
   try {
-    let now = Date.now();
     // [DEBUG]
-    // now = 1612763153896;
+    // const now = 1612763153896;
     // [DEBUG]
+    const now = Date.now();
     views = await View.find({
       _date: { $lte: now, $gt: now - VIEW_EXPIRE_TIME },
       _website: website,
