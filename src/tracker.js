@@ -53,10 +53,6 @@
     let url = `${_API}?t=${type}&id=${_ID}&d=${Date.now()}`;
     // get session id
     let sid = getSID();
-    // no data sent if no sid and not view request
-    if (!sid && !needResponse) {
-      return;
-    }
     sid && (url += `&sid=${sid}`);
     url += `&p=${encode(path)}`;
     for (let key in payload) {
@@ -67,8 +63,14 @@
 
     // when not view type and `sendBeacon` available
     if (!needResponse && navigator.sendBeacon) {
+      // [DEBUG]
+      console.log('sending', type, 'with beacon', url);
+      // [DEBUG]
       navigator.sendBeacon(url);
     } else if (window.fetch) {
+      // [DEBUG]
+      console.log('sending', type, 'with fetch', url);
+      // [DEBUG]
       const req = fetch(url, { method: 'GET', keepalive: needWait });
       if (needResponse) {
         req.then((res) => {
@@ -81,6 +83,9 @@
         });
       }
     } else {
+      // [DEBUG]
+      console.log('sending', type, 'with xhr', url);
+      // [DEBUG]
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, !needWait);
       // [ie fix] xhr.responseType = 'json';
