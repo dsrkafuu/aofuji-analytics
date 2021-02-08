@@ -9,20 +9,23 @@ router.use(mongoose());
 
 /* middlewares */
 const { authCheck } = require('./middlewares/authCheck.js');
+const { cacheControl } = require('./middlewares/cacheControl.js');
 
 /* routes */
 const { router: collect } = require('./routes/collect.js');
 const { router: login } = require('./routes/login.js');
 const { router: common } = require('./routes/common.js');
-router.use('/collect', collect);
-router.use('/login', login);
-router.use('/common', /*authCheck({ checkPublic: true }),*/ common);
+router.use('/collect', cacheControl(), collect);
+router.use('/login', cacheControl(), login);
+router.use('/common', cacheControl(), /*authCheck({ checkPublic: true }),*/ common);
 const { router: adminWebsite } = require('./routes/admin/website.js');
 const { router: adminAccount } = require('./routes/admin/account.js');
 const { router: adminDebug } = require('./routes/admin/debug.js');
-router.use('/admin/website', authCheck(), adminWebsite);
-router.use('/admin/account', authCheck(), adminAccount);
-router.use('/admin/debug', authCheck(), adminDebug);
+router.use('/admin/website', cacheControl(), authCheck(), adminWebsite);
+router.use('/admin/account', cacheControl(), authCheck(), adminAccount);
+router.use('/admin/debug', cacheControl(), authCheck(), adminDebug);
+const { router: metricsRealtime } = require('./routes/metrics/realtime.js');
+router.use('/metrics/realtime', cacheControl({ allowCache: true }), metricsRealtime);
 
 /* fallback */
 router.use('/*', async () => {

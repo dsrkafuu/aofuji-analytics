@@ -202,7 +202,7 @@ const route = async (req, res) => {
           await View.findOneAndUpdate(
             // view before this leave
             {
-              _date: { $lt: date },
+              _date: { $lte: date },
               _session: session._id,
               _website: website._id,
               pathname,
@@ -210,7 +210,7 @@ const route = async (req, res) => {
             // add new page view time (not replace)
             { $inc: { pvt } }
           )
-            .sort({ _date: -1 })
+            .sort({ _date: -1 }) // ensure first view before this leave
             .lean();
         }
       } catch {

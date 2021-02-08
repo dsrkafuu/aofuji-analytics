@@ -17,10 +17,8 @@ const compression = require('compression');
 app.use(compression());
 
 /* routes */
-// route-level cache control
-const { cacheControl } = require('./middlewares/cacheControl.js');
 const { router } = require('./router.js');
-app.use('/api', cacheControl(), router);
+app.use('/api', router);
 // transform error to http response
 const { errorHandler } = require('./middlewares/errorHandler.js');
 app.use(errorHandler());

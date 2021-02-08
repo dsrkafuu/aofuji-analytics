@@ -8,10 +8,18 @@
       </div>
       <div class="menu">
         <div class="start">
-          <VRouterLink class="item" :to="{ name: 'Realtime' }" type="full-height">
+          <VRouterLink
+            class="item"
+            :to="{ name: 'Realtime', query: { website: selectedWebsite } }"
+            type="full-height"
+          >
             Realtime
           </VRouterLink>
-          <VRouterLink class="item" :to="{ name: 'Dashboard' }" type="full-height">
+          <VRouterLink
+            class="item"
+            :to="{ name: 'Dashboard', query: { website: selectedWebsite } }"
+            type="full-height"
+          >
             Dashboard
           </VRouterLink>
           <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
@@ -45,11 +53,6 @@ import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 export default {
   name: 'Navbar',
-  data() {
-    return {
-      value: '',
-    };
-  },
   computed: {
     // site title from environment variables
     siteTitle() {

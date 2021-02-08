@@ -1,7 +1,7 @@
 <template>
   <div :class="['v-list', `v-list-${type}`]">
     <div class="v-list-head"></div>
-    <div class="v-list-item" v-for="item of data" :key="item.id">
+    <div class="v-list-item" v-for="item of data" :key="item.key || item.id">
       <div v-if="type === 'extend'" class="v-list-text-wrapper">
         <div class="v-list-text">{{ item.text }}</div>
         <div class="v-list-sub">{{ item.sub }}</div>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="v-list-graph" v-if="graph">
-        <slot></slot>
+        <slot :item="item"></slot>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@ export default {
           return true;
         }
         for (let i = 0; i < val.length; i++) {
-          if (!val[i].id || !val[i].text) {
+          if (!val[i].key && !val[i].id) {
             return false;
           }
         }

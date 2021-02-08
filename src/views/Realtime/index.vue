@@ -4,7 +4,7 @@
       <VCard class="count">
         <div class="section">
           <div class="title">Users Online</div>
-          <div class="ctx ctx-uo">456</div>
+          <div class="ctx ctx-uo">{{ uo }}</div>
         </div>
         <div class="section">
           <div class="title">Device Category</div>
@@ -23,13 +23,17 @@
       <VCard class="data">
         <div class="section">
           <div class="title">Page Views</div>
-          <VList class="ctx ctx-pv" type="dense" :data="pv" graph>123</VList>
+          <VList class="ctx ctx-pv" type="dense" :data="pv" graph>
+            <template v-slot="{ item }">{{ item.value }}</template>
+          </VList>
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">User Sources</div>
-          <VList class="ctx ctx-us" type="dense" :data="us" graph>123</VList>
+          <VList class="ctx ctx-us" type="dense" :data="us" graph>
+            <template v-slot="{ item }">{{ item.value }}</template>
+          </VList>
         </div>
       </VCard>
     </div>
@@ -38,111 +42,187 @@
 
 <script>
 import { Chart, topojson } from '@/utils/Chart.js';
+import { cloneDeep } from '@/utils/lodash.js';
+import { logInfo, logError } from '@/utils/loggers.js';
 
 export default {
   name: 'Realtime',
   data() {
     return {
-      pv: [
-        { id: 1, text: '/' },
-        { id: 2, text: '/post' },
-        { id: 3, text: '/post/2020/extract-sf-pingfang' },
-        { id: 4, text: '/post/2020/umami-analytics' },
-        { id: 5, text: '/post/2020/potplayer-with-lav-fliters' },
-        { id: 6, text: '/post/2019/hugo-custom-pagination' },
-        { id: 7, text: '/code' },
-        { id: 8, text: '/code/2' },
-        { id: 9, text: '/code/5' },
-        { id: 10, text: '/post/2' },
-      ],
-      us: [
-        { id: 11, text: '(direct)' },
-        { id: 12, text: 'twelve' },
-        { id: 13, text: 'tt' },
-        { id: 14, text: 'ft' },
-        { id: 15, text: 'ft' },
-        { id: 16, text: 'st' },
-      ],
+      uo: NaN,
+      dc: {},
+      map: {},
+      act: [],
+      pv: [],
+      us: [],
+      worldTopo: null,
     };
   },
-  async mounted() {
-    new Chart(this.$refs.dcilm, {
-      type: 'doughnut',
-      data: {
-        labels: ['desktop', 'tablet', 'mobile'],
-        datasets: [
-          {
-            data: new Array(3).fill(1).map(() => Math.random()),
-            backgroundColor: [
-              'rgba(138, 162, 211, 0.6)',
-              'rgba(63, 69, 81, 0.3)',
-              'rgba(139, 129, 195, 0.6)',
-            ],
-            hoverBackgroundColor: [
-              'rgba(138, 162, 211, 0.8)',
-              'rgba(63, 69, 81, 0.4)',
-              'rgba(139, 129, 195, 0.75)',
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        plugins: {
-          legend: {
-            position: 'bottom',
-          },
-        },
-      },
-    });
-
-    let mapTopo = await this.$axios.get(
-      'https://cdn.jsdelivr.net/gh/amzrk2/dsr-cdn@1.0/json/world-110m.json'
-    );
-    mapTopo = mapTopo.data;
-    const countries = topojson.feature(mapTopo, mapTopo.objects.countries).features;
-    new Chart(this.$refs.map, {
-      type: 'choropleth',
-      data: {
-        labels: countries.map((d) => d.properties.name),
-        datasets: [
-          {
-            data: countries.map((d) => ({ feature: d, value: Math.random() })),
-            borderWidth: 0,
-            borderColor: 'rgba(255, 255, 255, 0)',
-          },
-        ],
-      },
-      options: {
-        devicePixelRatio: (window.devicePixelRatio || 1) * 2, // 2x scale for clearer border
-        aspectRatio: 1, // square map
-        showOutline: false,
-        showGraticule: false, // disable geo grids
-        plugins: {
-          legend: {
-            display: false, // remove unused legend
-          },
-        },
-        scales: {
-          xy: {
-            projection: 'mercator', // square map
-          },
-          color: {
-            display: false, // no color card
-            interpolate: (val) => `rgba(138, 162, 211, ${val})`, // color calculator
-          },
-        },
-      },
-    });
-  },
-  activated() {
-    // ensure search param exist
-    const website = this.$store.state.COMMON.selectedWebsite?._id;
-    if (website && !this.$route.query.website) {
-      this.$router.replace({
-        query: { website },
+  computed: {
+    website() {
+      return this.$store.state.COMMON.selectedWebsite?._id;
+    },
+    dcParsed() {
+      const { desktop, mobile, tablet, tv } = this.dc;
+      const total = desktop + mobile + tablet + tv;
+      return {
+        Desktop: desktop / total,
+        Mobile: mobile / total,
+        Tablet: tablet / total,
+        TV: tv / total,
+      };
+    },
+    mapParsed() {
+      const ret = {};
+      const countries = Object.keys(this.map);
+      let max = 0;
+      countries.forEach((country) => {
+        this.map[country] > max && (max = this.map[country]);
       });
-    }
+      countries.forEach((country) => {
+        ret[country] = this.map[country] / max;
+      });
+      return ret;
+    },
+  },
+  watch: {
+    async website() {
+      await this.fetchRealtime(this.website);
+    },
+    async dcParsed() {
+      await this.drawDCChart(this.dcParsed);
+    },
+    async mapParsed() {
+      await this.drawMapChart(this.mapParsed);
+    },
+  },
+  methods: {
+    /**
+     * fetch realtime data
+     * @param {string} website website id
+     */
+    async fetchRealtime(website) {
+      let res;
+      try {
+        res = await this.$api.get(`/metrics/realtime?website=${website}`);
+        this.uo = res.data.uo;
+        this.dc = res.data.dc;
+        this.map = res.data.map;
+        this.act = res.data.act;
+        res.data.pv.forEach((item) => (item.text = item.key));
+        this.pv = res.data.pv;
+        res.data.us.forEach((item) => (item.text = item.key));
+        this.us = res.data.us;
+        logInfo(cloneDeep(res.data));
+      } catch (e) {
+        this.$error('failed to fetch realtime data');
+        logError(e);
+      }
+    },
+    /**
+     * fetch world map topojson
+     */
+    async fetchWorldTopo() {
+      let res;
+      try {
+        res = await this.$axios.get(
+          'https://cdn.jsdelivr.net/gh/amzrk2/dsr-cdn@1.0/json/world-110m.min.json'
+        );
+        const d = res.data;
+        const p = topojson.feature(d, d.objects.ne_110m_admin_0_countries).features;
+        this.worldTopo = p;
+      } catch (e) {
+        this.$error('failed to fetch world map data');
+        logError(e);
+      }
+    },
+    /**
+     * draw device category chart
+     * @param {Object} data
+     */
+    async drawDCChart(data) {
+      new Chart(this.$refs.dcilm, {
+        type: 'doughnut',
+        data: {
+          labels: [...Object.keys(data)],
+          datasets: [
+            {
+              data: [...Object.values(data)],
+              backgroundColor: [
+                'rgba(138, 162, 211, 0.6)',
+                'rgba(63, 69, 81, 0.3)',
+                'rgba(139, 129, 195, 0.6)',
+              ],
+              hoverBackgroundColor: [
+                'rgba(138, 162, 211, 0.8)',
+                'rgba(63, 69, 81, 0.4)',
+                'rgba(139, 129, 195, 0.75)',
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: 'bottom',
+            },
+          },
+        },
+      });
+    },
+    /**
+     * draw world map
+     * @param {Object} data
+     */
+    async drawMapChart(data) {
+      // fetch topp
+      if (!this.worldTopo) {
+        await this.fetchWorldTopo();
+      }
+      // update data
+      this.worldTopo.forEach((d) => {
+        const ISO = d.properties.ISO_A2;
+        d.properties.VALUE = data[ISO] || 0;
+      });
+      // draw chart
+      new Chart(this.$refs.map, {
+        type: 'choropleth',
+        data: {
+          labels: this.worldTopo.map((d) => d.properties.NAME),
+          datasets: [
+            {
+              data: this.worldTopo.map((d) => ({ feature: d, value: d.properties.VALUE })),
+              borderWidth: 0,
+              borderColor: 'rgba(255, 255, 255, 0)',
+            },
+          ],
+        },
+        options: {
+          devicePixelRatio: (window.devicePixelRatio || 1) * 2, // 2x scale for clearer border
+          aspectRatio: 1, // square map
+          showOutline: false,
+          showGraticule: false, // disable geo grids
+          plugins: {
+            legend: {
+              display: false, // remove unused legend
+            },
+          },
+          scales: {
+            xy: {
+              projection: 'mercator', // square map
+            },
+            color: {
+              display: false, // no color card
+              // color calculator
+              // origin value 0-1
+              // target alpha channel 0.2-1
+              interpolate: (val) => `rgba(138, 162, 211, ${val * 0.8 + 0.2})`,
+            },
+          },
+        },
+      });
+    },
   },
 };
 </script>
