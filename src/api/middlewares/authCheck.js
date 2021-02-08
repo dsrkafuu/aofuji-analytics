@@ -4,9 +4,10 @@ const jwt = require('jsonwebtoken');
 /* utils */
 const { buildError } = require('../utils/buildError.js');
 const { Account } = require('../utils/mongoose.js');
+const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants.js');
 
 const selectKeys = 'username';
-const secret = process.env.TOKEN_SECRET || 'vector_token-secret';
+const SECRET = process.env.TOKEN_SECRET || JWT_DEFAULT_SECRET;
 const defaultOptions = {
   checkPublic: false, // whether check public websites' `share` search param
 };
@@ -21,14 +22,14 @@ function authCheck(options = defaultOptions) {
       buildError(418, 'TODO');
     } else {
       // check token
-      const { vector_token: token } = req.cookies;
+      const { [COOKIE_TOKEN]: token } = req.cookies;
       if (!token) {
         buildError(403, 'api request unauthorized');
       }
       // get token data
       let tokenData;
       try {
-        tokenData = jwt.verify(token, secret, { algorithm: 'HS256' });
+        tokenData = jwt.verify(token, SECRET, { algorithm: 'HS256' });
       } catch {
         tokenData = null;
       }

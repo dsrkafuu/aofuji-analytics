@@ -7,6 +7,7 @@ const { buildError } = require('../../utils/buildError.js');
 const { formatQuery } = require('../../utils/formatQuery.js');
 const { mapArray } = require('../../utils/mapArray.js');
 const { View } = require('../../utils/mongoose.js');
+const { VIEW_EXPIRE_TIME } = require('../../utils/constants.js');
 
 const selectKeys = '_session pathname referrer pvt _date';
 const populateKeys = '_session';
@@ -29,7 +30,7 @@ router.get('/', async (req, res) => {
     // [DEBUG]
     const now = Date.now();
     views = await View.find({
-      _date: { $lte: now, $gt: now - 15 * 60 * 1000 },
+      _date: { $lte: now, $gt: now - VIEW_EXPIRE_TIME },
       _website: website,
     })
       .select(selectKeys)

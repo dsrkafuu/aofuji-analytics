@@ -1,4 +1,4 @@
-/* sync with '@/api/utils/constants.js' */
+/* sync with '@/utils/constants.js' */
 
 /* dom */
 export const DOM_ATTR_THEME = 'data-theme';

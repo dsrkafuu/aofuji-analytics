@@ -12,6 +12,7 @@ const { formatQuery } = require('../utils/formatQuery.js');
 const { formatPath } = require('../utils/formatPath.js');
 const { formatRef } = require('../utils/formatRef.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
+const { VIEW_EXPIRE_TIME } = require('../utils/constants.js');
 
 const route = async (req, res) => {
   // get basic params
@@ -127,7 +128,7 @@ const route = async (req, res) => {
             pathname,
           }).sort({ _date: -1 });
           // no last view || after 15 min - save new view
-          if (!lastView || date - lastView._date >= 900 * 1000) {
+          if (!lastView || date - lastView._date >= VIEW_EXPIRE_TIME) {
             const newView = {
               _date: date,
               _session: session._id,
