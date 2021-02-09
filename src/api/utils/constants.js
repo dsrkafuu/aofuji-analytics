@@ -14,4 +14,5 @@ module.exports.STORAGE_ACCOUNT = 'account';
 
 /* api */
 module.exports.VIEW_EXPIRE_TIME = 15 * 60 * 1000; // 15 minutes
+module.exports.NEW_EXPIRE_TIME = 24 * 60 * 60 * 1000; // 1 day
 module.exports.JWT_DEFAULT_SECRET = 'vector_token-secret';

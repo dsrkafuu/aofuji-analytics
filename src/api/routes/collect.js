@@ -12,7 +12,7 @@ const { formatQuery } = require('../utils/formatQuery.js');
 const { formatPath } = require('../utils/formatPath.js');
 const { formatRef } = require('../utils/formatRef.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
-const { VIEW_EXPIRE_TIME } = require('../utils/constants.js');
+const { VIEW_EXPIRE_TIME, NEW_EXPIRE_TIME } = require('../utils/constants.js');
 
 const route = async (req, res) => {
   // get basic params
@@ -101,9 +101,12 @@ const route = async (req, res) => {
       }
       return session;
     } else {
-      session.new && (session.new = false);
-      session._date = date;
-      await session.save();
+      if (date - session._date >= NEW_EXPIRE_TIME) {
+        // view again after 1 day
+        session.new && (session.new = false);
+        session._date = date;
+        await session.save();
+      }
       return session;
     }
   };
