@@ -1,7 +1,7 @@
 <template>
   <div :class="['v-list', `v-list-${type}`]">
     <div class="v-list-head"></div>
-    <div class="v-list-item" v-for="item of data" :key="item.key || item.id">
+    <div class="v-list-item" v-for="item of data" :key="item.key || item.id || item.text">
       <div v-if="type === 'extend'" class="v-list-text-wrapper">
         <div class="v-list-text">{{ item.text }}</div>
         <div class="v-list-sub">{{ item.sub }}</div>

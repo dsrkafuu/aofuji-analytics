@@ -52,6 +52,8 @@ module.exports = {
   Account,
   View,
   Website,
+  // useful tools
+  ObjectId: mongoose.Types.ObjectId,
   /**
    * select for `create()`
    * @param {Object} result mongoose document

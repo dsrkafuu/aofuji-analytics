@@ -4,7 +4,7 @@
       <VCard class="count">
         <div class="section">
           <div class="title">Users Online</div>
-          <div class="ctx ctx-uo">{{ uo }}</div>
+          <div class="ctx ctx-uo">{{ au }}</div>
         </div>
         <div class="section">
           <div class="title">Device Category</div>
@@ -30,8 +30,16 @@
       </VCard>
       <VCard class="data">
         <div class="section">
-          <div class="title">User Sources</div>
-          <VList class="ctx ctx-us" type="dense" :data="us" graph>
+          <div class="title">Page Events</div>
+          <VList class="ctx ctx-pe" type="dense" :data="pe" graph>
+            <template v-slot="{ item }">{{ item.value }}</template>
+          </VList>
+        </div>
+      </VCard>
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Active Regions</div>
+          <VList class="ctx ctx-ar" type="dense" :data="ar" graph>
             <template v-slot="{ item }">{{ item.value }}</template>
           </VList>
         </div>
@@ -42,70 +50,40 @@
 
 <script>
 import { Chart, topojson } from '@/utils/Chart.js';
-import { cloneDeep } from '@/utils/lodash.js';
+import { cloneDeep, fromPairs } from '@/utils/lodash.js';
 import { logInfo, logError } from '@/utils/loggers.js';
 
 export default {
   name: 'Realtime',
   data() {
     return {
-      uo: NaN,
-      dc: {},
-      map: {},
-      act: [],
-      pv: [],
-      us: [],
-      worldTopo: null,
+      au: 0, // active users
+      dc: [], // device categories
+      ur: [], // user regions
+      pv: [], // page views
+      ue: [], // user events
+      topo: null, // world map topojson
     };
   },
   computed: {
     website() {
       return this.$store.state.COMMON.selectedWebsite?._id;
     },
-    dcParsed() {
-      const { desktop, mobile, tablet } = this.dc;
-      const total = desktop + mobile + tablet;
-      return {
-        Desktop: desktop / total,
-        Mobile: mobile / total,
-        Tablet: tablet / total,
-      };
-    },
   },
   watch: {
     async website() {
-      await this.fetchRealtime(this.website);
-    },
-    async dcParsed() {
-      await this.drawDCChart(this.dcParsed);
-    },
-    async map() {
-      await this.drawMapChart(this.map);
+      // update data
+      const fetchWorks = [];
+      if (!this.topo) {
+        fetchWorks.push(this.fetchWorldTopo());
+      }
+      fetchWorks.push(this.fetchRealtime(this.website));
+      await Promise.all(fetchWorks);
+      // draw charts
+      await Promise.all([this.drawDC(this.dc), this.drawMap(this.ur)]);
     },
   },
   methods: {
-    /**
-     * fetch realtime data
-     * @param {string} website website id
-     */
-    async fetchRealtime(website) {
-      let res;
-      try {
-        res = await this.$api.get(`/metrics/realtime?website=${website}`);
-        this.uo = res.data.uo;
-        this.dc = res.data.dc;
-        this.map = res.data.map;
-        this.act = res.data.act;
-        res.data.pv.forEach((item) => (item.text = item.key));
-        this.pv = res.data.pv;
-        res.data.us.forEach((item) => (item.text = item.key));
-        this.us = res.data.us;
-        logInfo(cloneDeep(res.data));
-      } catch (e) {
-        this.$error('failed to fetch realtime data');
-        logError(e);
-      }
-    },
     /**
      * fetch world map topojson
      */
@@ -117,24 +95,42 @@ export default {
         );
         const d = res.data;
         const p = topojson.feature(d, d.objects.ne_110m_admin_0_countries).features;
-        this.worldTopo = p;
+        this.topo = p;
       } catch (e) {
         this.$error('failed to fetch world map data');
         logError(e);
       }
     },
     /**
-     * draw device category chart
-     * @param {Object} data
+     * fetch realtime data
+     * @param {string} website website id
      */
-    async drawDCChart(data) {
+    async fetchRealtime(website) {
+      let res;
+      try {
+        res = await this.$api.get(`/metrics/realtime?website=${website}`);
+        this.au = res.data.au;
+        this.dc = res.data.dc;
+        this.ur = res.data.ur;
+        this.pv = res.data.pv;
+        logInfo(cloneDeep(res.data));
+      } catch (e) {
+        this.$error('failed to fetch realtime data');
+        logError(e);
+      }
+    },
+    /**
+     * draw device category chart
+     * @param {Array} data
+     */
+    async drawDC(data) {
       new Chart(this.$refs.dcilm, {
         type: 'doughnut',
         data: {
-          labels: [...Object.keys(data)],
+          labels: [...Object.keys(fromPairs(data))],
           datasets: [
             {
-              data: [...Object.values(data)],
+              data: [...Object.values(fromPairs(data))],
               backgroundColor: [
                 'rgba(138, 162, 211, 0.6)', // desktop
                 'rgba(139, 129, 195, 0.6)', // mobile
@@ -159,27 +155,27 @@ export default {
       });
     },
     /**
-     * draw world map
-     * @param {Object} data
+     * draw world map, need to init `this.topo` first
+     * @param {Array} data user regions
      */
-    async drawMapChart(data) {
-      // fetch topp
-      if (!this.worldTopo) {
-        await this.fetchWorldTopo();
+    async drawMap(data) {
+      if (!this.topo) {
+        return;
       }
-      // update data
-      this.worldTopo.forEach((d) => {
+      // combine user regions data with topojson
+      const ur = fromPairs(data);
+      this.topo.forEach((d) => {
         const ISO = d.properties.ISO_A2;
-        data[ISO] && (d.properties.VALUE = data[ISO]);
+        d.properties.VALUE = ur[ISO] || 0;
       });
       // draw chart
       new Chart(this.$refs.map, {
         type: 'choropleth',
         data: {
-          labels: this.worldTopo.map((d) => d.properties.NAME),
+          labels: this.topo.map((d) => d.properties.NAME),
           datasets: [
             {
-              data: this.worldTopo.map((d) => ({ feature: d, value: d.properties.VALUE })),
+              data: this.topo.map((d) => ({ feature: d, value: d.properties.VALUE })),
               borderWidth: 0,
               borderColor: 'rgba(255, 255, 255, 0)',
             },

@@ -1,7 +1,8 @@
 import camelCase from 'lodash/camelCase';
-import upperFirst from 'lodash/upperFirst';
 import cloneDeep from 'lodash/cloneDeep';
 import findIndex from 'lodash/findIndex';
+import fromPairs from 'lodash/fromPairs';
+import upperFirst from 'lodash/upperFirst';
 
 // fix lodash tree-shaking
-export { camelCase, upperFirst, cloneDeep, findIndex };
+export { camelCase, cloneDeep, findIndex, fromPairs, upperFirst };
