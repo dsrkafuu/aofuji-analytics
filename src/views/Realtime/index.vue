@@ -227,6 +227,7 @@ export default {
   .row {
     display: flex;
     gap: $space-base;
+    height: 22rem;
 
     &-hero {
       height: 26rem;

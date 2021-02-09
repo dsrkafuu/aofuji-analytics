@@ -8,7 +8,7 @@ module.exports = (mongoose) => {
     _date: { type: Number, default: Date.now },
   });
 
-  schema.index({ _date: -1 });
   schema.index({ _user: 1 });
+  schema.index({ _date: -1 });
   return mongoose.model('Website', schema);
 };

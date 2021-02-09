@@ -92,17 +92,20 @@ const route = async (req, res) => {
     } catch {
       needNewSession = true;
     }
-    if (!session) {
-      needNewSession = true;
-    }
+    !session && (needNewSession = true);
     if (needNewSession) {
       if (type === 'view') {
         session = await Session.create({ _date: date });
       } else {
         throw buildError(400, 'session init not allowed except view request');
       }
+      return session;
+    } else {
+      session.new && (session.new = false);
+      session._date = date;
+      await session.save();
+      return session;
     }
-    return session;
   };
   const [website, session] = await Promise.all([initWebsite(), initSession()]);
 
