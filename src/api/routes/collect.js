@@ -87,12 +87,16 @@ const route = async (req, res) => {
   let needNewSession = false;
   const initSession = async () => {
     let session = null;
-    try {
-      session = await Session.findById(sid);
-    } catch {
+    if (!sid) {
       needNewSession = true;
+    } else {
+      try {
+        session = await Session.findById(sid);
+      } catch {
+        needNewSession = true;
+      }
+      !session && (needNewSession = true);
     }
-    !session && (needNewSession = true);
     if (needNewSession) {
       if (type === 'view') {
         session = await Session.create({ _date: date });
@@ -126,14 +130,14 @@ const route = async (req, res) => {
 
         // save view
         const saveView = async () => {
-          // not create new view without referrer in 15 min
+          // not create new view without referrer in 10 min
           const lastView = await View.findOne({
             _date: { $lt: date },
             _session: session._id,
             _website: website._id,
             pathname,
           }).sort({ _date: -1 });
-          // no last view || after 15 min - save new view
+          // no last view || after 10 min - save new view
           if (!lastView || date - lastView._date >= VIEW_EXPIRE_TIME) {
             const newView = {
               _date: date,
@@ -144,7 +148,7 @@ const route = async (req, res) => {
             };
             await View.create(newView);
           }
-          // has last view && in 15 min - update view
+          // has last view && in 10 min - update view
           else {
             referrer && (lastView.referrer = referrer);
             lastView._date = date;

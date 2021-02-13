@@ -15,9 +15,8 @@ const { VIEW_EXPIRE_TIME } = require('../../utils/constants.js');
 // get account
 router.get('/', async (req, res) => {
   // [DEBUG]
-  const now = 1612846952200;
-  // [DEBUG]
-  // const now = Date.now();
+  // const now = 1612846952200;
+  const now = Date.now();
 
   // get selected website
   let { website } = req.query;
@@ -55,7 +54,7 @@ router.get('/', async (req, res) => {
     let views;
     try {
       views = await View.aggregate([
-        // in 15 min
+        // in 10 min
         { $match: { _date: { $lte: now, $gt: now - VIEW_EXPIRE_TIME }, _website: website } },
         // count each path's total value
         { $group: { _id: '$pathname', value: { $sum: 1 } } },
@@ -74,7 +73,7 @@ router.get('/', async (req, res) => {
     let events;
     try {
       events = await Event.aggregate([
-        // in 15 min
+        // in 10 min
         { $match: { _date: { $lte: now, $gt: now - VIEW_EXPIRE_TIME }, _website: website } },
         // count each event's total value
         { $group: { _id: '$name', value: { $sum: 1 } } },
