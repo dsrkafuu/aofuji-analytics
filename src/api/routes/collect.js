@@ -93,21 +93,25 @@ const route = async (req, res) => {
       try {
         session = await Session.findById(sid);
       } catch {
-        try {
-          session = await Session.find({ ip: clientIP });
-        } catch {
-          session = null;
+        session = null;
+        if (clientIP) {
+          try {
+            session = await Session.findOne({ ip: clientIP });
+          } catch {
+            session = null;
+          }
+          !session && (session = null);
         }
-        !session && (session = null);
       }
-    } else {
+      !session && (session = null);
+    } else if (clientIP) {
       try {
-        session = await Session.find({ ip: clientIP });
+        session = await Session.findOne({ ip: clientIP });
       } catch {
         session = null;
       }
+      !session && (session = null);
     }
-    !session && (session = null);
 
     // change session data
     if (!session) {
@@ -130,6 +134,7 @@ const route = async (req, res) => {
     }
   };
   const [website, session] = await Promise.all([initWebsite(), initSession()]);
+  console.log(session);
 
   // data process
   switch (type) {
