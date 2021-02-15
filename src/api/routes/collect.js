@@ -87,19 +87,32 @@ const route = async (req, res) => {
   let needNewSession = false;
   const initSession = async () => {
     let session = null;
-    if (!sid) {
-      needNewSession = true;
-    } else {
+
+    // find session
+    if (sid) {
       try {
         session = await Session.findById(sid);
       } catch {
-        needNewSession = true;
+        try {
+          session = await Session.find({ ip: clientIP });
+        } catch {
+          session = null;
+        }
+        !session && (session = null);
       }
-      !session && (needNewSession = true);
+    } else {
+      try {
+        session = await Session.find({ ip: clientIP });
+      } catch {
+        session = null;
+      }
     }
-    if (needNewSession) {
+    !session && (session = null);
+
+    // change session data
+    if (!session) {
       if (type === 'view') {
-        session = await Session.create({ _date: date });
+        session = await Session.create({ ip: clientIP, _date: date });
       } else {
         throw buildError(400, 'session init not allowed except view request');
       }
@@ -108,6 +121,7 @@ const route = async (req, res) => {
       if (date - session._date >= NEW_EXPIRE_TIME) {
         // view again after 1 day
         session.new && (session.new = false);
+        session.ip = clientIP;
         session._date = date;
         await session.save();
       }
