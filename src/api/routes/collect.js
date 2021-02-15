@@ -84,7 +84,7 @@ const route = async (req, res) => {
     return website;
   };
   // init session
-  let needNewSession = false;
+  let newSession = false;
   const initSession = async () => {
     let session = null;
 
@@ -113,6 +113,7 @@ const route = async (req, res) => {
     if (!session) {
       if (type === 'view') {
         session = await Session.create({ ip: clientIP, _date: date });
+        newSession = true;
       } else {
         throw buildError(400, 'session init not allowed except view request');
       }
@@ -174,13 +175,13 @@ const route = async (req, res) => {
           // check whether need to try update session data
           let needSave = false;
           // language & screen
-          if (needNewSession || !session.language || !session.screen) {
+          if (newSession || !session.language || !session.screen) {
             lng && (session.language = lng);
             scn && (session.screen = scn);
             needSave = true;
           }
           // browser & system & platform
-          if (needNewSession || !session.browser || !session.system || !session.platform) {
+          if (newSession || !session.browser || !session.system || !session.platform) {
             const Bowser = require('bowser');
             const bowser = Bowser.getParser(clientUA);
             const formatString = (str) =>
@@ -191,7 +192,7 @@ const route = async (req, res) => {
             needSave = true;
           }
           // location
-          if (needNewSession || !session.location) {
+          if (newSession || !session.location) {
             const path = require('path');
             const fs = require('fs');
             const { Reader } = require('maxmind');
@@ -250,7 +251,7 @@ const route = async (req, res) => {
   }
 
   // send response
-  if (needNewSession) {
+  if (newSession) {
     res.status(201).send({ sid: session._id });
   } else {
     res.status(204).send();
