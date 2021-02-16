@@ -23,25 +23,19 @@
       <VCard class="data">
         <div class="section">
           <div class="title">Page Views</div>
-          <VList class="ctx ctx-pv" type="dense" :data="pv" graph>
-            <template v-slot="{ item }">{{ item.value }}</template>
-          </VList>
+          <VList class="ctx ctx-pv" type="dense" :data="pv" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
-          <div class="title">Page Events</div>
-          <VList class="ctx ctx-pe" type="dense" :data="pe" graph>
-            <template v-slot="{ item }">{{ item.value }}</template>
-          </VList>
+          <div class="title">User Events</div>
+          <VList class="ctx ctx-pe" type="dense" :data="ue" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
-          <div class="title">Active Regions</div>
-          <VList class="ctx ctx-ar" type="dense" :data="ar" graph>
-            <template v-slot="{ item }">{{ item.value }}</template>
-          </VList>
+          <div class="title">User Regions</div>
+          <VList class="ctx ctx-ar" type="dense" :data="ur" />
         </div>
       </VCard>
     </div>
@@ -59,9 +53,9 @@ export default {
     return {
       au: 0, // active users
       dc: [], // device categories
-      ur: [], // user regions
       pv: [], // page views
       ue: [], // user events
+      ur: [], // user regions
       topo: null, // world map topojson
     };
   },
@@ -111,8 +105,9 @@ export default {
         res = await this.$api.get(`/metrics/realtime?website=${website}`);
         this.au = res.data.au;
         this.dc = res.data.dc;
-        this.ur = res.data.ur;
         this.pv = res.data.pv;
+        this.ue = res.data.ue;
+        this.ur = res.data.ur;
         logInfo(cloneDeep(res.data));
       } catch (e) {
         this.$error('failed to fetch realtime data');
@@ -202,7 +197,10 @@ export default {
               // origin value 0-1
               // target alpha channel 0.5-0.8
               interpolate: (val) => {
-                return `rgba(138, 162, 211, ${0.3 * val + 0.5})`;
+                if (!val) {
+                  return 'rgba(138, 162, 211, 0.2)';
+                }
+                return `rgba(138, 162, 211, ${0.6 * val + 0.2})`;
               },
             },
           },

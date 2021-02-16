@@ -1,32 +1,41 @@
 <template>
   <div :class="['v-list', `v-list-${type}`]">
-    <div class="v-list-head"></div>
-    <div class="v-list-item" v-for="item of data" :key="item.key || item.id || item.text">
-      <div v-if="type === 'extend'" class="v-list-text-wrapper">
-        <div class="v-list-text">{{ item.text }}</div>
-        <div class="v-list-sub">{{ item.sub }}</div>
-      </div>
-      <div v-else class="v-list-text">{{ item.text }}</div>
-      <div class="v-list-label" v-if="item.label">
-        <span class="v-label">
-          <VLabel>{{ item.label }}</VLabel>
-        </span>
-      </div>
-      <div class="v-list-ctrl" v-if="control">
-        <div class="v-list-ctrl-item">
-          <VButton @click.prevent="$emit('edit', item.id)">
-            <VIconEdit />
-          </VButton>
+    <div class="v-list-item" v-for="item of data" :key="item.key || item.id || item[0]">
+      <!-- key-value pair list -->
+      <template v-if="Array.isArray(item) && item.length === 2">
+        <div class="v-list-text">{{ item[0] }}</div>
+        <div class="v-list-count">{{ item[1] }}</div>
+      </template>
+      <!-- object list -->
+      <template v-else>
+        <div v-if="type === 'extend'" class="v-list-text-wrapper">
+          <div class="v-list-text">{{ item.text }}</div>
+          <div class="v-list-sub">{{ item.sub }}</div>
         </div>
-        <div class="v-list-ctrl-item">
-          <VButton @click.prevent="$emit('delete', item.id)">
-            <VIconTrash />
-          </VButton>
+        <div v-else class="v-list-text">{{ item.text }}</div>
+        <div class="v-list-label" v-if="item.label">
+          <span class="v-label">
+            <VLabel>{{ item.label }}</VLabel>
+          </span>
         </div>
-      </div>
-      <div class="v-list-graph" v-if="graph">
+        <div class="v-list-ctrl" v-if="control">
+          <div class="v-list-ctrl-item">
+            <VButton @click="$emit('edit', item.id)">
+              <VIconEdit />
+            </VButton>
+          </div>
+          <div class="v-list-ctrl-item">
+            <VButton @click="$emit('delete', item.id)">
+              <VIconTrash />
+            </VButton>
+          </div>
+        </div>
         <slot :item="item"></slot>
-      </div>
+      </template>
+      <!-- custom row item -->
+      <template v-if="custom">
+        <slot :item="item"></slot>
+      </template>
     </div>
   </div>
 </template>
@@ -38,15 +47,14 @@ export default {
     data: {
       type: Array,
       validator: (val) => {
-        if (!val.length) {
-          return true;
-        }
-        for (let i = 0; i < val.length; i++) {
-          if (!val[i].key && !val[i].id) {
-            return false;
+        let res = true;
+        val.forEach((item) => {
+          if ((Array.isArray(item) && item.length === 2) || (item.text && (item.key || item.id))) {
+            return;
           }
-        }
-        return true;
+          res = false;
+        });
+        return res;
       },
       required: true,
     },
@@ -58,7 +66,7 @@ export default {
       default: 'default', // common list by default
     },
     control: Boolean, // show control buttons
-    graph: Boolean, // custom grid at the end
+    custom: Boolean, // custom list
   },
 };
 </script>
@@ -77,6 +85,15 @@ export default {
   &-text {
     padding: 0 $space-sm;
     flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-count {
+    padding-right: $space-sm;
+    flex: 0 0 auto;
+    text-align: right;
   }
 
   &-label {
