@@ -12,11 +12,10 @@ const { mapArray } = require('../../utils/mapArray.js');
 const { toPairs } = require('../../utils/toPairs.js');
 const { VIEW_EXPIRE_TIME } = require('../../utils/constants.js');
 
-// get account
 router.get('/', async (req, res) => {
   // [DEBUG]
-  const now = 1612846952200;
-  // const now = Date.now();
+  // const now = 1612846952200;
+  const now = Date.now();
 
   // get selected website
   let { website } = req.query;
@@ -65,7 +64,7 @@ router.get('/', async (req, res) => {
       views = [];
     }
     return {
-      pv: toPairs(views), // page views
+      pv: toPairs(views || []), // page views
     };
   };
 

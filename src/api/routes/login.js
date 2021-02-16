@@ -8,13 +8,11 @@ const jwt = require('jsonwebtoken');
 const { buildError } = require('../utils/buildError.js');
 const { Account, select } = require('../utils/mongoose.js');
 const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants.js');
-
 const SECRET = process.env.TOKEN_SECRET || JWT_DEFAULT_SECRET;
-const selectKeys = 'username';
 
 // check init status
 router.get('/init', async (req, res) => {
-  const inited = await Account.findOne({}).select(selectKeys).lean();
+  const inited = await Account.findOne({}).select('username').lean();
   res.set('Content-Length', 0);
   if (!inited) {
     res.status(201).send();
@@ -33,7 +31,7 @@ router.post('/init', async (req, res) => {
     password,
     isAdmin: true,
   });
-  res.status(201).send(select(result, selectKeys));
+  res.status(201).send(select(result, 'username'));
 });
 
 // login route
@@ -69,7 +67,7 @@ router.post('/', async (req, res) => {
 
   // send token back
   res.cookie(COOKIE_TOKEN, token, { maxAge: 14 * 86400 * 1000, sameSite: 'Lax' });
-  res.send(select(account, selectKeys));
+  res.send(select(account, 'username'));
 });
 
 module.exports = { router };

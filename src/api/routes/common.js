@@ -5,10 +5,8 @@ const router = Router();
 /* utils */
 const { Website } = require('../utils/mongoose.js');
 
-const selectKeys = 'name';
-
 router.get('/', async (req, res) => {
-  const result = await Website.find({}).select(selectKeys).limit(50).lean();
+  const result = await Website.find({}).select('name').limit(50).lean();
   res.send(result);
 });
 

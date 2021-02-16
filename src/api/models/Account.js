@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 
 module.exports = (mongoose) => {
   const schema = new mongoose.Schema({
+    _date: { type: Number, default: Date.now },
+
     username: { type: String },
     password: {
       type: String,
@@ -11,10 +13,9 @@ module.exports = (mongoose) => {
       },
     },
     isAdmin: { type: Boolean },
-    _date: { type: Number, default: Date.now },
   });
 
-  schema.index({ username: 1 }, { unique: true });
   schema.index({ _date: -1 });
+  schema.index({ username: 1 }, { unique: true });
   return mongoose.model('Account', schema);
 };

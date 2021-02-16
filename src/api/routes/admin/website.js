@@ -4,17 +4,15 @@ const router = Router();
 const { buildError } = require('../../utils/buildError.js');
 const { Website, Account, select } = require('../../utils/mongoose.js');
 
-const selectKeys = 'name url base isPublic';
-
 // get all websites
 router.get('/', async (req, res) => {
-  const result = await Website.find({}).select(selectKeys).limit(50).lean();
+  const result = await Website.find({}).select('name url base isPublic').limit(50).lean();
   res.send(result);
 });
 
 // get one website
 router.get('/:id', async (req, res) => {
-  const result = await Website.findById(req.params.id).select(selectKeys).lean();
+  const result = await Website.findById(req.params.id).select('name url base isPublic').lean();
   res.send(result);
 });
 
@@ -31,7 +29,7 @@ router.post('/', async (req, res) => {
       isPublic,
       _date: Date.now(),
     });
-    res.status(201).send(select(result, selectKeys));
+    res.status(201).send(select(result, 'name url base isPublic'));
   } else {
     throw buildError(403, 'website account not found');
   }
@@ -47,7 +45,7 @@ router.put('/:id', async (req, res) => {
     isPublic,
     _date: Date.now(),
   })
-    .select(selectKeys)
+    .select('name url base isPublic')
     .lean();
   res.status(201).send(result);
 });

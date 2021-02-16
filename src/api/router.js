@@ -25,7 +25,9 @@ router.use('/admin/website', cacheControl(), authCheck(), adminWebsite);
 router.use('/admin/account', cacheControl(), authCheck(), adminAccount);
 router.use('/admin/debug', cacheControl(), authCheck(), adminDebug);
 const { router: metricsRealtime } = require('./routes/metrics/realtime.js');
+const { router: metricsDashboard } = require('./routes/metrics/dashboard.js');
 router.use('/metrics/realtime', cacheControl({ allowCache: true }), metricsRealtime);
+router.use('/metrics/dashboard', cacheControl({ allowCache: true }), metricsDashboard);
 
 /* fallback */
 router.use('/*', async () => {

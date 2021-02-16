@@ -1,4 +1,4 @@
-/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
+/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright Apache-2.0 License */
 
 (function () {
   /* init */
@@ -159,15 +159,8 @@
     // data
     const data = {
       r: ref, // referrer
+      lng: navigator.language || undefined, // language
     };
-    data.lng = navigator.language || undefined; // language
-    // screen size
-    if (screen.width) {
-      // [ie fix] Number.isNaN()
-      const width = Math.round(screen.width || 0);
-      const height = Math.round(screen.height || 0);
-      data.scn = `${width}x${height}`;
-    }
     // send view data
     sendData('view', path, data);
   };

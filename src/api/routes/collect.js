@@ -12,7 +12,7 @@ const { formatQuery } = require('../utils/formatQuery.js');
 const { formatPath } = require('../utils/formatPath.js');
 const { formatRef } = require('../utils/formatRef.js');
 const { Session, View, Website } = require('../utils/mongoose.js');
-const { VIEW_EXPIRE_TIME, NEW_EXPIRE_TIME } = require('../utils/constants.js');
+const { VIEW_EXPIRE_TIME, SESSION_EXPIRE_TIME } = require('../utils/constants.js');
 
 const route = async (req, res) => {
   // get basic params
@@ -71,80 +71,60 @@ const route = async (req, res) => {
   }
 
   // init website
-  const initWebsite = async () => {
-    let website = null;
-    try {
-      website = await Website.findById(id).lean();
-    } catch {
-      website = null;
-    }
-    if (!website) {
-      throw buildError(400, 'request website not allowed');
-    }
-    return website;
-  };
-  // init session
+  let website = null;
+  try {
+    website = await Website.findById(id).lean();
+  } catch {
+    website = null;
+  }
+  if (!website) {
+    throw buildError(400, 'request website not allowed');
+  }
+
+  // find session
   let newSession = false;
-  const initSession = async () => {
-    let session = null;
-
-    // find session
-    if (sid) {
-      try {
-        session = await Session.findById(sid);
-      } catch {
-        session = null;
-        if (clientIP) {
-          try {
-            session = await Session.findOne({ ip: clientIP });
-          } catch {
-            session = null;
-          }
-          !session && (session = null);
+  let session = null;
+  if (sid) {
+    try {
+      session = await Session.findById(sid);
+    } catch {
+      session = null;
+      if (clientIP) {
+        try {
+          session = await Session.findOne({ ip: clientIP, _website: website._id });
+        } catch {
+          session = null;
         }
+        !session && (session = null);
       }
-      !session && (session = null);
-    } else if (clientIP) {
-      try {
-        session = await Session.findOne({ ip: clientIP });
-      } catch {
-        session = null;
-      }
-      !session && (session = null);
     }
-
-    // change session data
-    if (!session) {
-      if (type === 'view') {
-        session = await Session.create({ ip: clientIP, _date: date });
-        newSession = true;
-      } else {
-        throw buildError(400, 'session init not allowed except view request');
-      }
-      return session;
+    !session && (session = null);
+  } else if (clientIP) {
+    try {
+      session = await Session.findOne({ ip: clientIP, _website: website._id });
+    } catch {
+      session = null;
+    }
+    !session && (session = null);
+  }
+  // create new session
+  if (!session) {
+    if (type === 'view') {
+      session = await Session.create({ _date: date, ip: clientIP, _website: website._id });
+      newSession = true;
     } else {
-      if (date - session._date >= NEW_EXPIRE_TIME) {
-        // view again after 1 day
-        session.new && (session.new = false);
-        session.ip = clientIP;
-        session._date = date;
-        await session.save();
-      }
-      return session;
+      throw buildError(400, 'session init not allowed except view request');
     }
-  };
-  const [website, session] = await Promise.all([initWebsite(), initSession()]);
-  console.log(session);
+  }
 
   // data process
   switch (type) {
     case 'view': {
       try {
         // get params
-        let { r: ref, lng, scn } = req.query;
+        let { r: ref, lng } = req.query;
         ref = formatQuery('string', ref);
         lng = formatQuery('string', lng);
-        scn = formatQuery('string', scn);
         const pathname = formatPath(path, website.base);
         const referrer = await formatRef(ref, website.url);
 
@@ -175,18 +155,22 @@ const route = async (req, res) => {
             await lastView.save();
           }
         };
-        // save session
+        // update session
         const saveSession = async () => {
           // check whether need to try update session data
           let needSave = false;
-          // language & screen
-          if (newSession || !session.language || !session.screen) {
-            lng && (session.language = lng);
-            scn && (session.screen = scn);
+          // update basic session data after 1 day
+          if (newSession || date - session._date >= SESSION_EXPIRE_TIME) {
+            session.ip = clientIP;
+            session._date = date;
             needSave = true;
           }
-          // browser & system & platform
-          if (newSession || !session.browser || !session.system || !session.platform) {
+          // try update advanced session data when missing
+          if (lng && !session.language) {
+            session.language = lng;
+            needSave = true;
+          }
+          if (clientUA && (!session.browser || !session.system || !session.platform)) {
             const Bowser = require('bowser');
             const bowser = Bowser.getParser(clientUA);
             const formatString = (str) =>
@@ -196,8 +180,7 @@ const route = async (req, res) => {
             session.platform = formatString(bowser.getPlatformType());
             needSave = true;
           }
-          // location
-          if (newSession || !session.location) {
+          if (clientIP && !session.location) {
             const path = require('path');
             const fs = require('fs');
             const { Reader } = require('maxmind');
@@ -205,11 +188,9 @@ const route = async (req, res) => {
               path.resolve(__dirname, '../../../api/assets/GeoLite2-Country.mmdb')
             );
             const maxmind = new Reader(gdb);
-            if (clientIP) {
-              const gd = maxmind.get(clientIP);
-              session.location = gd && gd.country ? gd.country.iso_code : undefined;
-              needSave = true;
-            }
+            const gd = maxmind.get(clientIP);
+            session.location = gd && gd.country ? gd.country.iso_code : undefined;
+            needSave = true;
           }
           if (needSave) {
             await session.save();

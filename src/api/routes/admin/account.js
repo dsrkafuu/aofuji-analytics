@@ -3,11 +3,9 @@ const { Router } = require('express');
 const router = Router();
 const { Account } = require('../../utils/mongoose.js');
 
-const selectKeys = 'username isAdmin';
-
 // get account
 router.get('/', async (req, res) => {
-  const result = await Account.findOne({}).select(selectKeys).lean();
+  const result = await Account.findOne({}).select('username isAdmin').lean();
   res.send(result);
 });
 
@@ -20,7 +18,7 @@ router.put('/:id', async (req, res) => {
     isAdmin: true,
     _date: Date.now(),
   })
-    .select(selectKeys)
+    .select('username isAdmin')
     .lean();
   res.status(201).send(result);
 });
