@@ -16,13 +16,13 @@ router.get('/', async (req, res) => {
   from = formatQuery('number', from);
   to = formatQuery('number', to);
 
-  // get steps
+  // construct steps
   let { step } = req.query;
   step = formatQuery('number', step);
   // [DEBUG]
-  // from = 1612846112100; // 12:48:32
-  // to = 1612846952100; // 13:02:32
-  // step = 120000; // 2min
+  from = 1612846112100; // 12:48:32
+  to = 1612846952100; // 13:02:32
+  step = 120000; // 2min
 
   let fromTemp = to - step;
   const steps = [{ from: fromTemp, to: to }];
@@ -45,27 +45,24 @@ router.get('/', async (req, res) => {
       const stepBy = async () => {
         let res = await Promise.all(
           steps.map((step) =>
-            // Session.estimatedDocumentCount()
             Session.countDocuments({ _date: { $lte: step.to, $gt: step.from }, _website: website })
-          )
+          ) // Session.estimatedDocumentCount()
         );
-        return res;
+        return res || [];
       };
       // group sessions by key
-      const groupBy = (key) =>
-        Session.aggregate([
-          // from to
-          { $match: { _date: { $lte: to, $gt: from }, _website: website } },
-          // count each [key]'s total value
-          { $group: { _id: key ? `$${key}` : null, value: { $sum: 1 } } },
+      const groupBy = async (key) => {
+        const res = await Session.aggregate([
+          { $match: { _date: { $lte: to, $gt: from }, _website: website } }, // from to
+          { $group: { _id: `$${key}`, value: { $sum: 1 } } }, // count each [key]'s total value
           { $sort: { value: -1 } },
           { $limit: 10 },
         ]);
+        return toPairs(res || []);
+      };
 
       sessions = await Promise.all([
-        // sessions by step
         stepBy(),
-        // datas
         groupBy('language'),
         groupBy('browser'),
         groupBy('system'),
@@ -76,14 +73,12 @@ router.get('/', async (req, res) => {
       sessions = [];
     }
     return {
-      // sessions by step
-      ssum: sessions[0] || [],
-      // datas
-      lang: toPairs(sessions[1] || []),
-      brow: toPairs(sessions[2] || []),
-      sys: toPairs(sessions[3] || []),
-      plat: toPairs(sessions[4] || []),
-      loc: toPairs(sessions[5] || []),
+      ssum: sessions[0], // sessions by step
+      lang: sessions[1],
+      brow: sessions[2],
+      sys: sessions[3],
+      plat: sessions[4],
+      loc: sessions[5],
     };
   };
 
@@ -100,15 +95,52 @@ router.get('/', async (req, res) => {
             })
           )
         );
-        return res;
+        return res || [];
       };
-      views = await Promise.all([stepBy()]);
+      // group views by pathname
+      const groupByPath = async () => {
+        const res = await View.aggregate([
+          { $match: { _date: { $lte: to, $gt: from }, _website: website } },
+          { $group: { _id: '$pathname', value: { $sum: 1 } } },
+          { $sort: { value: -1 } },
+          { $limit: 10 },
+        ]);
+        return toPairs(res || []);
+      };
+      // group views by referrer
+      const groupByRef = async () => {
+        const res = await View.aggregate([
+          {
+            $match: {
+              _date: { $lte: to, $gt: from },
+              _website: website,
+              referrer: { $exists: true },
+            },
+          },
+          { $group: { _id: '$referrer', value: { $sum: 1 } } },
+          { $sort: { value: -1 } },
+          { $limit: 10 },
+        ]);
+        return toPairs(res || []);
+      };
+      // count avg view time by key
+      const avgByPVT = async () => {
+        const res = await View.aggregate([
+          { $match: { _date: { $lte: to, $gt: from }, _website: website, pvt: { $gt: 0 } } },
+          { $group: { _id: null, value: { $avg: '$pvt' } } },
+        ]);
+        return (res || [])[0]?.value || 0;
+      };
+
+      views = await Promise.all([stepBy(), groupByPath(), groupByRef(), avgByPVT()]);
     } catch {
       views = [];
     }
     return {
-      // views counter
-      vsum: views[0] || [],
+      vsum: views[0], // views by step
+      path: views[1],
+      ref: views[2],
+      pvt: views[3],
     };
   };
 

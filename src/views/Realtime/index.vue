@@ -20,23 +20,17 @@
       </VCard>
     </div>
     <div class="row row-norm">
-      <VCard class="data">
-        <div class="section">
-          <div class="title">Page Views</div>
-          <VList class="ctx ctx-pv" type="dense" :data="pv" />
-        </div>
+      <VCard class="data section">
+        <div class="title">Page Views</div>
+        <VList class="ctx ctx-pv" type="dense" :data="pv" />
       </VCard>
-      <VCard class="data">
-        <div class="section">
-          <div class="title">User Events</div>
-          <VList class="ctx ctx-pe" type="dense" :data="ue" />
-        </div>
+      <VCard class="data section">
+        <div class="title">User Events</div>
+        <VList class="ctx ctx-pe" type="dense" :data="ue" />
       </VCard>
-      <VCard class="data">
-        <div class="section">
-          <div class="title">User Regions</div>
-          <VList class="ctx ctx-ar" type="dense" :data="ur" />
-        </div>
+      <VCard class="data section">
+        <div class="title">User Regions</div>
+        <VList class="ctx ctx-ar" type="dense" :data="ur" />
       </VCard>
     </div>
   </div>
@@ -103,12 +97,12 @@ export default {
       let res;
       try {
         res = await this.$api.get(`/metrics/realtime?website=${website}`);
+        logInfo(cloneDeep(res.data));
         this.au = res.data.au;
         this.dc = res.data.dc;
         this.pv = res.data.pv;
         this.ue = res.data.ue;
         this.ur = res.data.ur;
-        logInfo(cloneDeep(res.data));
       } catch (e) {
         this.$error('failed to fetch realtime data');
         logError(e);
@@ -243,7 +237,7 @@ export default {
   // count
   .count {
     padding: $space-lg;
-    flex: 0 0 33%;
+    flex: 0 0 28%;
     display: flex;
     flex-direction: column;
     gap: $space-lg;
@@ -272,7 +266,7 @@ export default {
 
   // data
   .data {
-    flex: 0 1 33%;
+    flex: 0 1 32.3%;
 
     .title {
       padding: $space-lg;
