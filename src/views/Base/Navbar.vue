@@ -28,7 +28,7 @@
         </div>
         <div class="end">
           <div class="select" v-if="showSelect">
-            <VSelect :data="commonWebsites" v-model="selectedWebsite" />
+            <VSelect :map="websitesMap" v-model="selectedWebsite" />
           </div>
           <div class="ctrl">
             <VButton class="item" type="full-height" v-if="showSignOut" @click="handleSignOut">
@@ -45,10 +45,7 @@
 </template>
 
 <script>
-/* deps */
 import Cookie from 'js-cookie';
-/* utils */
-import { cloneDeep, findIndex } from '@/utils/lodash.js';
 import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 export default {
@@ -67,14 +64,13 @@ export default {
       return this.$route.path.startsWith('/realtime') || this.$route.path.startsWith('/dashboard');
     },
     // common website select list
-    commonWebsites() {
+    websitesMap() {
       let data = this.$store.state.COMMON.websites;
-      data = cloneDeep(data);
+      const map = {};
       for (let i = 0; i < data.length; i++) {
-        data[i].value = data[i]._id;
-        data[i].text = data[i].name;
+        map[data[i]._id] = { text: data[i].name };
       }
-      return data;
+      return map;
     },
     // value for v-model bind select
     // sync with vuex
@@ -83,10 +79,9 @@ export default {
         return this.$store.state.COMMON.selectedWebsite?._id || '';
       },
       set(val) {
-        const index = findIndex(this.commonWebsites, ['value', val]);
-        if (index >= 0) {
-          const _id = this.commonWebsites[index]._id;
-          const name = this.commonWebsites[index].name;
+        if (val) {
+          const _id = val;
+          const name = this.websitesMap[_id];
           this.$store.commit('M_SELECT_WEBSITE', {
             _id,
             name,
@@ -94,7 +89,7 @@ export default {
           // update url search param
           if (_id !== this.$route.query.website) {
             this.$router.replace({
-              query: { website: this.commonWebsites[index]._id },
+              query: { website: _id },
             });
           }
         }

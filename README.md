@@ -9,7 +9,7 @@ Vue.js is in the transition phase from v2 to v3, and the project will continue t
 Options API prop order:
 
 ```
-render => name => components => props => data => computed => watch => methods => lifecycle functions
+render => name => components => props => data => computed => watch => lifecycle functions => methods
 ```
 
 ## Bypass Block Extensions

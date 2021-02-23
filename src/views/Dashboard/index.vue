@@ -4,7 +4,7 @@
       <VCard class="summary">
         <div class="section">
           <div class="ctx ctx-dr">
-            <VSelect :data="rangeMap" v-model="dataRange" />
+            <VSelect :map="RANGE_MAP" v-model="dataRange" />
           </div>
         </div>
         <div class="section">
@@ -68,11 +68,12 @@ import { cloneDeep } from '@/utils/lodash.js';
 import { logInfo, logError } from '@/utils/loggers.js';
 import { Chart } from '@/utils/Chart.js';
 
-const rangeMap = [
-  { text: 'Last 24 Hours', value: 24, step: 1 },
-  { text: 'Last Week', value: 168, step: 24 },
-  { text: 'Last Month', value: 672, step: 24 },
-];
+const RANGE_MAP = {
+  LAST_15M: { text: 'Last 15 Minutes', value: 900, step: 60 },
+  LAST_24H: { text: 'Last 24 Hours', value: 86400, step: 3600 },
+  LAST_7D: { text: 'Last Week', value: 604800, step: 86400 },
+  LAST_30D: { text: 'Last Month', value: 2592000, step: 86400 },
+};
 
 export default {
   name: 'Dashboard',
@@ -92,8 +93,9 @@ export default {
       ref: [],
       pvt: 0,
 
-      rangeMap,
-      dataRange: 168,
+      RANGE_MAP,
+      dataRange: 'LAST_15M',
+      chart: null,
     };
   },
   computed: {
@@ -103,23 +105,37 @@ export default {
   },
   watch: {
     async website() {
-      await this.fetchDashboard(this.website);
-      await this.drawChart(this.view, this.usess);
+      await this.fetchDashboard(
+        this.website,
+        RANGE_MAP[this.dataRange].value,
+        RANGE_MAP[this.dataRange].step
+      );
+      this.initChart(this.view, this.usess);
+    },
+    async dataRange() {
+      await this.fetchDashboard(
+        this.website,
+        RANGE_MAP[this.dataRange].value,
+        RANGE_MAP[this.dataRange].step
+      );
+      this.updateChart(this.view, this.usess);
     },
   },
   methods: {
     /**
      * fetch dashboard data
      * @param {string} website website id
+     * @param {number} hours
+     * @param {number} step
      */
-    async fetchDashboard(website) {
+    async fetchDashboard(website, hours, step) {
+      const to = 1612846952100; // Date.now();
+      step = step * 1000;
+      const from = to - hours * 1000;
       let res;
       try {
-        const now = Date.now();
-        const step = 24 * 60 * 60 * 1000; // 1day
-        const from = now - 7 * step; // 1week
         res = await this.$api.get(
-          `/metrics/dashboard?website=${website}&from=${from}&to=${now}&step=${step}`
+          `/metrics/dashboard?website=${website}&from=${from}&to=${to}&step=${step}`
         );
         logInfo(cloneDeep(res.data));
         this.sess = res.data.sess;
@@ -140,18 +156,18 @@ export default {
       }
     },
     /**
-     * draw data chart
+     * init data chart
      * @param {Array} view views by step
      * @param {Array} usess unique sessions by step
      */
-    async drawChart(view, usess) {
-      new Chart(this.$refs.chart, {
+    initChart(view, usess) {
+      this.chart = new Chart(this.$refs.chart, {
         type: 'bar',
         data: {
           labels: view.map((val, index) => `${index}`),
           datasets: [
-            { data: usess, backgroundColor: 'rgba(139, 129, 195, 0.4)' },
-            { data: view, backgroundColor: 'rgba(138, 162, 211, 0.8)' },
+            { label: 'Unique Sessions', data: usess, backgroundColor: '#aba4d3' },
+            { label: 'Page Views', data: view, backgroundColor: '#9db1da' },
           ],
         },
         options: {
@@ -161,11 +177,29 @@ export default {
             x: { gridLines: { display: false }, stacked: true },
           },
           plugins: {
-            legend: { display: false },
+            legend: { position: 'bottom' },
           },
         },
       });
     },
+    /**
+     * update chart data
+     * @param {Array} view views by step
+     * @param {Array} usess unique sessions by step
+     */
+    updateChart(view, usess) {
+      if (this.chart) {
+        this.chart.data.labels = view.map((val, index) => `${index}`);
+        this.chart.data.datasets = [
+          { data: usess, backgroundColor: '#aba4d3' },
+          { data: view, backgroundColor: '#9db1da' },
+        ];
+        this.chart.update();
+      }
+    },
+  },
+  activated() {
+    console.log(this.website);
   },
 };
 </script>
@@ -183,7 +217,6 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .ctx {
       margin-top: $space-sm;
     }
@@ -193,12 +226,10 @@ export default {
     display: flex;
     gap: $space-base;
     height: 22.25rem;
-
     &-prim {
       .data:first-child {
         flex: 1 1 60%;
       }
-
       .data:last-child {
         flex: 1 1 40%;
       }
@@ -207,12 +238,10 @@ export default {
 
   .data {
     flex: 0 1 32.3%;
-
     .title {
       padding: $space-lg;
       padding-bottom: 0;
     }
-
     .ctx {
       padding: $space-xs $space-sm;
       padding-bottom: $space-base;
@@ -225,14 +254,12 @@ export default {
     display: flex;
     flex-direction: column;
     gap: $space-base;
-
-    .ctx-dr {
-      margin-top: $space-xs;
-      margin-bottom: $space-sm;
-
-      .v-select {
-        width: 100%;
-      }
+  }
+  .ctx-dr {
+    margin-top: $space-xs !important;
+    margin-bottom: $space-sm;
+    .v-select {
+      width: 100%;
     }
   }
 
@@ -242,12 +269,10 @@ export default {
     font-size: $font-size-xl * 1.5;
     text-align: center;
   }
-
   .chart {
     flex: 1 1 auto;
     padding: $space-base;
   }
-
   .ctx-chart {
     height: 100%;
   }

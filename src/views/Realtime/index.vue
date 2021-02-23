@@ -120,25 +120,15 @@ export default {
           datasets: [
             {
               data: [...Object.values(fromPairs(data))],
-              backgroundColor: [
-                'rgba(138, 162, 211, 0.6)', // desktop
-                'rgba(139, 129, 195, 0.6)', // mobile
-                'rgba(63, 69, 81, 0.3)', // tablet
-              ],
-              hoverBackgroundColor: [
-                'rgba(138, 162, 211, 0.6)', // desktop
-                'rgba(139, 129, 195, 0.6)', // mobile
-                'rgba(63, 69, 81, 0.3)', // tablet
-              ],
+              backgroundColor: ['#9db1da', '#aba4d3', '#ababab'],
               borderWidth: 1,
             },
           ],
         },
         options: {
+          devicePixelRatio: (window.devicePixelRatio || 1) * 2,
           plugins: {
-            legend: {
-              position: 'bottom',
-            },
+            legend: { position: 'bottom' },
           },
         },
       });
@@ -155,7 +145,7 @@ export default {
       const ur = fromPairs(data);
       this.topo.forEach((d) => {
         const ISO = d.properties.ISO_A2;
-        d.properties.VALUE = ur[ISO] || 0;
+        d.properties.VALUE = ur[ISO] || null;
       });
       // draw chart
       new Chart(this.$refs.map, {
@@ -166,35 +156,27 @@ export default {
             {
               data: this.topo.map((d) => ({ feature: d, value: d.properties.VALUE })),
               borderWidth: 0,
-              borderColor: 'rgba(255, 255, 255, 0)',
+              borderColor: '#ffffff00',
             },
           ],
         },
         options: {
-          devicePixelRatio: (window.devicePixelRatio || 1) * 2, // 2x scale for clearer border
+          devicePixelRatio: (window.devicePixelRatio || 1) * 4,
           aspectRatio: 1, // square map
           showOutline: false,
           showGraticule: false, // disable geo grids
           plugins: {
-            legend: {
-              display: false, // remove unused legend
-            },
+            legend: { display: false }, // remove unused legend
           },
           scales: {
-            xy: {
-              projection: 'mercator', // square map
-            },
+            xy: { projection: 'mercator' }, // square map
             color: {
               display: false, // no color card
-              missing: 'rgba(138, 162, 211, 0.2)',
-              // color calculator
-              // origin value 0-1
-              // target alpha channel 0.5-0.8
+              missing: 'rgba(157, 182, 218, 0.5)',
+              // color calculator, origin value 0-1
+              // target color rgba(157,182,218,0.8)-rgba(157,172,218,1.0)
               interpolate: (val) => {
-                if (!val) {
-                  return 'rgba(138, 162, 211, 0.2)';
-                }
-                return `rgba(138, 162, 211, ${0.6 * val + 0.2})`;
+                return `rgba(157, ${182 - 10 * val}, 218, ${0.8 + val * 0.2})`;
               },
             },
           },

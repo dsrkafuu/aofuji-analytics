@@ -6,21 +6,19 @@
       <VIconChevronDown v-else />
     </div>
     <ul class="v-select-list" v-show="active">
-      <li v-for="item of data" :key="item.value" @click="handleSelect(item)">
-        {{ item.text }}
+      <li v-for="key of Object.keys(map)" :key="key" @click="handleSelect(key)">
+        {{ map[key] ? map[key].text : '' }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { findIndex } from '@/utils/lodash.js';
-
 export default {
   name: 'VSelect',
   props: {
-    data: {
-      type: Array,
+    map: {
+      type: Object,
       required: true,
     },
     // for v-model
@@ -35,17 +33,7 @@ export default {
   },
   computed: {
     selectedText() {
-      const value = this.value;
-      if (value) {
-        const index = findIndex(this.data, ['value', value]);
-        if (index >= 0) {
-          return this.data[index].text;
-        } else {
-          return '';
-        }
-      } else {
-        return '';
-      }
+      return this.map[this.value] ? this.map[this.value].text : '';
     },
   },
   methods: {
@@ -57,11 +45,12 @@ export default {
     },
     /**
      * handle li select
-     * @param {Object} item
+     * @param {string} key
      */
-    handleSelect(item) {
-      this.text = item.text;
-      this.$emit('input', item.value);
+    handleSelect(key) {
+      if (key !== this.value) {
+        this.$emit('input', key);
+      }
       this.active = false;
     },
   },

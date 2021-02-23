@@ -14,8 +14,8 @@ const { VIEW_EXPIRE_TIME } = require('../../utils/constants.js');
 
 router.get('/', async (req, res) => {
   // [DEBUG]
-  // const now = 1612846952200;
-  const now = Date.now();
+  const now = 1612846952200;
+  // const now = Date.now();
 
   // get selected website
   let { website } = req.query;

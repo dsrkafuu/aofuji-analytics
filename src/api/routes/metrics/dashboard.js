@@ -17,10 +17,6 @@ router.get('/', async (req, res) => {
   // construct steps
   let { step } = req.query;
   step = formatQuery('number', step);
-  // [DEBUG]
-  from = 1612846112100; // 12:48:32
-  to = 1612846952100; // 13:02:32
-  step = 120000; // 2min
 
   let fromTemp = to - step;
   const steps = [{ from: fromTemp, to: to }];
