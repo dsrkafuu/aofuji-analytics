@@ -4,16 +4,16 @@
       <VCard class="summary">
         <div class="section">
           <div class="ctx ctx-dr">
-            <VSelect />
+            <VSelect :data="rangeMap" v-model="dataRange" />
           </div>
         </div>
         <div class="section">
           <div class="title">Page Views</div>
-          <div class="ctx ctx-pv">{{ pv }}</div>
+          <div class="ctx ctx-pv">{{ views }}</div>
         </div>
         <div class="section">
           <div class="title">Unique Visitor</div>
-          <div class="ctx ctx-uv">{{ uv }}</div>
+          <div class="ctx ctx-uv">{{ sess }}</div>
         </div>
         <div class="section">
           <div class="title">Avg. View Time</div>
@@ -67,34 +67,36 @@
 import { cloneDeep } from '@/utils/lodash.js';
 import { logInfo, logError } from '@/utils/loggers.js';
 import { Chart } from '@/utils/Chart.js';
-import VSelect from '@/components/basic/VSelect.vue';
+
+const rangeMap = [
+  { text: 'Last 24 Hours', value: 24, step: 1 },
+  { text: 'Last Week', value: 168, step: 24 },
+  { text: 'Last Month', value: 672, step: 24 },
+];
 
 export default {
-  components: { VSelect },
   name: 'Dashboard',
   data() {
     return {
-      vsum: [],
-      ssum: [],
-      pvt: NaN,
+      sess: 0, // unique sessions count
+      lang: [],
+      brow: [],
+      sys: [],
+      plat: [],
+      loc: [],
+
+      views: 0, // views count
+      view: [], // views by step
+      usess: [], // unique sessions by step
       path: [],
       ref: [],
-      sys: [],
-      brow: [],
-      plat: [],
-      lang: [],
-      loc: [],
+      pvt: 0,
+
+      rangeMap,
+      dataRange: 168,
     };
   },
   computed: {
-    // total page view
-    pv() {
-      return this.vsum.reduce((preVal, curVal) => preVal + curVal, 0);
-    },
-    // total unique visitor
-    uv() {
-      return this.ssum.reduce((preVal, curVal) => preVal + curVal, 0);
-    },
     website() {
       return this.$store.state.COMMON.selectedWebsite?._id;
     },
@@ -102,7 +104,7 @@ export default {
   watch: {
     async website() {
       await this.fetchDashboard(this.website);
-      await this.drawChart(this.ssum, this.vsum);
+      await this.drawChart(this.view, this.usess);
     },
   },
   methods: {
@@ -120,16 +122,18 @@ export default {
           `/metrics/dashboard?website=${website}&from=${from}&to=${now}&step=${step}`
         );
         logInfo(cloneDeep(res.data));
-        this.vsum = res.data.vsum;
-        this.ssum = res.data.ssum;
-        this.pvt = res.data.pvt;
+        this.sess = res.data.sess;
+        this.lang = res.data.lang;
+        this.brow = res.data.brow;
+        this.sys = res.data.sys;
+        this.plat = res.data.plat;
+        this.loc = res.data.loc;
+        this.views = res.data.views;
+        this.view = res.data.view;
+        this.usess = res.data.usess;
         this.path = res.data.path;
         this.ref = res.data.ref;
-        this.sys = res.data.sys;
-        this.brow = res.data.brow;
-        this.plat = res.data.plat;
-        this.lang = res.data.lang;
-        this.loc = res.data.loc;
+        this.pvt = res.data.pvt;
       } catch (e) {
         this.$error('failed to fetch dashboard data');
         logError(e);
@@ -137,28 +141,24 @@ export default {
     },
     /**
      * draw data chart
-     * @param {Array} ssum
-     * @param {Array} vsum
+     * @param {Array} view views by step
+     * @param {Array} usess unique sessions by step
      */
-    async drawChart(ssum, vsum) {
+    async drawChart(view, usess) {
       new Chart(this.$refs.chart, {
         type: 'bar',
         data: {
-          labels: vsum.map((val, index) => `${index}`),
+          labels: view.map((val, index) => `${index}`),
           datasets: [
-            {
-              data: vsum,
-              backgroundColor: 'rgba(138, 162, 211, 0.6)',
-            },
+            { data: usess, backgroundColor: 'rgba(139, 129, 195, 0.4)' },
+            { data: view, backgroundColor: 'rgba(138, 162, 211, 0.8)' },
           ],
         },
         options: {
           devicePixelRatio: (window.devicePixelRatio || 1) * 2,
           maintainAspectRatio: false,
           scales: {
-            x: {
-              gridLines: { display: false },
-            },
+            x: { gridLines: { display: false }, stacked: true },
           },
           plugins: {
             legend: { display: false },
@@ -177,20 +177,6 @@ export default {
   flex-direction: column;
   gap: $space-base;
 
-  .data {
-    flex: 0 1 32.3%;
-
-    .title {
-      padding: $space-lg;
-      padding-bottom: 0;
-    }
-
-    .ctx {
-      padding: $space-xs $space-sm;
-      padding-bottom: $space-base;
-    }
-  }
-
   .section {
     .title {
       white-space: nowrap;
@@ -208,10 +194,6 @@ export default {
     gap: $space-base;
     height: 22.25rem;
 
-    &-hero {
-      height: 22.25rem;
-    }
-
     &-prim {
       .data:first-child {
         flex: 1 1 60%;
@@ -223,12 +205,35 @@ export default {
     }
   }
 
+  .data {
+    flex: 0 1 32.3%;
+
+    .title {
+      padding: $space-lg;
+      padding-bottom: 0;
+    }
+
+    .ctx {
+      padding: $space-xs $space-sm;
+      padding-bottom: $space-base;
+    }
+  }
+
   .summary {
     padding: $space-lg;
     flex: 0 0 26%;
     display: flex;
     flex-direction: column;
-    gap: $space-lg;
+    gap: $space-base;
+
+    .ctx-dr {
+      margin-top: $space-xs;
+      margin-bottom: $space-sm;
+
+      .v-select {
+        width: 100%;
+      }
+    }
   }
 
   .ctx-pv,

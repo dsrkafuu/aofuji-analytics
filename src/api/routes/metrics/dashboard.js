@@ -1,11 +1,9 @@
-/* deps */
 const { Router } = require('express');
 const router = Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { View, Session } = require('../../utils/mongoose.js');
 
-/* utils */
 const { buildError } = require('../../utils/buildError.js');
 const { formatQuery } = require('../../utils/formatQuery.js');
 const { toPairs } = require('../../utils/toPairs.js');
@@ -42,16 +40,15 @@ router.get('/', async (req, res) => {
     let sessions;
     try {
       // count sessions by step
-      const stepBy = async () => {
-        let res = await Promise.all(
-          steps.map((step) =>
-            Session.countDocuments({ _date: { $lte: step.to, $gt: step.from }, _website: website })
-          ) // Session.estimatedDocumentCount()
-        );
-        return res || [];
+      const countSess = async () => {
+        const res = await Session.countDocuments({
+          _date: { $lte: to, $gt: from },
+          _website: website,
+        }); // Session.estimatedDocumentCount()
+        return Number(res) || 0;
       };
       // group sessions by key
-      const groupBy = async (key) => {
+      const group = async (key) => {
         const res = await Session.aggregate([
           { $match: { _date: { $lte: to, $gt: from }, _website: website } }, // from to
           { $group: { _id: `$${key}`, value: { $sum: 1 } } }, // count each [key]'s total value
@@ -60,20 +57,19 @@ router.get('/', async (req, res) => {
         ]);
         return toPairs(res || []);
       };
-
       sessions = await Promise.all([
-        stepBy(),
-        groupBy('language'),
-        groupBy('browser'),
-        groupBy('system'),
-        groupBy('platform'),
-        groupBy('location'),
+        countSess(),
+        group('language'),
+        group('browser'),
+        group('system'),
+        group('platform'),
+        group('location'),
       ]);
     } catch {
       sessions = [];
     }
     return {
-      ssum: sessions[0], // sessions by step
+      sess: sessions[0], // unique sessions count
       lang: sessions[1],
       brow: sessions[2],
       sys: sessions[3],
@@ -86,7 +82,7 @@ router.get('/', async (req, res) => {
     let views;
     try {
       // count views by step
-      const stepBy = async () => {
+      const stepViews = async () => {
         let res = await Promise.all(
           steps.map((step) =>
             View.countDocuments({
@@ -97,8 +93,21 @@ router.get('/', async (req, res) => {
         );
         return res || [];
       };
+      // count unique visitors by step
+      const stepVisitors = async () => {
+        let res = await Promise.all(
+          steps.map(async (step) => {
+            const d = await View.distinct('_session', {
+              _date: { $lte: step.to, $gt: step.from },
+              _website: website,
+            });
+            return d.length || 0;
+          })
+        );
+        return res || [];
+      };
       // group views by pathname
-      const groupByPath = async () => {
+      const groupPaths = async () => {
         const res = await View.aggregate([
           { $match: { _date: { $lte: to, $gt: from }, _website: website } },
           { $group: { _id: '$pathname', value: { $sum: 1 } } },
@@ -108,7 +117,7 @@ router.get('/', async (req, res) => {
         return toPairs(res || []);
       };
       // group views by referrer
-      const groupByRef = async () => {
+      const groupRefs = async () => {
         const res = await View.aggregate([
           {
             $match: {
@@ -124,23 +133,30 @@ router.get('/', async (req, res) => {
         return toPairs(res || []);
       };
       // count avg view time by key
-      const avgByPVT = async () => {
+      const avgViewTime = async () => {
         const res = await View.aggregate([
           { $match: { _date: { $lte: to, $gt: from }, _website: website, pvt: { $gt: 0 } } },
           { $group: { _id: null, value: { $avg: '$pvt' } } },
         ]);
         return (res || [])[0]?.value || 0;
       };
-
-      views = await Promise.all([stepBy(), groupByPath(), groupByRef(), avgByPVT()]);
+      views = await Promise.all([
+        stepViews(),
+        stepVisitors(),
+        groupPaths(),
+        groupRefs(),
+        avgViewTime(),
+      ]);
     } catch {
       views = [];
     }
     return {
-      vsum: views[0], // views by step
-      path: views[1],
-      ref: views[2],
-      pvt: views[3],
+      views: views[0].reduce((preVal, curVal) => preVal + curVal, 0),
+      view: views[0],
+      usess: views[1],
+      path: views[2],
+      ref: views[3],
+      pvt: views[4],
     };
   };
 
