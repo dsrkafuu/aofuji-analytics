@@ -106,7 +106,7 @@ export default {
      * switch the theme
      */
     handleThemeSwitch() {
-      this.$store.commit('SWITCH_THEME');
+      this.$store.commit('M_SWITCH_THEME');
     },
     /**
      * signout and go login

@@ -3,6 +3,11 @@
     <div class="row row-hero">
       <VCard class="summary">
         <div class="section">
+          <div class="ctx ctx-dr">
+            <VSelect />
+          </div>
+        </div>
+        <div class="section">
           <div class="title">Page Views</div>
           <div class="ctx ctx-pv">{{ pv }}</div>
         </div>
@@ -15,7 +20,11 @@
           <div class="ctx ctx-pvt">{{ pvt }}</div>
         </div>
       </VCard>
-      <VCard class="chart"> </VCard>
+      <VCard class="chart">
+        <div class="ctx ctx-chart">
+          <canvas ref="chart"></canvas>
+        </div>
+      </VCard>
     </div>
     <div class="row row-prim">
       <VCard class="data section">
@@ -57,8 +66,11 @@
 <script>
 import { cloneDeep } from '@/utils/lodash.js';
 import { logInfo, logError } from '@/utils/loggers.js';
+import { Chart } from '@/utils/Chart.js';
+import VSelect from '@/components/basic/VSelect.vue';
 
 export default {
+  components: { VSelect },
   name: 'Dashboard',
   data() {
     return {
@@ -90,6 +102,7 @@ export default {
   watch: {
     async website() {
       await this.fetchDashboard(this.website);
+      await this.drawChart(this.ssum, this.vsum);
     },
   },
   methods: {
@@ -128,7 +141,30 @@ export default {
      * @param {Array} vsum
      */
     async drawChart(ssum, vsum) {
-      console.log(ssum, vsum);
+      new Chart(this.$refs.chart, {
+        type: 'bar',
+        data: {
+          labels: vsum.map((val, index) => `${index}`),
+          datasets: [
+            {
+              data: vsum,
+              backgroundColor: 'rgba(138, 162, 211, 0.6)',
+            },
+          ],
+        },
+        options: {
+          devicePixelRatio: (window.devicePixelRatio || 1) * 2,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              gridLines: { display: false },
+            },
+          },
+          plugins: {
+            legend: { display: false },
+          },
+        },
+      });
     },
   },
 };
@@ -170,15 +206,19 @@ export default {
   .row {
     display: flex;
     gap: $space-base;
-    height: 22rem;
+    height: 22.25rem;
 
     &-hero {
-      height: 19rem;
+      height: 22.25rem;
     }
 
     &-prim {
-      .data {
-        flex: 1 1 auto;
+      .data:first-child {
+        flex: 1 1 60%;
+      }
+
+      .data:last-child {
+        flex: 1 1 40%;
       }
     }
   }
@@ -200,6 +240,11 @@ export default {
 
   .chart {
     flex: 1 1 auto;
+    padding: $space-base;
+  }
+
+  .ctx-chart {
+    height: 100%;
   }
 }
 </style>
