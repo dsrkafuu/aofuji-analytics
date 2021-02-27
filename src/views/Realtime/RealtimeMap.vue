@@ -8,7 +8,7 @@
 
 <script>
 import { CHART_MAP_TOPOJSON, CHART_MAP_PIXEL_RATIO } from '@/utils/constants';
-import { Chart, topojson } from '@/utils/chart';
+import { Chart, topojson } from '@/utils/chartjs';
 import { fromPairs } from '@/utils/lodash';
 
 export default {

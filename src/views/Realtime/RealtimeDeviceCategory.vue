@@ -9,7 +9,7 @@
 
 <script>
 import { CHART_PIXEL_RATIO } from '@/utils/constants';
-import { Chart } from '@/utils/chart';
+import { Chart } from '@/utils/chartjs';
 import { fromPairs } from '@/utils/lodash';
 
 export default {
