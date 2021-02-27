@@ -2,7 +2,7 @@
 
 \[WIP\] Minimal alternative to Google Analytics.
 
-## About Vue.js
+## About Vue.js v2
 
 Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem is not stable yet.
 
@@ -12,7 +12,7 @@ Options API prop order:
 render => name => components => props => data => computed => watch => lifecycle functions => methods
 ```
 
-## Bypass Block Extensions
+## Bypass Blocker Extensions
 
 Add `VUE_APP_TRACKER_FILENAME` environment variable to customize the tracker script name, for example:
 
@@ -20,11 +20,11 @@ Add `VUE_APP_TRACKER_FILENAME` environment variable to customize the tracker scr
 VUE_APP_TRACKER_FILENAME="jquery.min.js"
 ```
 
-## Local Development
+## Contribute
 
 First you need to fork this repo and clone it. Then create a `.env.development` then set the development environment variables below.
 
-Note that this project uses husky and lint-staged to format source code, so the git commands may be slow due to the Prettier formatting workflow.
+Note that this project uses [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged) to format source code, so the git commands may be slow due to the Prettier formatting workflow.
 
 After these, you can simply:
 
@@ -32,8 +32,6 @@ After these, you can simply:
 npm install
 npm run dev
 ```
-
-Remember to use `npm run lint` to check the errors before commiting.
 
 Check the [Environment Variables](#environment-variables) section for more details.
 
@@ -68,6 +66,6 @@ VUE_APP_BASE_URL="/"
 
 ## License
 
-This project is released under `Apache License 2.0`, for more information read the [LICENSE](https://github.com/amzrk2/vector-analytics/blob/main/LICENSE).
+This project is released under `Apache License 2.0`, for more information read the [LICENSE](https://github.com/dsrkafuu/vector-analytics/blob/main/LICENSE).
 
-**Copyright © 2020-present DSRKafuU <https://amzrk2.cc/>**
+**Copyright © 2020-present DSRKafuU (https://dsrkafuu.su)**
