@@ -1,10 +1,10 @@
-/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
-require('../utils/env.js')();
+/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) Apache-2.0 License */
+require('../utils/env')();
 
-const app = require('../src/api/index.js');
+const app = require('../src/api');
 const serverless = require('serverless-http');
 
-/* normal */
+// normal
 if (!process.env.SERVERLESS) {
   // static server in production
   if (process.env.NODE_ENV === 'production') {
@@ -19,11 +19,11 @@ if (!process.env.SERVERLESS) {
       ? process.env.SERVER_PORT || 3000
       : process.env.SERVER_API_PORT || 3001;
   app.listen(port, () => {
-    console.log(`[vector api] listening at http://localhost:${port}`);
+    console.log(`[vector-api] listening at http://localhost:${port}`);
   });
 }
 
-/* serverless */
+// serverless
 // vercel
 module.exports = app;
 // aws lambda (netlify etc.)

@@ -1,7 +1,7 @@
 <template>
   <div class="section">
     <div class="title">Device Category</div>
-    <div class="ctx ctx-device-category">
+    <div class="ctx ctx-dc">
       <canvas ref="deviceCategoryRef"></canvas>
     </div>
   </div>
@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ctx-device-category {
+.ctx-dc {
   padding-top: $space-sm;
   max-width: 14.5rem;
   margin: 0 auto;

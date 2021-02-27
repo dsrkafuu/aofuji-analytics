@@ -35,4 +35,4 @@ async function buildTracker() {
   });
 }
 
-module.exports = { buildTracker };
+module.exports = buildTracker;

@@ -13,6 +13,7 @@ export default {
   }),
 
   mutations: {
+    // set all realtime data
     // payload: { au, dc, pv, ue, ur }
     xmSetAll(state, payload) {
       const { au, dc, pv, ue, ur } = payload;
@@ -26,6 +27,7 @@ export default {
   },
 
   actions: {
+    // fetch all realtime data
     // payload: { _id }
     async xaFetchAll({ commit }, payload) {
       const { _id } = payload;

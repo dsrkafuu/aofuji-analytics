@@ -22,6 +22,7 @@ export default {
   }),
 
   mutations: {
+    // set login accout
     // payload: { _id, username }
     xmSetAccount(state, payload) {
       const { _id, username } = payload;
@@ -29,10 +30,12 @@ export default {
       setLS(STORAGE_ACCOUNT, { _id, username });
     },
 
+    // set websites available
     // payload: [{ _id, name }]
     xmSetWebsites(state, payload) {
       state.websites = cloneDeep(payload);
     },
+    // set current website
     // payload: { _id }
     xmSetCurWebsite(state, payload) {
       const { _id } = payload;
@@ -48,8 +51,9 @@ export default {
   },
 
   actions: {
+    // fetch whether account inited
     // payload: { username, password }
-    async xaFetchInited({ commit }, payload) {
+    async xaFetchInited(ctx, payload) {
       const { username, password } = payload;
       const resInited = await $api.get('/login/init');
       // if not inited
@@ -59,8 +63,8 @@ export default {
           password,
         });
       }
-      commit('xmSetInited');
     },
+    // go login
     // payload: { username, password }
     async xaPostLogin({ commit, dispatch }, payload) {
       // check init status
@@ -71,21 +75,25 @@ export default {
         username,
         password,
       });
-      $info(`logging in as ${res.data.username}`);
       commit('xmSetAccount', res.data);
+      $info(`logging in as ${res.data.username}`);
     },
+    // go logout
     async xaPostLogout({ commit }) {
       commit('xmSetAccount', {});
       Cookie.remove(COOKIE_TOKEN, { sameSite: 'Lax' });
       $router.push({ name: 'Login' });
+      $info(`successfully logged out`);
     },
 
+    // fet all websites
     async xaFetchWebsites({ commit }) {
       const res = await $api.get('/common');
       commit('xmSetWebsites', res.data);
       // init default selected website
       if (res.data[0]) {
-        commit('xmSetCurWebsite', res.data[0]);
+        const { _id } = res.data[0];
+        commit('xmSetCurWebsite', { _id });
       }
     },
   },

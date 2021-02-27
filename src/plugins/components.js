@@ -20,7 +20,7 @@ export default {
    * @param {Vue} Vue
    */
   install(Vue) {
-    /* icons */
+    // icons
     const requireIcons = require.context('../assets/icons', false, /.*\.svg$/);
     requireIcons.keys().forEach((fileName) => {
       const componentConfig = requireIcons(fileName);
@@ -28,7 +28,7 @@ export default {
       Vue.component(componentName, componentConfig.default || componentConfig);
     });
 
-    /* components */
+    // components
     const requireBasic = require.context('../components/basic', false, /.*\.vue$/);
     requireBasic.keys().forEach((fileName) => {
       const componentConfig = requireBasic(fileName);

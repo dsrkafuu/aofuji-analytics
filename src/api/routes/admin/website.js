@@ -1,12 +1,13 @@
-/* utils */
 const { Router } = require('express');
 const router = Router();
-const { buildError } = require('../../utils/buildError.js');
-const { Website, Account, select } = require('../../utils/mongoose.js');
+
+const buildError = require('../../utils/buildError');
+const selectQuery = require('../../utils/selectQuery');
+const { Website, Account } = require('../../models');
 
 // get all websites
 router.get('/', async (req, res) => {
-  const result = await Website.find({}).select('name url base isPublic').limit(50).lean();
+  const result = await Website.find({}).select('name url base isPublic').limit(20).lean();
   res.send(result);
 });
 
@@ -29,7 +30,7 @@ router.post('/', async (req, res) => {
       isPublic,
       _date: Date.now(),
     });
-    res.status(201).send(select(result, 'name url base isPublic'));
+    res.status(201).send(selectQuery(result, 'name url base isPublic'));
   } else {
     throw buildError(403, 'website account not found');
   }
@@ -56,4 +57,4 @@ router.delete('/:id', async (req, res) => {
   res.status(201).send();
 });
 
-module.exports = { router };
+module.exports = router;

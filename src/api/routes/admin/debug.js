@@ -1,11 +1,5 @@
-/* utils */
 const { Router } = require('express');
 const router = Router();
-const { buildError } = require('../../utils/buildError.js');
-const { requestIP } = require('../../utils/requestIP.js');
-const { Website, Account } = require('../../utils/mongoose.js');
-
-/* deps */
 const fs = require('fs');
 const path = require('path');
 const Bowser = require('bowser');
@@ -14,6 +8,10 @@ const gdb = fs.readFileSync(
   path.resolve(__dirname, '../../../../api/assets/GeoLite2-Country.mmdb')
 );
 const maxmind = new Reader(gdb);
+
+const buildError = require('../../utils/buildError');
+const requestIP = require('../../utils/requestIP');
+const { Website, Account } = require('../../models');
 
 router.get('/', async (req, res) => {
   try {
@@ -43,4 +41,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-module.exports = { router };
+module.exports = router;

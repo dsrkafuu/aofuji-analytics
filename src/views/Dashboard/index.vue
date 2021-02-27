@@ -3,7 +3,7 @@
     <div class="row row-hero">
       <VCard class="summary">
         <div class="section">
-          <div class="ctx ctx-dr">
+          <div class="ctx ctx-rg">
             <VSelect :map="rangeMap" v-model="range" />
           </div>
         </div>
@@ -12,8 +12,8 @@
           <div class="ctx ctx-pv">{{ pageViews }}</div>
         </div>
         <div class="section">
-          <div class="title">Unique Visitor</div>
-          <div class="ctx ctx-uv">{{ uniqueSessions }}</div>
+          <div class="title">Unique Visitors</div>
+          <div class="ctx ctx-us">{{ uniqueSessions }}</div>
         </div>
         <div class="section">
           <div class="title">Avg. View Time</div>
@@ -25,37 +25,51 @@
       </VCard>
     </div>
     <div class="row row-prim">
-      <VCard class="data section">
-        <div class="title">Pages</div>
-        <VList class="ctx ctx-path" type="dense" :data="pathnames" />
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Pages</div>
+          <VList class="ctx ctx-path" type="dense" :data="pathnames" />
+        </div>
       </VCard>
-      <VCard class="data section">
-        <div class="title">Referers</div>
-        <VList class="ctx ctx-ref" type="dense" :data="referrers" />
-      </VCard>
-    </div>
-    <div class="row row-norm">
-      <VCard class="data section">
-        <div class="title">Systems</div>
-        <VList class="ctx ctx-sys" type="dense" :data="systems" />
-      </VCard>
-      <VCard class="data section">
-        <div class="title">Browsers</div>
-        <VList class="ctx ctx-brow" type="dense" :data="browsers" />
-      </VCard>
-      <VCard class="data section">
-        <div class="title">Device Platforms</div>
-        <VList class="ctx ctx-plat" type="dense" :data="platforms" />
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Referers</div>
+          <VList class="ctx ctx-ref" type="dense" :data="referrers" />
+        </div>
       </VCard>
     </div>
     <div class="row row-norm">
-      <VCard class="data section">
-        <div class="title">Languages</div>
-        <VList class="ctx ctx-lang" type="dense" :data="languages" />
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Systems</div>
+          <VList class="ctx ctx-sys" type="dense" :data="systems" />
+        </div>
       </VCard>
-      <VCard class="data section">
-        <div class="title">Locations</div>
-        <VList class="ctx ctx-loc" type="dense" :data="locations" />
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Browsers</div>
+          <VList class="ctx ctx-brow" type="dense" :data="browsers" />
+        </div>
+      </VCard>
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Device Platforms</div>
+          <VList class="ctx ctx-plat" type="dense" :data="platforms" />
+        </div>
+      </VCard>
+    </div>
+    <div class="row row-norm">
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Languages</div>
+          <VList class="ctx ctx-lang" type="dense" :data="languages" />
+        </div>
+      </VCard>
+      <VCard class="data">
+        <div class="section">
+          <div class="title">Locations</div>
+          <VList class="ctx ctx-loc" type="dense" :data="locations" />
+        </div>
       </VCard>
     </div>
   </div>
@@ -111,6 +125,10 @@ export default {
   },
   watch: {
     async curWebsite() {
+      // fix missing route query
+      if (this.$route.query.website !== this.curWebsite._id) {
+        this.$router.replace({ query: { website: this.curWebsite._id } });
+      }
       if (!this.inited) {
         await this.fetchDashboard();
       }
@@ -122,6 +140,7 @@ export default {
     },
   },
   async activated() {
+    // fetch data when router push in
     if (!this.inited && this.curWebsite) {
       await this.fetchDashboard();
     }
@@ -141,23 +160,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .dashboard {
   margin: $space-base;
   display: flex;
   flex-direction: column;
   gap: $space-base;
-
-  .section {
-    .title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ctx {
-      margin-top: $space-sm;
-    }
-  }
 
   .row {
     display: flex;
@@ -170,6 +178,30 @@ export default {
       .data:last-child {
         flex: 1 1 40%;
       }
+    }
+  }
+
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ctx {
+    margin-top: $space-sm;
+
+    &-rg {
+      margin-top: $space-xs !important;
+      margin-bottom: $space-sm;
+      .v-select {
+        width: 100%;
+      }
+    }
+
+    &-pv,
+    &-us,
+    &-pvt {
+      font-size: $font-size-xl * 1.5;
+      text-align: center;
     }
   }
 
@@ -191,20 +223,6 @@ export default {
     display: flex;
     flex-direction: column;
     gap: $space-base;
-  }
-  .ctx-dr {
-    margin-top: $space-xs !important;
-    margin-bottom: $space-sm;
-    .v-select {
-      width: 100%;
-    }
-  }
-
-  .ctx-pv,
-  .ctx-uv,
-  .ctx-pvt {
-    font-size: $font-size-xl * 1.5;
-    text-align: center;
   }
   .chart {
     flex: 1 1 auto;

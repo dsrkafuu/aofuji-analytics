@@ -2,12 +2,12 @@ const { Router } = require('express');
 const router = Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const { View, Event, Session } = require('../../utils/mongoose');
 
-const { buildError } = require('../../utils/buildError');
-const { formatQuery } = require('../../utils/formatQuery');
-const { mapArray } = require('../../utils/mapArray');
-const { toPairs } = require('../../utils/toPairs');
+const { View, Event, Session } = require('../../models');
+const buildError = require('../../utils/buildError');
+const formatQuery = require('../../utils/formatQuery');
+const mapArray = require('../../utils/mapArray');
+const toPairs = require('../../utils/toPairs');
 const { VIEW_EXPIRE_TIME } = require('../../utils/constants');
 
 router.get('/', async (req, res) => {
@@ -88,4 +88,4 @@ router.get('/', async (req, res) => {
   res.send({ ...r1, ...r2, ...r3 });
 });
 
-module.exports = { router };
+module.exports = router;

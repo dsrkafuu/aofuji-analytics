@@ -16,4 +16,4 @@ function requestIP(req) {
     .trim();
 }
 
-module.exports = { requestIP };
+module.exports = requestIP;

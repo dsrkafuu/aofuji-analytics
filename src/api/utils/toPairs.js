@@ -13,4 +13,4 @@ function toPairs(arr) {
   return arr.map((item) => [item._id, item.value]);
 }
 
-module.exports = { toPairs };
+module.exports = toPairs;

@@ -27,4 +27,4 @@ async function formatRef(ref, url) {
   return refURL.hostname || undefined;
 }
 
-module.exports = { formatRef };
+module.exports = formatRef;

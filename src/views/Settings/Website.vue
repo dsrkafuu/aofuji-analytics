@@ -10,77 +10,60 @@
 </template>
 
 <script>
-/* utils */
-import { logInfo, logError } from '@/utils/loggers.js';
-
 export default {
   name: 'Website',
   computed: {
     websites() {
       const ret = [];
-      const websites = this.$store.state.WEBSITE.websites;
+      const websites = this.$store.state.settings.websites;
       if (websites && Array.isArray(websites)) {
         for (let i = 0; i < websites.length; i++) {
-          const site = {};
-          site.id = websites[i]._id;
-          site.text = websites[i].name;
-          site.sub = websites[i].url;
-          site.label = websites[i].isPublic ? 'public' : 'private';
-          ret.push(site);
+          ret.push({
+            id: websites[i]._id,
+            text: websites[i].name,
+            sub: websites[i].url,
+            label: websites[i].isPublic ? 'public' : 'private',
+          });
         }
       }
       return ret;
     },
+  },
+  async mounted() {
+    await this.fetchWebsites();
   },
   methods: {
     /**
      * fetch website data when first mounted
      */
     async fetchWebsites() {
-      let res;
-      try {
-        res = await this.$api.get('/admin/website');
-        this.$store.commit('M_UPDATE_ALL_WEBSITES', res.data);
-        logInfo(res.data);
-      } catch (e) {
-        this.$error('failed to fetch website list');
-        logError(e);
-      }
+      await this.$store.dispatch('settings/xaFetchWebsites');
     },
     /**
      * handle website add
      */
     handleAdd() {
-      this.$store.commit('M_EDIT_WEBSITE', {});
+      this.$store.commit('settings/xmSetEditWebsite', { _id: '' });
     },
     /**
      * handle website edit
-     * @param {string} id
+     * @param {string} _id
      */
-    handleEdit(id) {
-      this.$store.commit('M_EDIT_WEBSITE', { _id: id });
+    handleEdit(_id) {
+      this.$store.commit('settings/xmSetEditWebsite', { _id });
     },
     /**
      * handle website delete
+     * @param {string} _id
      */
-    async handleDelete(id) {
-      try {
-        await this.$api.delete(`/admin/website/${id}`);
-        this.$store.commit('M_REMOVE_WEBSITE', { _id: id });
-        this.$info('website removed');
-      } catch (e) {
-        this.$error('failed to remove website');
-        logError(e);
-      }
+    async handleDelete(_id) {
+      await this.$store.dispatch('settings/xaDeleteWebsite', { _id });
     },
-  },
-  async mounted() {
-    await this.fetchWebsites();
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .website {
   margin: $space-lg;
 }

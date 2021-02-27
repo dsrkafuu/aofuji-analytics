@@ -70,7 +70,7 @@ export default {
   text-align: center;
   user-select: none;
 
-  /* icon support */
+  // icon support
   flex-direction: column;
   justify-content: center;
   align-items: center;

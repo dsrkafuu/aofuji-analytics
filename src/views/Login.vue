@@ -1,12 +1,12 @@
 <template>
   <div class="login">
-    <VCard class="login-card">
+    <VCard class="card">
       <VHeader :text="siteTitle" />
-      <div class="login-line">
+      <div class="line">
         <span>Username</span>
         <VInput v-model="username" :validator="validUsername" />
       </div>
-      <div class="login-line">
+      <div class="line">
         <span>Password</span>
         <VInput
           v-model="password"
@@ -15,7 +15,7 @@
           @keyup.enter="handleLogin"
         />
       </div>
-      <VButton class="login-submit" type="full-width" @click="handleLogin">Login</VButton>
+      <VButton class="submit" type="full-width" @click="handleLogin">Login</VButton>
     </VCard>
   </div>
 </template>
@@ -65,7 +65,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .login {
   position: fixed;
   top: 0;
@@ -76,31 +76,27 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
 
-  &-card {
-    min-width: 30rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: $space-lg 0;
-
-    .v-header {
-      margin-bottom: $space-xs;
-    }
+.card {
+  min-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: $space-lg 0;
+  .v-header {
+    margin-bottom: $space-xs;
   }
-
-  &-line {
-    margin-top: $space-sm;
-
-    span {
-      display: inline-block;
-      width: 7rem;
-    }
+}
+.line {
+  margin-top: $space-sm;
+  span {
+    display: inline-block;
+    width: 7rem;
   }
-
-  &-submit {
-    margin-top: $space-sm;
-  }
+}
+.submit {
+  margin-top: $space-sm;
 }
 </style>

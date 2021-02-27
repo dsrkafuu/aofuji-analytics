@@ -1,6 +1,6 @@
 <template>
   <div class="settings">
-    <div class="settings-ctrl">
+    <div class="ctrl">
       <VCard>
         <VButton
           v-for="(tab, index) of tabs"
@@ -13,7 +13,7 @@
         </VButton>
       </VCard>
     </div>
-    <div class="settings-content">
+    <div class="content">
       <VCard>
         <keep-alive>
           <component :is="curTab"></component>
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-/* components */
 import Website from './Website.vue';
 import WebsiteEdit from './WebsiteEdit.vue';
 import Account from './Account.vue';
@@ -49,14 +48,15 @@ export default {
     };
   },
   computed: {
+    // current tab index
     curIndex() {
       const tabQuery = this.$route.query.tab;
       const tabIndex = this.tabQuerys.indexOf(tabQuery);
       return tabIndex >= 0 ? tabIndex : 0;
     },
-    // current tab object
+    // current tab component object
     curTab() {
-      if (this.$store.state.WEBSITE.editing) {
+      if (this.$store.state.settings.editWebsite) {
         return WebsiteEdit;
       } else {
         return this.tabs[this.curIndex].component;
@@ -70,37 +70,30 @@ export default {
      */
     changeTab(newIndex) {
       // exit editing
-      if (this.$store.state.WEBSITE.editing) {
-        this.$store.commit('M_EXIT_EDIT_WEBSITE');
+      if (this.$store.state.settings.editWebsite) {
+        this.$store.commit('xmSetEditWebsite', {});
       }
       // change tab
       const tabQuery = this.tabQuerys[newIndex];
-      this.$router.push({
-        name: 'Settings',
-        query: {
-          tab: tabQuery,
-        },
-      });
+      this.$router.replace({ query: { tab: tabQuery } });
     },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .settings {
   display: flex;
   margin: $space-lg;
 }
 
-.settings-ctrl {
+.ctrl {
   flex: 0 0 20%;
-
   .v-card {
     padding: $space-base 0;
   }
 }
-
-.settings-content {
+.content {
   flex: 1 1 auto;
   margin-left: $space-lg;
 }

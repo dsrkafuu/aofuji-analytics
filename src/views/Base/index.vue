@@ -18,6 +18,9 @@ export default {
   components: {
     Navbar,
   },
+  async mounted() {
+    await this.fetchCommon();
+  },
   methods: {
     /**
      * fetch common data, etc. websites
@@ -25,9 +28,6 @@ export default {
     async fetchCommon() {
       await this.$store.dispatch('common/xaFetchWebsites');
     },
-  },
-  async mounted() {
-    await this.fetchCommon();
   },
 };
 </script>

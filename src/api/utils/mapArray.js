@@ -27,4 +27,4 @@ function mapArray(arr, key) {
   return sortBy([...map.values()], (obj) => obj[1]).reverse();
 }
 
-module.exports = { mapArray };
+module.exports = mapArray;

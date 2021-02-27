@@ -10,4 +10,4 @@ function responseTime() {
   };
 }
 
-module.exports = { responseTime };
+module.exports = responseTime;

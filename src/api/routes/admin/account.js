@@ -1,7 +1,7 @@
-/* utils */
 const { Router } = require('express');
 const router = Router();
-const { Account } = require('../../utils/mongoose.js');
+
+const { Account } = require('../../models');
 
 // get account
 router.get('/', async (req, res) => {
@@ -23,4 +23,4 @@ router.put('/:id', async (req, res) => {
   res.status(201).send(result);
 });
 
-module.exports = { router };
+module.exports = router;

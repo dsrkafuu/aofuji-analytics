@@ -1,5 +1,5 @@
-import { getLS, setLS } from '@/utils/storage.js';
-import { STORAGE_THEME, DOM_ATTR_THEME } from '@/utils/constants.js';
+import { getLS, setLS } from '@/utils/storage';
+import { STORAGE_THEME, DOM_ATTR_THEME } from '@/utils/constants';
 
 // init dom theme attribute
 const initialTheme = getLS(STORAGE_THEME) || 'auto';

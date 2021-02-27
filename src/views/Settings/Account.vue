@@ -21,39 +21,35 @@
 </template>
 
 <script>
-/* deps */
-import Cookie from 'js-cookie';
-/* utils */
-import { logInfo, logError } from '@/utils/loggers.js';
 import { validUsername, validPassword } from '@/utils/validators.js';
-import { COOKIE_TOKEN } from '@/utils/constants.js';
 
 export default {
   name: 'Account',
   data() {
     return {
-      validUsername,
-      validPassword,
       id: '',
       username: '',
       password: '',
+      // functions
+      validUsername,
+      validPassword,
     };
+  },
+  computed: {
+    account() {
+      return this.$store.state.common.account;
+    },
+  },
+  mounted() {
+    this.fetchAccount();
   },
   methods: {
     /**
      * fetch account data when first mounted
      */
-    async fetchAccount() {
-      let res;
-      try {
-        res = await this.$api.get('/admin/account');
-        this.id = res.data._id;
-        this.username = res.data.username;
-        logInfo(res.data);
-      } catch (e) {
-        this.$error('failed to fetch account');
-        logError(e);
-      }
+    fetchAccount() {
+      this.id = this.account._id;
+      this.username = this.account.username;
     },
     /**
      * modify account data
@@ -67,62 +63,43 @@ export default {
         this.$error('not a valid password');
         return;
       }
-      let res;
-      try {
-        res = await this.$api.put(`/admin/account/${this.id}`, {
-          username: this.username,
-          password: this.password,
-        });
-        this.$info('account modified');
-        logInfo(res.data);
-        // log out after account changed
-        this.$store.commit('M_COMMON_ACCOUNT', {});
-        Cookie.remove(COOKIE_TOKEN, { sameSite: 'Lax' });
-        this.$router.push({
-          name: 'Login',
-        });
-        this.$info('please log-in again');
-      } catch (e) {
-        this.$error('failed to modify account');
-        logError(e);
-      }
+      await this.$store.dispatch('settings/xaPutAccount', {
+        _id: this.id,
+        username: this.username,
+        password: this.password,
+      });
     },
-  },
-  async mounted() {
-    await this.fetchAccount();
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .account {
   padding: $space-lg;
+}
 
-  .line {
-    display: flex;
-    align-items: center;
-    padding: 0 $space-sm;
-
-    .v-label,
-    .v-input {
-      margin: 0 !important;
-      min-width: 20rem;
-      text-align: left;
-    }
-
-    .v-label {
-      font-size: $font-size-sm;
-      height: 2rem;
-      line-height: 2rem;
-      padding: 0 $space-xs * 1.75;
-    }
-
-    .keyname {
-      font-weight: 500;
-      height: 2.5rem;
-      line-height: 2.5rem;
-      width: 10rem;
-    }
+.line {
+  display: flex;
+  align-items: center;
+  padding: 0 $space-sm;
+  .v-label,
+  .v-input {
+    margin: 0 !important;
+    min-width: 20rem;
+    text-align: left;
   }
+  .v-label {
+    font-size: $font-size-sm;
+    height: 2rem;
+    line-height: 2rem;
+    padding: 0 $space-xs * 1.75;
+  }
+}
+
+.keyname {
+  font-weight: 500;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  width: 10rem;
 }
 </style>

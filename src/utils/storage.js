@@ -1,5 +1,5 @@
-import { logError } from './loggers.js';
-import { LS_KEY } from './constants.js';
+import { logError } from './loggers';
+import { LS_KEY } from './constants';
 
 /**
  * set local storage

@@ -1,12 +1,9 @@
-/* deps */
 const jwt = require('jsonwebtoken');
 
-/* utils */
-const { buildError } = require('../utils/buildError.js');
-const { Account } = require('../utils/mongoose.js');
-const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants.js');
+const buildError = require('../utils/buildError');
+const { Account } = require('../models');
+const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants');
 
-const selectKeys = 'username';
 const SECRET = process.env.TOKEN_SECRET || JWT_DEFAULT_SECRET;
 const defaultOptions = {
   checkPublic: false, // whether check public websites' `share` search param
@@ -19,6 +16,7 @@ function authCheck(options = defaultOptions) {
     // and also passed `share` search param
     const { share } = req.query;
     if (checkPublic && share) {
+      // [TODO]
       buildError(418, 'TODO');
     } else {
       // check token
@@ -40,7 +38,7 @@ function authCheck(options = defaultOptions) {
       const { _id, username } = tokenData;
       let authed;
       try {
-        const account = await Account.findById(_id).select(selectKeys).lean();
+        const account = await Account.findById(_id).select('username').lean();
         authed = account.username === username;
       } catch {
         authed = false;
@@ -53,4 +51,4 @@ function authCheck(options = defaultOptions) {
   };
 }
 
-module.exports = { authCheck };
+module.exports = authCheck;

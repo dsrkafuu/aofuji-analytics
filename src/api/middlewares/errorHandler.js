@@ -10,7 +10,7 @@ function errorHandler() {
     });
     // if customized error
     if (err.status !== undefined) {
-      res.status(err.status).send('[goose api] ' + err.message);
+      res.status(err.status).send('[vector-api] ' + err.message);
     }
     // pass to express default
     else {
@@ -19,4 +19,4 @@ function errorHandler() {
   };
 }
 
-module.exports = { errorHandler };
+module.exports = errorHandler;

@@ -2,7 +2,7 @@
   <div class="about">
     <VHeader text="About"></VHeader>
     <div class="test">
-      <VButton @click="handleTest">click here to test api</VButton>
+      <VButton @click="handleTest">Click Here to Test API</VButton>
       <div class="test-api" v-if="testData">
         <pre>{{ testData }}</pre>
       </div>
@@ -11,10 +11,7 @@
 </template>
 
 <script>
-/* deps */
-import { cloneDeep } from '@/utils/lodash.js';
-/* utils */
-import { logInfo, logError } from '@/utils/loggers.js';
+import { cloneDeep } from '@/utils/lodash';
 
 export default {
   name: 'About',
@@ -25,35 +22,25 @@ export default {
   },
   methods: {
     async handleTest() {
-      let res;
-      try {
-        res = await this.$api.get('/admin/debug?cache=0');
-        this.testData = cloneDeep(res.data);
-        this.$info('debug data fetched');
-        logInfo(res.data);
-      } catch (e) {
-        this.$error('failed to process debug test');
-        logError(e);
-      }
+      const res = await this.$api.get('/admin/debug?cache=0');
+      this.testData = cloneDeep(res.data);
+      this.$info('debug data fetched');
     },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .about {
   margin: $space-lg;
+}
 
-  .test {
-    span {
-      margin-left: $space-sm;
-      margin-right: $space-sm;
-    }
-
-    .test-api pre {
-      margin: $space-base;
-      font-size: $font-size-xs;
-    }
-  }
+.test span {
+  margin-left: $space-sm;
+  margin-right: $space-sm;
+}
+.test-api pre {
+  margin: $space-base;
+  font-size: $font-size-xs;
 }
 </style>

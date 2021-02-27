@@ -10,4 +10,4 @@ function buildError(status, statusText) {
   return err;
 }
 
-module.exports = { buildError };
+module.exports = buildError;

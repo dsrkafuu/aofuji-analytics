@@ -12,4 +12,4 @@ function formatQuery(type, value) {
   }
 }
 
-module.exports = { formatQuery };
+module.exports = formatQuery;

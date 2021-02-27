@@ -1,12 +1,12 @@
-/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
+/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) Apache-2.0 License */
 
-/* utils */
+// utils
 const express = require('express');
 const app = express();
 
-/* middlewares */
+// middlewares
 // response time logger
-const { responseTime } = require('./middlewares/responseTime.js');
+const responseTime = require('./middlewares/responseTime');
 app.use(responseTime());
 // body parser and cookie parser
 app.use(express.json());
@@ -16,11 +16,11 @@ app.use(cookieParser());
 const compression = require('compression');
 app.use(compression());
 
-/* routes */
-const { router } = require('./router.js');
-app.use('/api', router);
+// routes
+app.use('/api', require('./router.js'));
+
 // transform error to http response
-const { errorHandler } = require('./middlewares/errorHandler.js');
+const errorHandler = require('./middlewares/errorHandler.js');
 app.use(errorHandler());
 
 module.exports = app;

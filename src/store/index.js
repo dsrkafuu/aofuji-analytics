@@ -6,7 +6,7 @@ import theme from './theme';
 import common from './common';
 import dashboard from './dashboard';
 import realtime from './realtime';
-import { WEBSITE } from './website.js';
+import settings from './settings';
 
 export default new Vuex.Store({
   modules: {
@@ -14,6 +14,6 @@ export default new Vuex.Store({
     common,
     dashboard,
     realtime,
-    WEBSITE,
+    settings,
   },
 });

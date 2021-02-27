@@ -28,9 +28,6 @@
 </template>
 
 <script>
-/* utils */
-import { logInfo, logError } from '@/utils/loggers.js';
-
 export default {
   name: 'WebsiteEdit',
   data() {
@@ -43,60 +40,7 @@ export default {
   },
   computed: {
     _id() {
-      return this.$store.state.WEBSITE.editing?._id;
-    },
-  },
-  methods: {
-    /**
-     * init website data with id when activated
-     */
-    initWebsite() {
-      const editing = this.$store.state.WEBSITE.editing;
-      if (editing) {
-        this.name = editing.name || '';
-        this.url = editing.url || '';
-        this.base = editing.base || '';
-        this.isPublic = editing.isPublic || false;
-      }
-    },
-    /**
-     * add a new website or modify website data
-     */
-    async handleCheck() {
-      let res, buf;
-      try {
-        if (this._id) {
-          res = await this.$api.put(`/admin/website/${this._id}`, {
-            name: this.name,
-            url: this.url,
-            base: this.base,
-            isPublic: this.isPublic,
-          });
-          this.$store.commit('M_UPDATE_WEBSITE', res.data);
-          buf = 'website modified';
-        } else {
-          res = await this.$api.post('/admin/website', {
-            name: this.name,
-            url: this.url,
-            base: this.base,
-            isPublic: this.isPublic,
-          });
-          this.$store.commit('M_ADD_WEBSITE', res.data);
-          buf = 'new website added';
-        }
-        this.$info(buf);
-        logInfo(res.data);
-        this.handleExit();
-      } catch (e) {
-        this.$error(`failed to ${this._id ? 'modify website' : 'add new website'}`);
-        logError(e);
-      }
-    },
-    /**
-     * exit editing
-     */
-    handleExit() {
-      this.$store.commit('M_EXIT_EDIT_WEBSITE');
+      return this.$store.state.settings.editWebsite?._id;
     },
   },
   activated() {
@@ -112,38 +56,76 @@ export default {
     this.base = '';
     this.isPublic = false;
   },
+  methods: {
+    /**
+     * init website data with id when activated
+     */
+    initWebsite() {
+      const editing = this.$store.state.settings.editWebsite;
+      if (editing) {
+        this.name = editing.name || '';
+        this.url = editing.url || '';
+        this.base = editing.base || '';
+        this.isPublic = editing.isPublic || false;
+      }
+    },
+    /**
+     * add a new website or modify website data
+     */
+    async handleCheck() {
+      if (this._id) {
+        await this.$store.dispatch('settings/xaPutWebsite', {
+          name: this.name,
+          url: this.url,
+          base: this.base,
+          isPublic: this.isPublic,
+        });
+      } else {
+        await this.$store.dispatch('settings/xaPostWebsite', {
+          name: this.name,
+          url: this.url,
+          base: this.base,
+          isPublic: this.isPublic,
+        });
+      }
+      this.handleExit();
+    },
+    /**
+     * exit editing
+     */
+    handleExit() {
+      this.$store.commit('settings/xmSetEditWebsite', {});
+    },
+  },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .website-edit {
   padding: $space-lg;
+}
 
-  .line {
-    display: flex;
-    align-items: center;
-    padding: 0 $space-sm;
-
-    .v-label,
-    .v-input {
-      margin: 0 !important;
-      min-width: 20rem;
-      text-align: left;
-    }
-
-    .v-label {
-      font-size: $font-size-sm;
-      height: 2rem;
-      line-height: 2rem;
-      padding: 0 $space-xs * 1.75;
-    }
-
-    .keyname {
-      font-weight: 500;
-      height: 2.5rem;
-      line-height: 2.5rem;
-      width: 10rem;
-    }
+.line {
+  display: flex;
+  align-items: center;
+  padding: 0 $space-sm;
+  .v-label,
+  .v-input {
+    margin: 0 !important;
+    min-width: 20rem;
+    text-align: left;
   }
+  .v-label {
+    font-size: $font-size-sm;
+    height: 2rem;
+    line-height: 2rem;
+    padding: 0 $space-xs * 1.75;
+  }
+}
+.keyname {
+  font-weight: 500;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  width: 10rem;
 }
 </style>

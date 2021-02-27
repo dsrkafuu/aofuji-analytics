@@ -21,6 +21,7 @@ export default {
   }),
 
   mutations: {
+    // set all dashboard data
     // payload: { pv, us, pvt, pvs, uss, path, ref, lang, brow, sys, plat, loc }
     xmSetAll(state, payload) {
       const { pv, us, pvt, pvs, uss } = payload;
@@ -42,6 +43,7 @@ export default {
   },
 
   actions: {
+    // fetch all dashboard data
     // payload: { _id, range, step }
     async xaFetchAll({ commit }, payload) {
       const { _id, range, step } = payload;

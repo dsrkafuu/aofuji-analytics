@@ -17,4 +17,4 @@ function cacheControl(options = defaultOptions) {
   }
 }
 
-module.exports = { cacheControl };
+module.exports = cacheControl;

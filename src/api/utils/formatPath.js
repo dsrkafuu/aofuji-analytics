@@ -32,4 +32,4 @@ function formatPath(path, base) {
   return path;
 }
 
-module.exports = { formatPath };
+module.exports = formatPath;

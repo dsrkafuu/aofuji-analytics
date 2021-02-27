@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="v-container">
     <VCard class="not-found">
       <span>OOPS</span>
       <span>404 PAGE NOT FOUND</span>
@@ -14,10 +14,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .not-found {
   margin: $space-lg;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,7 +27,6 @@ export default {
     font-size: $font-size-xl;
     font-weight: 500;
   }
-
   a {
     margin: $space-base 0;
   }

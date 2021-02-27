@@ -1,13 +1,12 @@
-/* deps */
 const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-/* utils */
-const { buildError } = require('../utils/buildError.js');
-const { Account, select } = require('../utils/mongoose.js');
-const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants.js');
+const buildError = require('../utils/buildError');
+const selectQuery = require('../utils/selectQuery');
+const { Account } = require('../models');
+const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants');
 const SECRET = process.env.TOKEN_SECRET || JWT_DEFAULT_SECRET;
 
 // check init status
@@ -31,7 +30,7 @@ router.post('/init', async (req, res) => {
     password,
     isAdmin: true,
   });
-  res.status(201).send(select(result, 'username'));
+  res.status(201).send(selectQuery(result, 'username'));
 });
 
 // login route
@@ -67,7 +66,7 @@ router.post('/', async (req, res) => {
 
   // send token back
   res.cookie(COOKIE_TOKEN, token, { maxAge: 14 * 86400 * 1000, sameSite: 'Lax' });
-  res.send(select(account, 'username'));
+  res.send(selectQuery(account, 'username'));
 });
 
-module.exports = { router };
+module.exports = router;

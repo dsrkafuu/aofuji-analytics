@@ -1,40 +1,40 @@
 <template>
   <nav class="navbar">
     <div class="v-container">
-      <div class="navbar-brand">
-        <VButton class="navbar-item" type="full-height" href="https://appvector.icu" external>
+      <div class="brand">
+        <VButton class="item" type="full-height" href="https://appvector.icu" external>
           {{ siteTitle }}
         </VButton>
       </div>
-      <div class="navbar-menu">
-        <div class="navbar-start">
+      <div class="menu">
+        <div class="start">
           <VRouterLink
-            class="navbar-item"
+            class="item"
             :to="{ name: 'Dashboard', query: curWebsite ? { website: curWebsite } : {} }"
             type="full-height"
           >
             Dashboard
           </VRouterLink>
           <VRouterLink
-            class="navbar-item"
+            class="item"
             :to="{ name: 'Realtime', query: curWebsite ? { website: curWebsite } : {} }"
             type="full-height"
           >
             Realtime
           </VRouterLink>
-          <VRouterLink class="navbar-item" :to="{ name: 'Settings' }" type="full-height">
+          <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
             Settings
           </VRouterLink>
         </div>
-        <div class="navbar-end">
-          <div class="navbar-select" v-if="showSelectWebsite">
+        <div class="end">
+          <div class="select" v-if="showSelectWebsite">
             <VSelect :map="websitesMap" v-model="curWebsite" />
           </div>
-          <div class="navbar-ctrl">
-            <VButton class="navbar-item" type="full-height" v-if="showLogout" @click="handleLogout">
+          <div class="ctrl">
+            <VButton class="item" type="full-height" v-if="showLogout" @click="handleLogout">
               <VIconSignOut />
             </VButton>
-            <VButton class="navbar-item" type="full-height" @click="handleThemeSwitch">
+            <VButton class="item" type="full-height" @click="handleThemeSwitch">
               <VIconAdjust />
             </VButton>
           </div>
@@ -90,7 +90,7 @@ export default {
      * switch the theme
      */
     async handleThemeSwitch() {
-      await this.$store.dispatch('common/xaSwitchTheme');
+      await this.$store.dispatch('theme/xaSwitchTheme');
     },
     /**
      * logout and go login
@@ -102,7 +102,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .navbar {
   background-color: var(--color-bg);
   height: $navbar-height;
@@ -118,34 +118,30 @@ export default {
     height: $navbar-height-sm * 2;
   }
 
-  &-brand {
+  .brand {
     flex: 0 0 auto;
     font-size: $font-size-md;
     font-weight: 500;
-
     .navbar-item {
       padding: 0 $space-lg;
       color: var(--color-font) !important;
     }
   }
 
-  &-menu {
+  .menu {
     flex: 1 1 auto;
     display: flex;
   }
-
-  &-select {
+  .select {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-
-  &-start {
+  .start {
     flex: 1 1 auto;
     display: flex;
   }
-
-  &-end {
+  .end {
     flex: 0 0 auto;
     display: flex;
     gap: $space-sm;

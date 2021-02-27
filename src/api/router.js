@@ -1,37 +1,41 @@
-/* deps */
 const { Router } = require('express');
 const router = Router();
 
-/* utils */
-const { buildError } = require('./utils/buildError.js');
-const { mongoose } = require('./utils/mongoose.js');
-router.use(mongoose());
+// utils
+require('./utils/mongoose');
+const buildError = require('./utils/buildError');
 
-/* middlewares */
-const { authCheck } = require('./middlewares/authCheck.js');
-const { cacheControl } = require('./middlewares/cacheControl.js');
+// middlewares
+const authCheck = require('./middlewares/authCheck');
+const cacheControl = require('./middlewares/cacheControl');
 
-/* routes */
-const { router: collect } = require('./routes/collect.js');
-const { router: login } = require('./routes/login.js');
-const { router: common } = require('./routes/common.js');
-router.use('/collect', cacheControl(), collect);
-router.use('/login', cacheControl(), login);
-router.use('/common', cacheControl(), /*authCheck({ checkPublic: true }),*/ common);
-const { router: adminWebsite } = require('./routes/admin/website.js');
-const { router: adminAccount } = require('./routes/admin/account.js');
-const { router: adminDebug } = require('./routes/admin/debug.js');
-router.use('/admin/website', cacheControl(), authCheck(), adminWebsite);
-router.use('/admin/account', cacheControl(), authCheck(), adminAccount);
-router.use('/admin/debug', cacheControl(), authCheck(), adminDebug);
-const { router: metricsRealtime } = require('./routes/metrics/realtime.js');
-const { router: metricsDashboard } = require('./routes/metrics/dashboard.js');
-router.use('/metrics/realtime', cacheControl({ allowCache: true }), metricsRealtime);
-router.use('/metrics/dashboard', cacheControl({ allowCache: true }), metricsDashboard);
+// routes
+router.use('/collect', cacheControl(), require('./routes/collect'));
+router.use('/login', cacheControl(), require('./routes/login'));
+router.use(
+  '/common',
+  cacheControl(),
+  /*authCheck({ checkPublic: true }),*/ require('./routes/common')
+);
 
-/* fallback */
+router.use('/admin/website', cacheControl(), authCheck(), require('./routes/admin/website'));
+router.use('/admin/account', cacheControl(), authCheck(), require('./routes/admin/account'));
+router.use('/admin/debug', cacheControl(), authCheck(), require('./routes/admin/debug'));
+
+router.use(
+  '/metrics/dashboard',
+  cacheControl({ allowCache: true }),
+  require('./routes/metrics/dashboard')
+);
+router.use(
+  '/metrics/realtime',
+  cacheControl({ allowCache: true }),
+  require('./routes/metrics/realtime')
+);
+
+// fallback
 router.use('/*', async () => {
   throw buildError(404, 'route not found');
 });
 
-module.exports = { router };
+module.exports = router;
