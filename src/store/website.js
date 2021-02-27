@@ -1,6 +1,4 @@
-/* deps */
 import { cloneDeep } from '@/utils/lodash.js';
-/* utils */
 import { findIndex } from '@/utils/lodash.js';
 
 export const WEBSITE = {

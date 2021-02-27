@@ -1,24 +1,28 @@
 import { getLS, setLS } from '@/utils/storage.js';
 import { STORAGE_THEME, DOM_ATTR_THEME } from '@/utils/constants.js';
 
-export const THEME = {
+// init dom theme attribute
+const initialTheme = getLS(STORAGE_THEME) || 'auto';
+document.body.setAttribute(DOM_ATTR_THEME, initialTheme);
+
+export default {
+  namespaced: true,
   state: () => ({
-    // init theme from `localStorage`
-    theme: getLS(STORAGE_THEME) || 'auto',
+    theme: initialTheme,
   }),
 
   mutations: {
-    /**
-     * init theme to dom
-     */
-    M_INIT_THEME(state) {
-      document.body.setAttribute(DOM_ATTR_THEME, state.theme);
+    // payload: { theme }
+    xmSetTheme(state, payload) {
+      const { theme } = payload;
+      state.theme = theme;
+      document.body.setAttribute(DOM_ATTR_THEME, theme);
+      setLS(STORAGE_THEME, theme);
     },
+  },
 
-    /**
-     * trigger theme switch
-     */
-    M_SWITCH_THEME(state) {
+  actions: {
+    async xaSwitchTheme({ state, commit }) {
       // get the current theme of app
       const curTheme = state.theme;
       // get system perfered theme
@@ -37,9 +41,7 @@ export const THEME = {
         }
       }
       // commit theme change
-      document.body.setAttribute(DOM_ATTR_THEME, newTheme);
-      state.theme = newTheme;
-      setLS(STORAGE_THEME, newTheme);
+      commit('xmSetTheme', { theme: newTheme });
     },
   },
 };

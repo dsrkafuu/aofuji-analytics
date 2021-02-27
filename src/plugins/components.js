@@ -1,4 +1,4 @@
-import { upperFirst, camelCase } from '@/utils/lodash.js';
+import { upperFirst, camelCase } from '@/utils/lodash';
 
 /**
  * @param {string} fileName

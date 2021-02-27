@@ -7,10 +7,5 @@
 <script>
 export default {
   name: 'App',
-  created() {
-    // init theme to dom
-    this.$store.commit('M_INIT_THEME');
-  },
-  mounted() {},
 };
 </script>

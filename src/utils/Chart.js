@@ -1,4 +1,3 @@
-/* deps */
 import {
   Chart,
   ArcElement,
@@ -59,7 +58,7 @@ import {
 } from 'chartjs-chart-geo';
 Chart.register(ChoroplethController, GeoFeature, ColorScale, ProjectionScale);
 
-/* settings */
+// settings
 Chart.defaults.font.family = 'inherit';
 Chart.defaults.color = 'var(--color-font)';
 

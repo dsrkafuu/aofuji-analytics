@@ -1,40 +1,40 @@
 <template>
   <nav class="navbar">
     <div class="v-container">
-      <div class="brand">
-        <VButton class="item" type="full-height" href="https://appvector.icu" external>
+      <div class="navbar-brand">
+        <VButton class="navbar-item" type="full-height" href="https://appvector.icu" external>
           {{ siteTitle }}
         </VButton>
       </div>
-      <div class="menu">
-        <div class="start">
+      <div class="navbar-menu">
+        <div class="navbar-start">
           <VRouterLink
-            class="item"
-            :to="{ name: 'Realtime', query: { website: selectedWebsite } }"
-            type="full-height"
-          >
-            Realtime
-          </VRouterLink>
-          <VRouterLink
-            class="item"
-            :to="{ name: 'Dashboard', query: { website: selectedWebsite } }"
+            class="navbar-item"
+            :to="{ name: 'Dashboard', query: curWebsite ? { website: curWebsite } : {} }"
             type="full-height"
           >
             Dashboard
           </VRouterLink>
-          <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
+          <VRouterLink
+            class="navbar-item"
+            :to="{ name: 'Realtime', query: curWebsite ? { website: curWebsite } : {} }"
+            type="full-height"
+          >
+            Realtime
+          </VRouterLink>
+          <VRouterLink class="navbar-item" :to="{ name: 'Settings' }" type="full-height">
             Settings
           </VRouterLink>
         </div>
-        <div class="end">
-          <div class="select" v-if="showSelect">
-            <VSelect :map="websitesMap" v-model="selectedWebsite" />
+        <div class="navbar-end">
+          <div class="navbar-select" v-if="showSelectWebsite">
+            <VSelect :map="websitesMap" v-model="curWebsite" />
           </div>
-          <div class="ctrl">
-            <VButton class="item" type="full-height" v-if="showSignOut" @click="handleSignOut">
+          <div class="navbar-ctrl">
+            <VButton class="navbar-item" type="full-height" v-if="showLogout" @click="handleLogout">
               <VIconSignOut />
             </VButton>
-            <VButton class="item" type="full-height" @click="handleThemeSwitch">
+            <VButton class="navbar-item" type="full-height" @click="handleThemeSwitch">
               <VIconAdjust />
             </VButton>
           </div>
@@ -45,9 +45,6 @@
 </template>
 
 <script>
-import Cookie from 'js-cookie';
-import { COOKIE_TOKEN } from '@/utils/constants.js';
-
 export default {
   name: 'Navbar',
   computed: {
@@ -55,43 +52,35 @@ export default {
     siteTitle() {
       return process.env.VUE_APP_TITLE || 'Vector Analytics';
     },
-    // should show sign out button
-    showSignOut() {
-      return Boolean(this.$store.state.COMMON.account._id);
+    // should show logout button
+    showLogout() {
+      return Boolean(this.$store.state.common.account?._id);
     },
     // should show common website select
-    showSelect() {
+    showSelectWebsite() {
       return this.$route.path.startsWith('/realtime') || this.$route.path.startsWith('/dashboard');
     },
     // common website select list
     websitesMap() {
-      let data = this.$store.state.COMMON.websites;
+      let data = this.$store.state.common.websites || [];
       const map = {};
       for (let i = 0; i < data.length; i++) {
         map[data[i]._id] = { text: data[i].name };
       }
       return map;
     },
-    // value for v-model bind select
-    // sync with vuex
-    selectedWebsite: {
+    // value for v-model bind select, sync with vuex
+    curWebsite: {
       get() {
-        return this.$store.state.COMMON.selectedWebsite?._id || '';
+        return this.$store.state.common.curWebsite?._id || '';
       },
       set(val) {
-        if (val) {
-          const _id = val;
-          const name = this.websitesMap[_id];
-          this.$store.commit('M_SELECT_WEBSITE', {
-            _id,
-            name,
+        val && this.$store.commit('common/xmSetCurWebsite', { _id: val });
+        // update url search param
+        if (val && val !== this.$route.query.website) {
+          this.$router.replace({
+            query: { website: val },
           });
-          // update url search param
-          if (_id !== this.$route.query.website) {
-            this.$router.replace({
-              query: { website: _id },
-            });
-          }
         }
       },
     },
@@ -100,18 +89,14 @@ export default {
     /**
      * switch the theme
      */
-    handleThemeSwitch() {
-      this.$store.commit('M_SWITCH_THEME');
+    async handleThemeSwitch() {
+      await this.$store.dispatch('common/xaSwitchTheme');
     },
     /**
-     * signout and go login
+     * logout and go login
      */
-    handleSignOut() {
-      this.$store.commit('M_COMMON_ACCOUNT', {});
-      Cookie.remove(COOKIE_TOKEN, { sameSite: 'Lax' });
-      this.$router.push({
-        name: 'Login',
-      });
+    async handleLogout() {
+      await this.$store.dispatch('common/xaPostLogout');
     },
   },
 };
@@ -133,34 +118,34 @@ export default {
     height: $navbar-height-sm * 2;
   }
 
-  .brand {
+  &-brand {
     flex: 0 0 auto;
     font-size: $font-size-md;
     font-weight: 500;
 
-    .item {
+    .navbar-item {
       padding: 0 $space-lg;
       color: var(--color-font) !important;
     }
   }
 
-  .menu {
+  &-menu {
     flex: 1 1 auto;
     display: flex;
   }
 
-  .select {
+  &-select {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
-  .start {
+  &-start {
     flex: 1 1 auto;
     display: flex;
   }
 
-  .end {
+  &-end {
     flex: 0 0 auto;
     display: flex;
     gap: $space-sm;

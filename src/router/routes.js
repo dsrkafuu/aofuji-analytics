@@ -1,6 +1,4 @@
 import Base from '@/views/Base/index.vue';
-import Login from '@/views/Login.vue';
-import NotFound from '@/views/NotFound.vue';
 
 export const routes = [
   {
@@ -12,28 +10,31 @@ export const routes = [
       {
         path: '/realtime',
         name: 'Realtime',
-        component: () => import(/* webpackChunkName: "realtime" */ '@/views/Realtime/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "chunk-realtime" */ '@/views/Realtime/index.vue'),
       },
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/Dashboard/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "chunk-dashboard" */ '@/views/Dashboard/index.vue'),
       },
       {
         path: '/settings',
         name: 'Settings',
-        component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "chunk-settings" */ '@/views/Settings/index.vue'),
       },
     ],
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: () => import(/* webpackChunkName: "chunk-edges" */ '@/views/Login.vue'),
   },
   {
     path: '/*',
     name: 'NotFound',
-    component: NotFound,
+    component: () => import(/* webpackChunkName: "chunk-edges" */ '@/views/NotFound.vue'),
   },
 ];

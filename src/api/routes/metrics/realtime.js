@@ -1,20 +1,17 @@
-/* deps */
 const { Router } = require('express');
 const router = Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const { View, Event, Session } = require('../../utils/mongoose.js');
+const { View, Event, Session } = require('../../utils/mongoose');
 
-/* utils */
-const { buildError } = require('../../utils/buildError.js');
-const { formatQuery } = require('../../utils/formatQuery.js');
-const { mapArray } = require('../../utils/mapArray.js');
-const { toPairs } = require('../../utils/toPairs.js');
-const { VIEW_EXPIRE_TIME } = require('../../utils/constants.js');
+const { buildError } = require('../../utils/buildError');
+const { formatQuery } = require('../../utils/formatQuery');
+const { mapArray } = require('../../utils/mapArray');
+const { toPairs } = require('../../utils/toPairs');
+const { VIEW_EXPIRE_TIME } = require('../../utils/constants');
 
 router.get('/', async (req, res) => {
-  // [DEBUG]
-  const now = 1612846952200;
+  const now = 1612846952200; // [DEBUG]
   // const now = Date.now();
 
   // get selected website

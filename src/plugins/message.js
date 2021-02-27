@@ -1,7 +1,10 @@
-import VMessage from '@/components/VMessage.vue';
-import { store } from '@/store/index.js';
+import Vue from 'vue';
 
-export class MessageID {
+import VMessage from '@/components/VMessage.vue';
+import { findIndex } from '@/utils/lodash';
+
+// message id controller
+class MessageID {
   /**
    * @constructor
    * init id set
@@ -33,26 +36,60 @@ export class MessageID {
     this.set.delete(id);
   }
 }
+const messageID = new MessageID();
+
+// message popup data
+const messages = [];
+
+// push/shift/trigger/remove a message
+function pushMessage(id, timeout, type, text) {
+  messages.push({ id, timeout, type, text });
+}
+function shiftMessage() {
+  const message = messages.shift();
+  message.timeout && clearTimeout(message.timeout);
+  messageID.remove(message.id);
+}
+function triggerMessage({ type = 'default', text = '' }) {
+  const id = messageID.get();
+  const timeout = setTimeout(() => shiftMessage(), 8000);
+  pushMessage(id, timeout, type, text);
+}
+function removeMessage(id) {
+  const index = findIndex(messages, ['id', id]);
+  if (index >= 0) {
+    messages[index].timeout && clearTimeout(messages[index].timeout);
+    messageID.remove(messages[index].id);
+    messages.splice(index, 1);
+  }
+}
+
+// mount `VMessage` component directly to body
+const VMessageClass = Vue.extend(VMessage);
+const message = new VMessageClass({
+  data() {
+    return { messages };
+  },
+  methods: {
+    handleClose(id) {
+      removeMessage(id);
+    },
+  },
+});
+message.$mount();
+document.body.appendChild(message.$el);
+
+// exported functions
+export const $info = (text) => {
+  triggerMessage({ type: 'default', text });
+};
+export const $error = (text) => {
+  triggerMessage({ type: 'error', text });
+};
 
 export default {
-  /**
-   * @param {Vue} Vue
-   */
   install(Vue) {
-    // mount `VMessage` component directly to body
-    const VMessageClass = Vue.extend(VMessage);
-    const message = new VMessageClass({
-      store,
-    });
-    message.$mount();
-    document.body.appendChild(message.$el);
-
-    // add global functions
-    Vue.prototype.$info = (text) => {
-      store.dispatch('A_TRIGGER_MESSAGE', { type: 'default', text });
-    };
-    Vue.prototype.$error = (text) => {
-      store.dispatch('A_TRIGGER_MESSAGE', { type: 'error', text });
-    };
+    Vue.prototype.$info = $info;
+    Vue.prototype.$error = $error;
   },
 };

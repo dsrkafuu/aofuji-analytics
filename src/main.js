@@ -1,28 +1,22 @@
-/*! vector-analytics | DSRKafuU <amzrk2.cc> | Copyright (c) Apache-2.0 License */
-require('../utils/env.js')();
+/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) Apache-2.0 License */
 
-/* deps */
 import Vue from 'vue';
 Vue.config.productionTip = false;
-import { router } from './router/index.js';
-import { store } from './store/index.js';
+import router from './router';
+import store from './store';
 
-/* css */
 import 'normalize.css';
 import './scss/index.scss';
 
-/* components */
-import VComponents from './plugins/components.js';
+import VComponents from './plugins/components';
 Vue.use(VComponents);
-import VMessage from './plugins/message.js';
+import VMessage from './plugins/message';
 Vue.use(VMessage);
-
-/* plugins */
-import Axios from './plugins/axios.js';
+import Axios from './plugins/axios';
 Vue.use(Axios);
 
-/* app */
 import App from './App.vue';
+
 new Vue({
   router,
   store,

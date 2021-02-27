@@ -1,4 +1,4 @@
-const sortBy = require('lodash/sortBy.js');
+const sortBy = require('lodash/sortBy');
 
 /**
  * generate times of certain value map from an array

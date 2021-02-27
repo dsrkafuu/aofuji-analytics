@@ -4,184 +4,74 @@
       <VCard class="count">
         <div class="section">
           <div class="title">Users Online</div>
-          <div class="ctx ctx-uo">{{ au }}</div>
+          <div class="ctx ctx-uo">{{ activeUsers }}</div>
         </div>
-        <div class="section">
-          <div class="title">Device Category</div>
-          <div class="ctx ctx-dc">
-            <canvas ref="dcilm"></canvas>
-          </div>
-        </div>
+        <RealtimeDeviceCategory :data="deviceCategorys" />
       </VCard>
-      <VCard class="map">
-        <div class="ctx-map">
-          <canvas ref="map"></canvas>
-        </div>
+      <VCard class="realtime-map">
+        <RealtimeMap :data="userRegions" />
       </VCard>
     </div>
     <div class="row row-norm">
       <VCard class="data section">
         <div class="title">Page Views</div>
-        <VList class="ctx ctx-pv" type="dense" :data="pv" />
+        <VList class="ctx ctx-pv" type="dense" :data="pageViews" />
       </VCard>
       <VCard class="data section">
         <div class="title">User Events</div>
-        <VList class="ctx ctx-pe" type="dense" :data="ue" />
+        <VList class="ctx ctx-pe" type="dense" :data="userEvents" />
       </VCard>
       <VCard class="data section">
         <div class="title">User Regions</div>
-        <VList class="ctx ctx-ar" type="dense" :data="ur" />
+        <VList class="ctx ctx-ar" type="dense" :data="userRegions" />
       </VCard>
     </div>
   </div>
 </template>
 
 <script>
-import { Chart, topojson } from '@/utils/Chart.js';
-import { cloneDeep, fromPairs } from '@/utils/lodash.js';
-import { logInfo, logError } from '@/utils/loggers.js';
+import { mapState } from 'vuex';
+import RealtimeDeviceCategory from './RealtimeDeviceCategory.vue';
+import RealtimeMap from './RealtimeMap.vue';
 
 export default {
   name: 'Realtime',
-  data() {
-    return {
-      au: 0, // active users
-      dc: [], // device categories
-      pv: [], // page views
-      ue: [], // user events
-      ur: [], // user regions
-      topo: null, // world map topojson
-    };
+  components: {
+    RealtimeDeviceCategory,
+    RealtimeMap,
   },
   computed: {
-    website() {
-      return this.$store.state.COMMON.selectedWebsite?._id;
+    curWebsite() {
+      return this.$store.state.common.curWebsite?._id;
     },
+    ...mapState('realtime', [
+      'inited',
+      'activeUsers',
+      'deviceCategorys',
+      'pageViews',
+      'userEvents',
+      'userRegions',
+    ]),
   },
   watch: {
-    async website() {
-      // update data
-      const fetchWorks = [];
-      if (!this.topo) {
-        fetchWorks.push(this.fetchWorldTopo());
+    async curWebsite(_id) {
+      if (!this.inited) {
+        await this.fetchRealtime(_id);
       }
-      fetchWorks.push(this.fetchRealtime(this.website));
-      await Promise.all(fetchWorks);
-      // draw charts
-      await Promise.all([this.drawDC(this.dc), this.drawMap(this.ur)]);
     },
+  },
+  async activated() {
+    if (!this.inited && this.curWebsite) {
+      await this.fetchRealtime(this.curWebsite);
+    }
   },
   methods: {
     /**
-     * fetch world map topojson
-     */
-    async fetchWorldTopo() {
-      let res;
-      try {
-        res = await this.$axios.get(
-          'https://cdn.jsdelivr.net/gh/amzrk2/dsr-cdn@1.0/json/world-110m.min.json'
-        );
-        const d = res.data;
-        const p = topojson.feature(d, d.objects.ne_110m_admin_0_countries).features;
-        this.topo = p;
-      } catch (e) {
-        this.$error('failed to fetch world map data');
-        logError(e);
-      }
-    },
-    /**
      * fetch realtime data
-     * @param {string} website website id
+     * @param {string} _id website id
      */
-    async fetchRealtime(website) {
-      let res;
-      try {
-        res = await this.$api.get(`/metrics/realtime?website=${website}`);
-        logInfo(cloneDeep(res.data));
-        this.au = res.data.au;
-        this.dc = res.data.dc;
-        this.pv = res.data.pv;
-        this.ue = res.data.ue;
-        this.ur = res.data.ur;
-      } catch (e) {
-        this.$error('failed to fetch realtime data');
-        logError(e);
-      }
-    },
-    /**
-     * draw device category chart
-     * @param {Array} data
-     */
-    async drawDC(data) {
-      new Chart(this.$refs.dcilm, {
-        type: 'doughnut',
-        data: {
-          labels: [...Object.keys(fromPairs(data))],
-          datasets: [
-            {
-              data: [...Object.values(fromPairs(data))],
-              backgroundColor: ['#9db1da', '#aba4d3', '#ababab'],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          devicePixelRatio: (window.devicePixelRatio || 1) * 2,
-          plugins: {
-            legend: { position: 'bottom' },
-          },
-        },
-      });
-    },
-    /**
-     * draw world map, need to init `this.topo` first
-     * @param {Array} data user regions
-     */
-    async drawMap(data) {
-      if (!this.topo) {
-        return;
-      }
-      // combine user regions data with topojson
-      const ur = fromPairs(data);
-      this.topo.forEach((d) => {
-        const ISO = d.properties.ISO_A2;
-        d.properties.VALUE = ur[ISO] || null;
-      });
-      // draw chart
-      new Chart(this.$refs.map, {
-        type: 'choropleth',
-        data: {
-          labels: this.topo.map((d) => d.properties.NAME),
-          datasets: [
-            {
-              data: this.topo.map((d) => ({ feature: d, value: d.properties.VALUE })),
-              borderWidth: 0,
-              borderColor: '#ffffff00',
-            },
-          ],
-        },
-        options: {
-          devicePixelRatio: (window.devicePixelRatio || 1) * 4,
-          aspectRatio: 1, // square map
-          showOutline: false,
-          showGraticule: false, // disable geo grids
-          plugins: {
-            legend: { display: false }, // remove unused legend
-          },
-          scales: {
-            xy: { projection: 'mercator' }, // square map
-            color: {
-              display: false, // no color card
-              missing: 'rgba(157, 182, 218, 0.5)',
-              // color calculator, origin value 0-1
-              // target color rgba(157,182,218,0.8)-rgba(157,172,218,1.0)
-              interpolate: (val) => {
-                return `rgba(157, ${182 - 10 * val}, 218, ${0.8 + val * 0.2})`;
-              },
-            },
-          },
-        },
-      });
+    async fetchRealtime(_id) {
+      await this.$store.dispatch('realtime/xaFetchAll', { _id });
     },
   },
 };
@@ -237,13 +127,8 @@ export default {
   }
 
   // map
-  .map {
+  &-map {
     flex: 1 1 auto;
-  }
-
-  .ctx-map {
-    position: relative;
-    top: -3.25rem;
   }
 
   // data

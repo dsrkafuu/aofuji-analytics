@@ -4,71 +4,68 @@
       <VCard class="summary">
         <div class="section">
           <div class="ctx ctx-dr">
-            <VSelect :map="RANGE_MAP" v-model="dataRange" />
+            <VSelect :map="rangeMap" v-model="range" />
           </div>
         </div>
         <div class="section">
           <div class="title">Page Views</div>
-          <div class="ctx ctx-pv">{{ views }}</div>
+          <div class="ctx ctx-pv">{{ pageViews }}</div>
         </div>
         <div class="section">
           <div class="title">Unique Visitor</div>
-          <div class="ctx ctx-uv">{{ sess }}</div>
+          <div class="ctx ctx-uv">{{ uniqueSessions }}</div>
         </div>
         <div class="section">
           <div class="title">Avg. View Time</div>
-          <div class="ctx ctx-pvt">{{ pvt }}</div>
+          <div class="ctx ctx-pvt">{{ pageViewTime }}</div>
         </div>
       </VCard>
       <VCard class="chart">
-        <div class="ctx ctx-chart">
-          <canvas ref="chart"></canvas>
-        </div>
+        <DashboardChart :pvsData="pageViewSteps" :ussData="uniqueSessionSteps" />
       </VCard>
     </div>
     <div class="row row-prim">
       <VCard class="data section">
         <div class="title">Pages</div>
-        <VList class="ctx ctx-path" type="dense" :data="path" />
+        <VList class="ctx ctx-path" type="dense" :data="pathnames" />
       </VCard>
       <VCard class="data section">
         <div class="title">Referers</div>
-        <VList class="ctx ctx-ref" type="dense" :data="ref" />
+        <VList class="ctx ctx-ref" type="dense" :data="referrers" />
       </VCard>
     </div>
     <div class="row row-norm">
       <VCard class="data section">
         <div class="title">Systems</div>
-        <VList class="ctx ctx-sys" type="dense" :data="sys" />
+        <VList class="ctx ctx-sys" type="dense" :data="systems" />
       </VCard>
       <VCard class="data section">
         <div class="title">Browsers</div>
-        <VList class="ctx ctx-brow" type="dense" :data="brow" />
+        <VList class="ctx ctx-brow" type="dense" :data="browsers" />
       </VCard>
       <VCard class="data section">
         <div class="title">Device Platforms</div>
-        <VList class="ctx ctx-plat" type="dense" :data="plat" />
+        <VList class="ctx ctx-plat" type="dense" :data="platforms" />
       </VCard>
     </div>
     <div class="row row-norm">
       <VCard class="data section">
         <div class="title">Languages</div>
-        <VList class="ctx ctx-lang" type="dense" :data="lang" />
+        <VList class="ctx ctx-lang" type="dense" :data="languages" />
       </VCard>
       <VCard class="data section">
         <div class="title">Locations</div>
-        <VList class="ctx ctx-loc" type="dense" :data="loc" />
+        <VList class="ctx ctx-loc" type="dense" :data="locations" />
       </VCard>
     </div>
   </div>
 </template>
 
 <script>
-import { cloneDeep } from '@/utils/lodash.js';
-import { logInfo, logError } from '@/utils/loggers.js';
-import { Chart } from '@/utils/Chart.js';
+import { mapState } from 'vuex';
+import DashboardChart from './DashboardChart.vue';
 
-const RANGE_MAP = {
+const rangeMap = {
   LAST_15M: { text: 'Last 15 Minutes', value: 900, step: 60 },
   LAST_24H: { text: 'Last 24 Hours', value: 86400, step: 3600 },
   LAST_7D: { text: 'Last Week', value: 604800, step: 86400 },
@@ -77,129 +74,69 @@ const RANGE_MAP = {
 
 export default {
   name: 'Dashboard',
+  components: {
+    DashboardChart,
+  },
   data() {
     return {
-      sess: 0, // unique sessions count
-      lang: [],
-      brow: [],
-      sys: [],
-      plat: [],
-      loc: [],
-
-      views: 0, // views count
-      view: [], // views by step
-      usess: [], // unique sessions by step
-      path: [],
-      ref: [],
-      pvt: 0,
-
-      RANGE_MAP,
-      dataRange: 'LAST_15M',
-      chart: null,
+      rangeMap,
+      range: 'LAST_15M',
     };
   },
   computed: {
-    website() {
-      return this.$store.state.COMMON.selectedWebsite?._id;
+    curWebsite() {
+      return this.$store.state.common.curWebsite?._id;
     },
+    rangeValue() {
+      return rangeMap[this.range].value * 1000;
+    },
+    rangeStep() {
+      return rangeMap[this.range].step * 1000;
+    },
+    ...mapState('dashboard', [
+      'inited',
+      'pageViews',
+      'uniqueSessions',
+      'pageViewTime',
+      'pageViewSteps',
+      'uniqueSessionSteps',
+      'pathnames',
+      'referrers',
+      'languages',
+      'browsers',
+      'systems',
+      'platforms',
+      'locations',
+    ]),
   },
   watch: {
-    async website() {
-      await this.fetchDashboard(
-        this.website,
-        RANGE_MAP[this.dataRange].value,
-        RANGE_MAP[this.dataRange].step
-      );
-      this.initChart(this.view, this.usess);
+    async curWebsite() {
+      if (!this.inited) {
+        await this.fetchDashboard();
+      }
     },
-    async dataRange() {
-      await this.fetchDashboard(
-        this.website,
-        RANGE_MAP[this.dataRange].value,
-        RANGE_MAP[this.dataRange].step
-      );
-      this.updateChart(this.view, this.usess);
+    async range() {
+      if (this.inited && this.curWebsite) {
+        await this.fetchDashboard();
+      }
     },
+  },
+  async activated() {
+    if (!this.inited && this.curWebsite) {
+      await this.fetchDashboard();
+    }
   },
   methods: {
     /**
      * fetch dashboard data
-     * @param {string} website website id
-     * @param {number} hours
-     * @param {number} step
      */
-    async fetchDashboard(website, hours, step) {
-      const to = 1612846952100; // Date.now();
-      step = step * 1000;
-      const from = to - hours * 1000;
-      let res;
-      try {
-        res = await this.$api.get(
-          `/metrics/dashboard?website=${website}&from=${from}&to=${to}&step=${step}`
-        );
-        logInfo(cloneDeep(res.data));
-        this.sess = res.data.sess;
-        this.lang = res.data.lang;
-        this.brow = res.data.brow;
-        this.sys = res.data.sys;
-        this.plat = res.data.plat;
-        this.loc = res.data.loc;
-        this.views = res.data.views;
-        this.view = res.data.view;
-        this.usess = res.data.usess;
-        this.path = res.data.path;
-        this.ref = res.data.ref;
-        this.pvt = res.data.pvt;
-      } catch (e) {
-        this.$error('failed to fetch dashboard data');
-        logError(e);
-      }
-    },
-    /**
-     * init data chart
-     * @param {Array} view views by step
-     * @param {Array} usess unique sessions by step
-     */
-    initChart(view, usess) {
-      this.chart = new Chart(this.$refs.chart, {
-        type: 'bar',
-        data: {
-          labels: view.map((val, index) => `${index}`),
-          datasets: [
-            { label: 'Unique Sessions', data: usess, backgroundColor: '#aba4d3' },
-            { label: 'Page Views', data: view, backgroundColor: '#9db1da' },
-          ],
-        },
-        options: {
-          devicePixelRatio: (window.devicePixelRatio || 1) * 2,
-          maintainAspectRatio: false,
-          scales: {
-            x: { gridLines: { display: false }, stacked: true },
-          },
-          plugins: {
-            legend: { position: 'bottom' },
-          },
-        },
+    async fetchDashboard() {
+      await this.$store.dispatch('dashboard/xaFetchAll', {
+        _id: this.curWebsite,
+        range: this.rangeValue,
+        step: this.rangeStep,
       });
     },
-    /**
-     * update chart data
-     * @param {Array} view views by step
-     * @param {Array} usess unique sessions by step
-     */
-    updateChart(view, usess) {
-      if (this.chart) {
-        this.chart.data.labels = view.map((val, index) => `${index}`);
-        this.chart.data.datasets = [
-          { data: usess, backgroundColor: '#aba4d3' },
-          { data: view, backgroundColor: '#9db1da' },
-        ];
-        this.chart.update();
-      }
-    },
-  },
-  activated() {
-    console.log(this.website);
   },
 };
 </script>
@@ -272,9 +209,6 @@ export default {
   .chart {
     flex: 1 1 auto;
     padding: $space-base;
-  }
-  .ctx-chart {
-    height: 100%;
   }
 }
 </style>

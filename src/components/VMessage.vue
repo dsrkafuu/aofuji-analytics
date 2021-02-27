@@ -13,22 +13,22 @@
  * may use vue 3 teleport feature to mount message inside body
  * instead of using Vue.extend() directly
  */
+import VButton from '@/components/basic/VButton.vue';
+import VIconTimes from '@/assets/icons/times.svg';
+
 export default {
   name: 'VMessage',
-  computed: {
-    messages() {
-      const messages = [...this.$store.state.MESSAGE.messages].reverse();
-      return messages;
-    },
+  components: {
+    VButton,
+    VIconTimes,
+  },
+  data() {
+    return {
+      messages: [],
+    };
   },
   methods: {
-    /**
-     * close this message
-     * @param {string} id
-     */
-    handleClose(id) {
-      this.$store.dispatch('A_CLOSE_MESSAGE', { id });
-    },
+    handleClose() {},
   },
 };
 </script>
@@ -68,8 +68,8 @@ export default {
     box-shadow: var(--shadow-error);
   }
 
-  /* animation */
-  transition: all 500ms ease;
+  // animation
+  transition: all 300ms ease;
 
   &-enter,
   &-leave-to {

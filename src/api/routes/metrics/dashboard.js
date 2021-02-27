@@ -65,7 +65,7 @@ router.get('/', async (req, res) => {
       sessions = [];
     }
     return {
-      sess: sessions[0], // unique sessions count
+      us: sessions[0], // unique user sessions
       lang: sessions[1],
       brow: sessions[2],
       sys: sessions[3],
@@ -147,12 +147,12 @@ router.get('/', async (req, res) => {
       views = [];
     }
     return {
-      views: views[0].reduce((preVal, curVal) => preVal + curVal, 0),
-      view: views[0],
-      usess: views[1],
+      pv: views[0].reduce((preVal, curVal) => preVal + curVal, 0), // total page views
+      pvs: views[0], // page views by step
+      uss: views[1], // sessions by step
       path: views[2],
       ref: views[3],
-      pvt: views[4],
+      pvt: views[4], // average page view time
     };
   };
 
