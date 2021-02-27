@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const buildError = require('../utils/buildError');
