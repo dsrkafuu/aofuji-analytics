@@ -45,13 +45,6 @@
     "vue-router": "~3.5.1",
     "vuex": "~3.6.2"
   },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "npm run lint",
-      "prettier --write"
-    ],
-    "*.{json,css,scss,md}": "prettier --write"
-  },
   "devDependencies": {
     "@babel/core": "^7.13.8",
     "@babel/preset-env": "^7.13.8",
