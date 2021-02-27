@@ -4,14 +4,6 @@
   "description": "Minimal alternative to Google Analytics.",
   "author": "DSRKafuU <dsrkafuu@outlook.com> (https://dsrkafuu.su)",
   "license": "Apache-2.0",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,json,css,scss,md}": "prettier --write"
-  },
   "scripts": {
     "lint:web": "vue-cli-service lint",
     "lint:api": "eslint ./api",
@@ -51,6 +43,9 @@
     "vue": "~2.6.12",
     "vue-router": "~3.5.1",
     "vuex": "~3.6.2"
+  },
+  "lint-staged": {
+    "*.{js,json,css,scss,md}": "prettier --write"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",
