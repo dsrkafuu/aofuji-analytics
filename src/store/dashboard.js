@@ -48,8 +48,8 @@ export default {
     async xaFetchAll({ commit }, payload) {
       const { _id, range, step } = payload;
       // calculate from to
-      const to = 1612846952100; // [DEBUG]
-      // const to = Date.now();
+      // const to = 1612846952100; // [DEBUG]
+      const to = Date.now();
       const from = to - range;
       // fetch data
       const res = await $api.get(
