@@ -8,7 +8,9 @@
     <VList :data="websites" type="extend" custom v-slot="{ item }">
       <div class="v-list-ctrl">
         <div class="v-list-ctrl-item">
-          <VButton @click="handleShowCode(item.id)">CODE</VButton>
+          <VButton @click="handleShowCode(item.id)">
+            <VIconCode />
+          </VButton>
         </div>
         <div class="v-list-ctrl-item">
           <VButton @click="handleEdit(item.id)">
