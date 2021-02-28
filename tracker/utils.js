@@ -1,6 +1,6 @@
 /* constants */
 
-export const LS_KEY = 'vector_sid_9e7c515';
+export const LS_KEY = 'vec_sid';
 export const [INACTIVE, PAUSE, ACTIVE] = [0, -1, 1];
 
 /* utils */
