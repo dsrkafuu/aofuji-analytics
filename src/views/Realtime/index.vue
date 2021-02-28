@@ -39,7 +39,7 @@
 import { mapState } from 'vuex';
 import RealtimeDeviceCategory from './RealtimeDeviceCategory.vue';
 import RealtimeMap from './RealtimeMap.vue';
-import { fmtNumber } from '@/utils/format';
+import { fmtNumber } from '@/utils/formatters';
 
 export default {
   name: 'Realtime',

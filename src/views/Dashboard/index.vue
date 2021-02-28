@@ -78,7 +78,7 @@
 <script>
 import { mapState } from 'vuex';
 import DashboardChart from './DashboardChart.vue';
-import { fmtNumber, fmtTime } from '@/utils/format';
+import { fmtNumber, fmtTime } from '@/utils/formatters';
 
 const rangeMap = {
   LAST_15M: { text: 'Last 15 Minutes', value: 900, step: 60 },
