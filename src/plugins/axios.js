@@ -22,7 +22,7 @@ function requestConfigInterceptor(config) {
 function responseInterceptor(res) {
   const config = res.config;
   const method = config.method.toUpperCase();
-  const src = config.baseURL || '' + config.url;
+  const src = (config.baseURL || '') + config.url;
   const lag = res.headers['x-response-time'];
   logInfo(
     `#${config.id} -> ${method} ${src} (${res.status}) ${lag ? `[${lag}] ` : ''}| ${config.time}`
@@ -33,7 +33,7 @@ function responseInterceptor(res) {
 function responseErrorInterceptor(e) {
   const config = e.config;
   const method = config.method.toUpperCase();
-  const src = config.baseURL || '' + config.url;
+  const src = (config.baseURL || '') + config.url;
   const status = e.response.status || 418;
   logError(`#${config.id} -> ${method} ${src} (${status})} | ${config.time}`);
   $error(`error response ${status}`);
