@@ -42,6 +42,9 @@ export function fmtTime(time) {
   if (typeof time !== 'number') {
     time = Number(time);
   }
+  if (time <= 0) {
+    return '0s';
+  }
 
   // get s/m/h
   let str = '';

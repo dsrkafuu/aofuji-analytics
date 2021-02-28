@@ -101,9 +101,9 @@ export default {
 .row {
   display: flex;
   gap: $space-base;
-  height: 22.25rem;
+  height: $realtime-data-height;
   &-hero {
-    height: 26rem;
+    height: $realtime-hero-height;
   }
 }
 
@@ -135,13 +135,20 @@ export default {
 .data {
   flex: 0 1 32.3%;
 
+  .section {
+    height: $realtime-data-height;
+    display: flex;
+    flex-direction: column;
+  }
   .title {
     padding: $space-lg;
     padding-bottom: 0;
   }
   .ctx {
+    flex: 1 1 auto;
     padding: $space-xs $space-sm;
     padding-bottom: $space-base;
+    position: relative;
   }
 }
 </style>

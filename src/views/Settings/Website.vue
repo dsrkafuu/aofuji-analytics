@@ -5,25 +5,27 @@
         <VIconPlus />
       </VButton>
     </VHeader>
-    <VList :data="websites" type="extend" custom v-slot="{ item }">
-      <div class="v-list-ctrl">
-        <div class="v-list-ctrl-item">
-          <VButton @click="handleShowCode(item.id)">
-            <VIconCode />
-          </VButton>
+    <div class="content">
+      <VList :data="websites" type="extend" custom v-slot="{ item }">
+        <div class="v-list-ctrl">
+          <div class="v-list-ctrl-item">
+            <VButton @click="handleShowCode(item.id)">
+              <VIconCode />
+            </VButton>
+          </div>
+          <div class="v-list-ctrl-item">
+            <VButton @click="handleEdit(item.id)">
+              <VIconEdit />
+            </VButton>
+          </div>
+          <div class="v-list-ctrl-item">
+            <VButton @click="handleDelete(item.id)">
+              <VIconTrash />
+            </VButton>
+          </div>
         </div>
-        <div class="v-list-ctrl-item">
-          <VButton @click="handleEdit(item.id)">
-            <VIconEdit />
-          </VButton>
-        </div>
-        <div class="v-list-ctrl-item">
-          <VButton @click="handleDelete(item.id)">
-            <VIconTrash />
-          </VButton>
-        </div>
-      </div>
-    </VList>
+      </VList>
+    </div>
     <VModal type="alert" :show="Boolean(showCodeID)" @confirm="handleCloseCode" custom>
       <div class="code">
         <pre class="code-pre" v-text="fmtCode(showCodeID)"></pre>
@@ -111,6 +113,10 @@ export default {
 <style lang="scss" scoped>
 .website {
   margin: $space-lg;
+}
+.content {
+  position: relative;
+  min-height: 3rem;
 
   .v-list-ctrl {
     flex: 0 0 auto;
@@ -118,21 +124,21 @@ export default {
     width: 12rem;
     justify-content: center;
   }
+}
 
-  .code {
-    width: 100%;
-    height: 100%;
-    margin-bottom: $space-sm;
+.code {
+  width: 100%;
+  height: 100%;
+  margin-bottom: $space-sm;
 
-    &-pre {
-      border-radius: $radius;
-      font-family: $font-family-mono;
-      margin: 0;
-      background-color: var(--color-wrapper);
-      padding: $space-sm;
-      overflow-x: auto;
-      font-size: $font-size-sm;
-    }
+  &-pre {
+    border-radius: $radius;
+    font-family: $font-family-mono;
+    margin: 0;
+    background-color: var(--color-wrapper);
+    padding: $space-sm;
+    overflow-x: auto;
+    font-size: $font-size-sm;
   }
 }
 </style>

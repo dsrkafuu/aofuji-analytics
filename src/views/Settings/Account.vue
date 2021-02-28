@@ -5,17 +5,19 @@
         <VIconCheck />
       </VButton>
     </VHeader>
-    <div class="line">
-      <span class="keyname">ID</span>
-      <VLabel>{{ id }}</VLabel>
-    </div>
-    <div class="line">
-      <span class="keyname">Username</span>
-      <VInput class="name" v-model="username" :validator="validUsername" />
-    </div>
-    <div class="line">
-      <span class="keyname">Password</span>
-      <VInput class="pass" v-model="password" type="password" :validator="validPassword" />
+    <div class="content">
+      <div class="line">
+        <span class="keyname">ID</span>
+        <VLabel>{{ id }}</VLabel>
+      </div>
+      <div class="line">
+        <span class="keyname">Username</span>
+        <VInput class="name" v-model="username" :validator="validUsername" />
+      </div>
+      <div class="line">
+        <span class="keyname">Password</span>
+        <VInput class="pass" v-model="password" type="password" :validator="validPassword" />
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +77,10 @@ export default {
 <style lang="scss" scoped>
 .account {
   padding: $space-lg;
+}
+.content {
+  position: relative;
+  min-height: 3rem;
 }
 
 .line {

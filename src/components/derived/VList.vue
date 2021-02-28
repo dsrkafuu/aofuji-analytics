@@ -1,5 +1,6 @@
 <template>
   <div :class="['v-list', `v-list-${type}`]">
+    <VNoData v-if="noData" />
     <div class="v-list-item" v-for="item of data" :key="item.key || item.id || item[0]">
       <!-- key-value pair list -->
       <template v-if="Array.isArray(item) && item.length === 2">
@@ -53,6 +54,11 @@ export default {
       default: 'default', // common list by default
     },
     custom: Boolean, // custom list
+  },
+  computed: {
+    noData() {
+      return this.data.length <= 0;
+    },
   },
 };
 </script>

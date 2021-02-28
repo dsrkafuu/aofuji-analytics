@@ -1,5 +1,6 @@
 <template>
   <div class="section">
+    <VNoData v-if="noData" />
     <div class="ctx ctx-chart">
       <canvas ref="chartRef"></canvas>
     </div>
@@ -24,6 +25,9 @@ export default {
   computed: {
     data() {
       return [this.pvsData, this.ussData];
+    },
+    noData() {
+      return this.pvsData.reduce((preVal, curVal) => preVal + curVal, 0) <= 0;
     },
   },
   watch: {
@@ -81,6 +85,7 @@ export default {
 <style lang="scss" scoped>
 .section,
 .ctx-chart {
+  position: relative;
   height: 100%;
 }
 </style>

@@ -69,6 +69,7 @@ export default {
   user-select: none;
   min-width: $select-min-width;
   max-width: $select-max-width;
+  font-size: $font-size-sm;
 
   &-input {
     margin: $space-xs $space-xs * 1.75;

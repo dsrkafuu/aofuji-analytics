@@ -173,7 +173,8 @@ export default {
   .row {
     display: flex;
     gap: $space-base;
-    height: 22.25rem;
+    height: $dashboard-data-height;
+
     &-prim {
       .data:first-child {
         flex: 1 1 60%;
@@ -191,6 +192,7 @@ export default {
   }
   .ctx {
     margin-top: $space-sm;
+    position: relative;
 
     &-rg {
       margin-top: $space-xs !important;
@@ -210,13 +212,21 @@ export default {
 
   .data {
     flex: 0 1 32.3%;
+
+    .section {
+      display: flex;
+      height: $realtime-data-height;
+      flex-direction: column;
+    }
     .title {
       padding: $space-lg;
       padding-bottom: 0;
     }
     .ctx {
+      flex: 1 1 auto;
       padding: $space-xs $space-sm;
       padding-bottom: $space-base;
+      position: relative;
     }
   }
 

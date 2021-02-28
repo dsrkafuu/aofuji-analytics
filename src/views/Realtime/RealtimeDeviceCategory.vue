@@ -2,6 +2,7 @@
   <div class="section">
     <div class="title">Device Category</div>
     <div class="ctx ctx-dc">
+      <VNoData v-if="noData" />
       <canvas ref="deviceCategoryRef"></canvas>
     </div>
   </div>
@@ -21,6 +22,11 @@ export default {
     return {
       chart: null,
     };
+  },
+  computed: {
+    noData() {
+      return this.data.length <= 0;
+    },
   },
   watch: {
     data(data) {
@@ -71,7 +77,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.section {
+  flex: 1 1 auto;
+  position: relative;
+}
+
 .ctx-dc {
+  position: relative;
+  height: 90%;
   padding-top: $space-sm;
   max-width: 14.5rem;
   margin: 0 auto;

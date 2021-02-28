@@ -1,5 +1,6 @@
 <template>
   <div class="section">
+    <VNoData v-if="noData" />
     <div class="ctx ctx-map">
       <canvas ref="mapRef"></canvas>
     </div>
@@ -22,6 +23,11 @@ export default {
       topoStatus: null, // topojson init status
       chart: null,
     };
+  },
+  computed: {
+    noData() {
+      return this.data.length <= 0;
+    },
   },
   watch: {
     data(data) {
@@ -121,8 +127,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ctx-map {
+.section {
   position: relative;
-  top: -3.25rem;
+  overflow: hidden;
+  height: 100%;
+}
+
+.ctx-map {
+  position: absolute;
+  top: -18%;
+  left: 0;
+  right: 0;
 }
 </style>
