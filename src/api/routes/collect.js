@@ -79,25 +79,33 @@ const route = async (req, res) => {
 
   // find session
   let newSession = false;
-  let session = null;
-  // find by id
-  if (sid) {
-    try {
-      session = await Session.findById(sid);
-    } catch {
-      session = null;
+  const findByID = async () => {
+    let session = null;
+    if (sid) {
+      try {
+        session = await Session.findById(sid);
+      } catch {
+        session = null;
+      }
+      !session && (session = null);
     }
-    !session && (session = null);
-  }
-  // find by ip
-  if (!session && clientIP) {
-    try {
-      session = await Session.findOne({ ip: clientIP, _website: website._id });
-    } catch {
-      session = null;
+    return session;
+  };
+  const findByIP = async () => {
+    let session = null;
+    if (clientIP) {
+      try {
+        session = await Session.findOne({ ip: clientIP, _website: website._id });
+      } catch {
+        session = null;
+      }
+      !session && (session = null);
     }
-    !session && (session = null);
-  }
+    return session;
+  };
+  // find by id and ip in parallel
+  const sessions = await Promise.all([findByID(), findByIP()]);
+  let session = sessions[0] || sessions[1] || null;
   // still not found, create new session
   if (!session) {
     if (type === 'view') {
@@ -188,6 +196,7 @@ const route = async (req, res) => {
           }
         };
 
+        // save view and update session in parallel
         await Promise.all([saveView(), saveSession()]);
       } catch {
         throw buildError(500, 'error processing view data');
