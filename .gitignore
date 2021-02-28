@@ -1,5 +1,6 @@
 # built files
 dist/
+lib/
 
 # extracted geo db files
 api/assets/*.mmdb

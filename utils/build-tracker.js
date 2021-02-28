@@ -1,38 +1,44 @@
 const path = require('path');
 const fs = require('fs');
+const esbuild = require('esbuild');
 const babel = require('@babel/core');
 const terser = require('terser').minify;
+
 const fileName = process.env.VUE_APP_TRACKER_FILENAME || 'vector.min.js';
 
 /**
  * build tracker to `dist`
  */
 async function buildTracker() {
-  const script = path.resolve(__dirname, '../src/tracker.js');
-  const folder = path.resolve(__dirname, '../dist');
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder);
-  }
-  let content = fs.readFileSync(script, { encoding: 'utf-8' });
+  // output esm file
+  esbuild.buildSync({
+    entryPoints: ['tracker/index.esm.js'],
+    outfile: 'lib/index.esm.js',
+    format: 'esm',
+    target: 'es2020',
+    bundle: true,
+    sourcemap: true,
+  });
 
-  // babel
-  const result = babel.transformSync(content, {
+  // build
+  esbuild.buildSync({
+    entryPoints: ['tracker/index.js'],
+    outfile: `dist/${fileName}`,
+    format: 'iife',
+    target: 'es2020',
+  });
+  const output = path.resolve(__dirname, `../dist/${fileName}`);
+  let content = fs.readFileSync(output, { encoding: 'utf-8' });
+
+  // transform
+  content = babel.transformSync(content, {
     // prevent from using vue app's babel config
-    configFile: path.resolve(__dirname, '../babel.tracker.json'),
-  });
-  content = result.code;
+    configFile: path.resolve(__dirname, '../tracker/babel.config.json'),
+  }).code;
 
-  // terser
-  await new Promise((resolve, reject) => {
-    try {
-      terser(content).then((result) => {
-        fs.writeFileSync(path.join(folder, fileName), result.code);
-        resolve();
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+  // minify
+  const result = await terser(content);
+  fs.writeFileSync(output, result.code);
 }
 
 module.exports = buildTracker;
