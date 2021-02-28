@@ -1,17 +1,15 @@
-# built files
+# output
 dist/
 lib/
-
-# extracted geo db files
 api/assets/*.mmdb
 api/assets/*.tar.gz
 
-# production env
+# env
 .env.production
 
-# local env files
-.env.local
-.env.*.local
+# deps
+node_modules/
+.vercel
 
 # system
 Thumbs.db
@@ -20,13 +18,6 @@ Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
 
-# npm files
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
 # editor directories and files
 .idea
 *.suo
@@ -34,5 +25,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-.vercel

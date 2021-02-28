@@ -1,4 +1,4 @@
-/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) Apache-2.0 License */
+/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) MIT License */
 require('../utils/env')();
 
 const app = require('../src/api');

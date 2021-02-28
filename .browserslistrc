@@ -1,9 +1,10 @@
+# common browsers list support
 # https://github.com/browserslist/browserslist#full-list
 
 > 0.5%
 last 2 major versions
 firefox esr
 not dead
-not edge <= 18
-not ie <= 11
-not op_mini all
+not edge <= 18         # legacy edge not supported
+not ie <= 11           # fuck off ie
+not op_mini all        # lack of data
