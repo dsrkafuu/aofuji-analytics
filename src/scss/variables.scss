@@ -1,5 +1,5 @@
 $font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-$font-family-mono: 'Fira Code', monospace;
+$font-family-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
 
 $font-size-base: 16px;
 
@@ -36,3 +36,6 @@ $select-height: 2rem;
 $select-inner-height: 1.5rem;
 $select-min-width: 12rem;
 $select-max-width: 20rem;
+
+$modal-min-width: 20rem;
+$modal-min-height: 8rem;

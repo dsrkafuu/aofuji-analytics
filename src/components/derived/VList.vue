@@ -18,19 +18,6 @@
             <VLabel>{{ item.label }}</VLabel>
           </span>
         </div>
-        <div class="v-list-ctrl" v-if="control">
-          <div class="v-list-ctrl-item">
-            <VButton @click="$emit('edit', item.id)">
-              <VIconEdit />
-            </VButton>
-          </div>
-          <div class="v-list-ctrl-item">
-            <VButton @click="$emit('delete', item.id)">
-              <VIconTrash />
-            </VButton>
-          </div>
-        </div>
-        <slot :item="item"></slot>
       </template>
       <!-- custom row item -->
       <template v-if="custom">
@@ -65,7 +52,6 @@ export default {
       },
       default: 'default', // common list by default
     },
-    control: Boolean, // show control buttons
     custom: Boolean, // custom list
   },
 };
@@ -100,13 +86,6 @@ export default {
     flex: 0 0 auto;
     width: 4.5rem;
     text-align: center;
-  }
-
-  &-ctrl {
-    flex: 0 0 auto;
-    display: flex;
-    width: 8rem;
-    justify-content: center;
   }
 
   /* dense list */

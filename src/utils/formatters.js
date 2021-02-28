@@ -66,3 +66,21 @@ export function fmtTime(time) {
 
   return str;
 }
+
+export function fmtCode(id = '') {
+  const origin = window.location.origin;
+  let base = process.env.VUE_APP_BASE_URL || '/';
+  if (!base.startsWith('/')) {
+    base = '/' + base;
+  }
+  if (base.endsWith('/') && base !== '/') {
+    base += '/';
+  }
+
+  return `<script
+  async
+  data-vaid="${id}"
+  data-vaapi="${origin + base}api"
+  src="https://cdn.jsdelivr.net/npm/vector-tracker@0.1/lib/vector.min.js"
+></script>`;
+}
