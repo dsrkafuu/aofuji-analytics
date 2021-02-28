@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { validUsername, validPassword } from '@/utils/validators.js';
+import { validUsername, validPassword } from '@/utils/validators';
 
 export default {
   name: 'Account',
@@ -30,9 +30,6 @@ export default {
       id: '',
       username: '',
       password: '',
-      // functions
-      validUsername,
-      validPassword,
     };
   },
   computed: {
@@ -44,6 +41,8 @@ export default {
     this.fetchAccount();
   },
   methods: {
+    validUsername,
+    validPassword,
     /**
      * fetch account data when first mounted
      */

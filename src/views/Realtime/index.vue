@@ -4,7 +4,7 @@
       <VCard class="count">
         <div class="section">
           <div class="title">Active Users</div>
-          <div class="ctx ctx-au">{{ activeUsers }}</div>
+          <div class="ctx ctx-au">{{ fmtNumber(activeUsers) }}</div>
         </div>
         <RealtimeDeviceCategory :data="deviceCategorys" />
       </VCard>
@@ -39,6 +39,7 @@
 import { mapState } from 'vuex';
 import RealtimeDeviceCategory from './RealtimeDeviceCategory.vue';
 import RealtimeMap from './RealtimeMap.vue';
+import { fmtNumber } from '@/utils/format';
 
 export default {
   name: 'Realtime',
@@ -78,6 +79,7 @@ export default {
     }
   },
   methods: {
+    fmtNumber,
     /**
      * fetch realtime data
      */

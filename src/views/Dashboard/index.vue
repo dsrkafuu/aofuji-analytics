@@ -9,15 +9,15 @@
         </div>
         <div class="section">
           <div class="title">Page Views</div>
-          <div class="ctx ctx-pv">{{ pageViews }}</div>
+          <div class="ctx ctx-pv">{{ fmtNumber(pageViews) }}</div>
         </div>
         <div class="section">
           <div class="title">Unique Visitors</div>
-          <div class="ctx ctx-us">{{ uniqueSessions }}</div>
+          <div class="ctx ctx-us">{{ fmtNumber(uniqueSessions) }}</div>
         </div>
         <div class="section">
           <div class="title">Avg. View Time</div>
-          <div class="ctx ctx-pvt">{{ pageViewTime }}</div>
+          <div class="ctx ctx-pvt">{{ fmtTime(pageViewTime) }}</div>
         </div>
       </VCard>
       <VCard class="chart">
@@ -78,6 +78,7 @@
 <script>
 import { mapState } from 'vuex';
 import DashboardChart from './DashboardChart.vue';
+import { fmtNumber, fmtTime } from '@/utils/format';
 
 const rangeMap = {
   LAST_15M: { text: 'Last 15 Minutes', value: 900, step: 60 },
@@ -146,6 +147,8 @@ export default {
     }
   },
   methods: {
+    fmtNumber,
+    fmtTime,
     /**
      * fetch dashboard data
      */

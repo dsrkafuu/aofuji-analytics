@@ -29,9 +29,6 @@ export default {
     return {
       username: '',
       password: '',
-      // functions
-      validUsername,
-      validPassword,
     };
   },
   computed: {
@@ -41,6 +38,11 @@ export default {
     },
   },
   methods: {
+    validUsername,
+    validPassword,
+    /**
+     * go login
+     */
     async handleLogin() {
       // validators
       if (!this.username || !validUsername(this.username)) {
