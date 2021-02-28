@@ -62,9 +62,7 @@ const route = async (req, res) => {
   if (process.env.NODE_ENV === 'production') {
     const [r1, r2, r3] = await Promise.all([checkOrigin(), checkIP(), checkBot()]);
     if (!(r1 && r2 && r3)) {
-      res.set('Content-Length', 0);
-      res.status(202).send();
-      return; // remember to return
+      throw buildError(403, 'request origin, ip or ua not allowed');
     }
   }
 
@@ -82,22 +80,17 @@ const route = async (req, res) => {
   // find session
   let newSession = false;
   let session = null;
+  // find by id
   if (sid) {
     try {
       session = await Session.findById(sid);
     } catch {
       session = null;
-      if (clientIP) {
-        try {
-          session = await Session.findOne({ ip: clientIP, _website: website._id });
-        } catch {
-          session = null;
-        }
-        !session && (session = null);
-      }
     }
     !session && (session = null);
-  } else if (clientIP) {
+  }
+  // find by ip
+  if (!session && clientIP) {
     try {
       session = await Session.findOne({ ip: clientIP, _website: website._id });
     } catch {
@@ -105,7 +98,7 @@ const route = async (req, res) => {
     }
     !session && (session = null);
   }
-  // create new session
+  // still not found, create new session
   if (!session) {
     if (type === 'view') {
       session = await Session.create({ _date: date, ip: clientIP, _website: website._id });
