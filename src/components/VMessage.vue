@@ -22,12 +22,14 @@ export default {
     VButton,
     VIconTimes,
   },
+
   // data and method from outer `Vue.extend()`
   data() {
     return {
       messages: [],
     };
   },
+
   methods: {
     handleClose() {},
   },

@@ -32,6 +32,7 @@
 <script>
 export default {
   name: 'VList',
+
   props: {
     data: {
       type: Array,

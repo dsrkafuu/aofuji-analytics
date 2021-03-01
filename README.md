@@ -1,20 +1,10 @@
 # Vector Analytics
 
-\[WIP\] Minimal alternative to Google Analytics.
+Minimal alternative to Google Analytics based on Vue.js and MongoDB.
 
 ## About Vue.js v2
 
 Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem is not stable yet.
-
-Options API prop order:
-
-```
-render
-name => components
-props => data => computed => watch
-lifecycle functions
-methods
-```
 
 ## Bypass Blocker Extensions
 
@@ -23,21 +13,6 @@ Add `VUE_APP_TRACKER_FILENAME` environment variable to customize the tracker scr
 ```
 VUE_APP_TRACKER_FILENAME="jquery.min.js"
 ```
-
-## Contribute
-
-First you need to fork this repo and clone it. Then create a `.env.development` then set the development environment variables below.
-
-Note that this project uses [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged) to format source code, so the git commands may be slow due to the Prettier formatting workflow.
-
-After these, you can simply:
-
-```bash
-npm install
-npm run dev
-```
-
-Check the [Environment Variables](#environment-variables) section for more details.
 
 ## Environment Variables
 
@@ -50,6 +25,14 @@ VUE_APP_TRACKER_FILENAME="goose.min.js" # tracker script file name
 VUE_APP_TITLE="Vector Analytics" # app title on control panel
 ```
 
+### Production
+
+Production mode needs `npm run build` first. Both the API server and website files built are provided by express.js on port `SERVER_PORT`.
+
+```
+VUE_APP_BASE_URL="/"
+```
+
 ### Development
 
 In development mode, the website itself is provided by Vue CLI on `SERVER_PORT`.
@@ -60,13 +43,40 @@ Difference is that the API server is deployed on `SERVER_API_PORT` without stati
 SERVER_API_PORT=3001
 ```
 
-### Production
+## Contribute
 
-Production mode needs `npm run build` first. Both the API server and website files built are provided by express.js on port `SERVER_PORT`.
+First you need to fork this repo and clone it.
+
+Then create a `.env.development` then set the development environment variables above. Check the [Environment Variables](#environment-variables) section for more details.
+
+After these, you can simply:
+
+```bash
+npm install
+npm run dev
+```
+
+Local MongoDB Server is also needed.
+
+### Code Style
+
+This project uses [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged) to format source code, so the git commands may be slow due to the [Prettier](https://prettier.io) formatting workflow.
+
+#### Options API Props Order
 
 ```
-VUE_APP_BASE_URL="/"
+render
+name => components
+props => data => computed => watch
+lifecycle functions
+methods
 ```
+
+#### SCSS Scopes
+
+All basic components in `@/components` should not use scoped styles, styles of those needs to be named like `v-component-ctx`.
+
+Alternatively, all view components in `@/views` should use scoped styles.
 
 ## License
 

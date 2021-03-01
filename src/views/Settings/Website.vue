@@ -39,6 +39,7 @@ import { fmtCode } from '@/utils/formatters';
 
 export default {
   name: 'Website',
+
   data() {
     return {
       showCode: false,
@@ -65,9 +66,11 @@ export default {
       return ret;
     },
   },
+
   async mounted() {
     await this.fetchWebsites();
   },
+
   methods: {
     fmtCode,
     /**
@@ -121,6 +124,7 @@ export default {
 .website {
   margin: $space-lg;
 }
+
 .content {
   position: relative;
   min-height: 3rem;

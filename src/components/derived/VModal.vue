@@ -6,7 +6,7 @@
           <slot></slot>
         </template>
         <template v-else>
-          <span class="v-modal-text">111</span>
+          <span class="v-modal-text">{{ value }}</span>
         </template>
       </div>
       <div class="v-modal-ctrl">
@@ -37,6 +37,7 @@ export default {
       },
       default: 'confirm', // confirm modal by default
     },
+    value: { type: String },
     custom: { type: Boolean }, // custom modal body
   },
 };
@@ -69,6 +70,7 @@ export default {
     justify-content: flex-end;
     align-items: center;
   }
+
   &-body {
     position: relative;
     flex: 1 1 auto;
@@ -76,6 +78,7 @@ export default {
     justify-content: center;
     align-items: center;
   }
+
   &-text {
     display: block;
     text-align: center;

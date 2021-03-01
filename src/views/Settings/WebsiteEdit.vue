@@ -118,12 +118,14 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 $space-sm;
+
   .v-label,
   .v-input {
     margin: 0 !important;
     min-width: 20rem;
     text-align: left;
   }
+
   .v-label {
     font-size: $font-size-sm;
     height: 2rem;
@@ -131,6 +133,7 @@ export default {
     padding: 0 $space-xs * 1.75;
   }
 }
+
 .keyname {
   font-weight: 500;
   height: 2.5rem;

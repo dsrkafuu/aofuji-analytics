@@ -18,9 +18,11 @@ export default {
   components: {
     Navbar,
   },
+
   async mounted() {
     await this.fetchCommon();
   },
+
   methods: {
     /**
      * fetch common data, etc. websites

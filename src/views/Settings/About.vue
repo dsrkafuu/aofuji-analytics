@@ -15,11 +15,13 @@ import { cloneDeep } from '@/utils/lodash';
 
 export default {
   name: 'About',
+
   data() {
     return {
       testData: null,
     };
   },
+
   methods: {
     async handleTest() {
       const res = await this.$api.get('/admin/debug?cache=0');
@@ -39,6 +41,7 @@ export default {
   margin-left: $space-sm;
   margin-right: $space-sm;
 }
+
 .test-api pre {
   margin: $space-base;
   font-size: $font-size-xs;

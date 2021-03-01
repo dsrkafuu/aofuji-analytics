@@ -12,8 +12,9 @@
 <script>
 export default {
   name: 'VHeader',
+
   props: {
-    text: String,
+    text: { type: String },
   },
 };
 </script>

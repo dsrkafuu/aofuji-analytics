@@ -47,6 +47,7 @@
 <script>
 export default {
   name: 'Navbar',
+
   computed: {
     // site title from environment variables
     siteTitle() {
@@ -83,6 +84,7 @@ export default {
       },
     },
   },
+
   methods: {
     /**
      * switch the theme
@@ -115,34 +117,38 @@ export default {
   @media screen and (max-width: $responsive-tablet + $responsive-offset) {
     height: $navbar-height-sm * 2;
   }
+}
 
-  .brand {
-    flex: 0 0 auto;
-    font-size: $font-size-md;
-    font-weight: 500;
-    .navbar-item {
-      padding: 0 $space-lg;
-      color: var(--color-font) !important;
-    }
-  }
+.brand {
+  flex: 0 0 auto;
+  font-size: $font-size-md;
+  font-weight: 500;
 
-  .menu {
-    flex: 1 1 auto;
-    display: flex;
+  .navbar-item {
+    padding: 0 $space-lg;
+    color: var(--color-font) !important;
   }
-  .select {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .start {
-    flex: 1 1 auto;
-    display: flex;
-  }
-  .end {
-    flex: 0 0 auto;
-    display: flex;
-    gap: $space-sm;
-  }
+}
+
+.menu {
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.select {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.start {
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.end {
+  flex: 0 0 auto;
+  display: flex;
+  gap: $space-sm;
 }
 </style>

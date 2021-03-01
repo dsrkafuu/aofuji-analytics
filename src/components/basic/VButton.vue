@@ -13,7 +13,7 @@ export default {
         ...this.$attrs,
       },
       on: {
-        click: this.onClick,
+        click: this.handleClick,
       },
     };
 
@@ -27,20 +27,22 @@ export default {
     const slot = this.$slots.default;
     return h(tag, options, this.loading ? icon : slot);
   },
+
   name: 'VButton',
+
   props: {
-    href: String,
-    active: Boolean,
-    disabled: Boolean,
-    external: Boolean,
-    loading: Boolean,
     type: {
       type: String,
       validator: (val) => {
-        return ['full-width', 'full-height', 'default'].includes(val); // button type available
+        return ['full-width', 'full-height', 'default'].includes(val);
       },
       default: 'default', // common button by default
     },
+    href: { type: String },
+    active: { type: Boolean },
+    disabled: { type: Boolean },
+    external: { type: Boolean },
+    loading: { type: Boolean },
   },
   computed: {
     buttonClasses() {
@@ -55,8 +57,9 @@ export default {
       ];
     },
   },
+
   methods: {
-    onClick(e) {
+    handleClick(e) {
       if (!this.disabled && !this.loading) {
         this.$emit('click', e);
       }

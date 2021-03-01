@@ -16,6 +16,7 @@
 <script>
 export default {
   name: 'VSelect',
+
   props: {
     map: {
       type: Object,
@@ -36,6 +37,7 @@ export default {
       return this.map[this.value] ? this.map[this.value].text : '';
     },
   },
+
   methods: {
     /**
      * switch active status

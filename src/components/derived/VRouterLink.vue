@@ -14,6 +14,7 @@
 <script>
 export default {
   name: 'VRouterLink',
+
   props: {
     to: [String, Object],
     type: String,

@@ -43,6 +43,7 @@ export default {
     Account,
     About,
   },
+
   data() {
     return {
       curTab: 'website',
@@ -59,6 +60,7 @@ export default {
       }
     },
   },
+
   activated() {
     // fix missing tab query
     const query = this.$route.query.tab;
@@ -68,6 +70,7 @@ export default {
       this.$router.replace({ query: { tab: this.curTab } });
     }
   },
+
   methods: {
     /**
      * change current tab
@@ -96,10 +99,12 @@ export default {
 
 .ctrl {
   flex: 0 0 20%;
+
   .v-card {
     padding: $space-base 0;
   }
 }
+
 .content {
   flex: 1 1 auto;
   margin-left: $space-lg;
