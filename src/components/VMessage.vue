@@ -37,6 +37,7 @@ export default {
 <style lang="scss">
 .v-message {
   &-wrapper {
+    z-index: 99;
     position: fixed;
     right: 2rem;
     bottom: 2rem;

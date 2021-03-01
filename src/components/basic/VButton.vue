@@ -23,7 +23,8 @@ export default {
       options.attrs.rel = 'noopener';
     }
 
-    return h(tag, options, this.$slots.default);
+    const children = this.loading ? [h('VIconCircle')] : this.$slots.default;
+    return h(tag, options, children);
   },
   name: 'VButton',
   props: {
@@ -31,6 +32,7 @@ export default {
     active: Boolean,
     disabled: Boolean,
     external: Boolean,
+    loading: Boolean,
     type: {
       type: String,
       validator: (val) => {
@@ -46,16 +48,15 @@ export default {
         `v-button-${this.type}`,
         {
           'v-button-disabled': this.disabled,
-        },
-        {
           'v-button-active': this.active,
+          'v-button-loading': this.loading,
         },
       ];
     },
   },
   methods: {
     onClick(e) {
-      if (!this.disabled) {
+      if (!this.disabled && !this.loading) {
         this.$emit('click', e);
       }
     },
@@ -108,6 +109,26 @@ export default {
   &-disabled:hover {
     cursor: not-allowed;
     background-color: transparent;
+  }
+
+  &-loading {
+    &:hover {
+      cursor: wait;
+      background-color: transparent;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .v-icon {
+      animation: spin 1s infinite linear;
+    }
   }
 }
 </style>

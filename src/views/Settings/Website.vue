@@ -19,7 +19,7 @@
             </VButton>
           </div>
           <div class="v-list-ctrl-item">
-            <VButton @click="handleDelete(item.id)">
+            <VButton @click="handleDelete(item.id)" :loading="item.id === awaitingDelete">
               <VIconTrash />
             </VButton>
           </div>
@@ -43,6 +43,7 @@ export default {
     return {
       showCode: false,
       showCodeID: '',
+      awaitingDelete: '',
     };
   },
   computed: {
@@ -91,7 +92,9 @@ export default {
      * @param {string} _id
      */
     async handleDelete(_id) {
+      this.awaitingDelete = _id;
       await this.$store.dispatch('settings/xaDeleteWebsite', { _id });
+      this.awaitingDelete = '';
     },
     /**
      * handle get tracker code

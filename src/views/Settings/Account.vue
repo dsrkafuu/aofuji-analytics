@@ -1,7 +1,7 @@
 <template>
   <div class="account">
     <VHeader text="Account">
-      <VButton @click="handleCheck">
+      <VButton @click="handleCheck" :loading="awaitingCheck">
         <VIconCheck />
       </VButton>
     </VHeader>
@@ -27,11 +27,14 @@ import { validUsername, validPassword } from '@/utils/validators';
 
 export default {
   name: 'Account',
+
   data() {
     return {
       id: '',
       username: '',
       password: '',
+
+      awaitingCheck: false,
     };
   },
   computed: {
@@ -39,9 +42,11 @@ export default {
       return this.$store.state.common.account;
     },
   },
+
   mounted() {
     this.fetchAccount();
   },
+
   methods: {
     validUsername,
     validPassword,
@@ -56,12 +61,15 @@ export default {
      * modify account data
      */
     async handleCheck() {
+      this.awaitingCheck = true;
       if (!this.username || !validUsername(this.username)) {
         this.$error('not a valid username');
+        this.awaitingCheck = false;
         return;
       }
       if (!this.password || !validPassword(this.password)) {
         this.$error('not a valid password');
+        this.awaitingCheck = false;
         return;
       }
       await this.$store.dispatch('settings/xaPutAccount', {
@@ -69,6 +77,7 @@ export default {
         username: this.username,
         password: this.password,
       });
+      this.awaitingCheck = false;
     },
   },
 };

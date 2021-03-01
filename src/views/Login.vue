@@ -15,7 +15,9 @@
           @keyup.enter="handleLogin"
         />
       </div>
-      <VButton class="submit" type="full-width" @click="handleLogin">Login</VButton>
+      <VButton class="submit" type="full-width" @click="handleLogin" :loading="awaitingLogin">
+        Login
+      </VButton>
     </VCard>
   </div>
 </template>
@@ -25,10 +27,13 @@ import { validUsername, validPassword } from '@/utils/validators';
 
 export default {
   name: 'Login',
+
   data() {
     return {
       username: '',
       password: '',
+
+      awaitingLogin: false,
     };
   },
   computed: {
@@ -37,6 +42,7 @@ export default {
       return process.env.VUE_APP_TITLE || 'Goose Analytics';
     },
   },
+
   methods: {
     validUsername,
     validPassword,
@@ -44,13 +50,16 @@ export default {
      * go login
      */
     async handleLogin() {
+      this.awaitingLogin = true;
       // validators
       if (!this.username || !validUsername(this.username)) {
         this.$error('not a valid username');
+        this.awaitingLogin = false;
         return;
       }
       if (!this.password || !validPassword(this.password)) {
         this.$error('not a valid password');
+        this.awaitingLogin = false;
         return;
       }
       // post login
@@ -58,6 +67,7 @@ export default {
         username: this.username,
         password: this.password,
       });
+      this.awaitingLogin = false;
       // redirect to dashboard
       this.$router.push({
         name: 'Dashboard',

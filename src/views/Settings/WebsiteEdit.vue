@@ -4,7 +4,7 @@
       <VButton @click="handleExit">
         <VIconTimes />
       </VButton>
-      <VButton @click="handleCheck">
+      <VButton @click="handleCheck" :loading="awaitingCheck">
         <VIconCheck />
       </VButton>
     </VHeader>
@@ -30,12 +30,15 @@
 <script>
 export default {
   name: 'WebsiteEdit',
+
   data() {
     return {
       name: '',
       url: '',
       base: '',
       isPublic: false,
+
+      awaitingCheck: false,
     };
   },
   computed: {
@@ -43,6 +46,7 @@ export default {
       return this.$store.state.settings.editWebsite?._id;
     },
   },
+
   activated() {
     // if editing instead of creating
     if (this._id) {
@@ -55,7 +59,10 @@ export default {
     this.url = '';
     this.base = '';
     this.isPublic = false;
+
+    this.awaitingCheck = false;
   },
+
   methods: {
     /**
      * init website data with id when activated
@@ -73,6 +80,7 @@ export default {
      * add a new website or modify website data
      */
     async handleCheck() {
+      this.awaitingCheck = true;
       if (this._id) {
         await this.$store.dispatch('settings/xaPutWebsite', {
           name: this.name,
@@ -88,6 +96,7 @@ export default {
           isPublic: this.isPublic,
         });
       }
+      this.awaitingCheck = false;
       this.handleExit();
     },
     /**
