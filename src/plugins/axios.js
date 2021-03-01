@@ -36,7 +36,13 @@ function responseErrorInterceptor(e) {
   const src = (config.baseURL || '') + config.url;
   const status = e.response.status || 418;
   logError(`#${config.id} -> ${method} ${src} (${status})} | ${config.time}`);
-  $error(`error response ${status}`);
+  // log error except login request
+  if (!src.endsWith('api/login')) {
+    $error(`error response ${status}`);
+    return Promise.resolve();
+  } else {
+    return Promise.reject(e);
+  }
 }
 
 // api
@@ -44,10 +50,7 @@ let baseURL = process.env.VUE_APP_BASE_URL || '/';
 if (!baseURL.endsWith('/')) {
   baseURL += '/';
 }
-const api = axios.create({
-  baseURL: `${baseURL}api`,
-  withCredentials: true,
-});
+const api = axios.create({ baseURL: `${baseURL}api`, withCredentials: true });
 api.interceptors.request.use(requestConfigInterceptor);
 api.interceptors.response.use(responseInterceptor, responseErrorInterceptor);
 

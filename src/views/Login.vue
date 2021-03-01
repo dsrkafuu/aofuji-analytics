@@ -24,6 +24,7 @@
 
 <script>
 import { validUsername, validPassword } from '@/utils/validators';
+import { $error } from '@/plugins/message';
 
 export default {
   name: 'Login',
@@ -62,11 +63,17 @@ export default {
         this.awaitingLogin = false;
         return;
       }
-      // post login
-      await this.$store.dispatch('common/xaPostLogin', {
-        username: this.username,
-        password: this.password,
-      });
+      try {
+        // post login
+        await this.$store.dispatch('common/xaPostLogin', {
+          username: this.username,
+          password: this.password,
+        });
+      } catch {
+        this.awaitingLogin = false;
+        $error('wrong username or password');
+        return;
+      }
       this.awaitingLogin = false;
       // redirect to dashboard
       this.$router.push({
