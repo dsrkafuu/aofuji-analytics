@@ -8,9 +8,10 @@
 </template>
 
 <script>
-import { CHART_MAP_TOPOJSON, CHART_MAP_PIXEL_RATIO } from '@/utils/constants';
+import { CHART_MAP_TOPOJSON, CHART_MAP_PIXEL_RATIO, STORAGE_TOPOJSON } from '@/utils/constants';
 import { Chart, topojson } from '@/utils/chartjs';
 import { fromPairs } from '@/utils/lodash';
+import { setLS, getLS } from '@/utils/storage';
 
 export default {
   name: 'RealtimeMap',
@@ -48,10 +49,18 @@ export default {
      * fetch world map topojson
      */
     async fetchTopojson() {
+      // if has cache and within 7 days
+      const cache = getLS(STORAGE_TOPOJSON);
+      if (cache && Date.now() - cache.time < 7 * 24 * 3600 * 1000 && cache.data) {
+        this.topojson = cache.data;
+        return;
+      }
+      // if no cache
       const res = await this.$axios.get(CHART_MAP_TOPOJSON);
       const data = res.data;
       const parsed = topojson.feature(data, data.objects.ne_110m_admin_0_countries).features;
       this.topojson = parsed;
+      setLS(STORAGE_TOPOJSON, { time: Date.now(), data: parsed });
     },
     /**
      * draw world map, need to init `this.topojson` first

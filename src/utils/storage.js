@@ -1,15 +1,13 @@
 import { logError } from './loggers';
-import { LS_KEY } from './constants';
 
 /**
  * set local storage
  * @param {string} key
+ * @param {any} value
  */
 export function setLS(key, value) {
   try {
-    const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
-    data[key] = value;
-    localStorage.setItem(LS_KEY, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
     logError(e);
     return;
@@ -23,8 +21,7 @@ export function setLS(key, value) {
  */
 export function getLS(key) {
   try {
-    const data = JSON.parse(localStorage.getItem(LS_KEY)) || {};
-    return data[key];
+    return JSON.parse(localStorage.getItem(key)) || null;
   } catch (e) {
     logError(e);
     return null;
