@@ -6,7 +6,7 @@
       </VButton>
     </VHeader>
     <div class="content">
-      <VList :data="websites" type="extend" custom v-slot="{ item }">
+      <VList :data="websites" type="extend" custom v-slot="{ item }" :loading="loading">
         <div class="v-list-ctrl">
           <div class="v-list-ctrl-item">
             <VButton @click="handleShowCode(item.id)">
@@ -44,6 +44,8 @@ export default {
       showCode: false,
       showCodeID: '',
       awaitingDelete: '',
+
+      loading: true,
     };
   },
   computed: {
@@ -72,7 +74,9 @@ export default {
      * fetch website data when first mounted
      */
     async fetchWebsites() {
+      this.loading = true;
       await this.$store.dispatch('settings/xaFetchWebsites');
+      this.loading = false;
     },
     /**
      * handle website add

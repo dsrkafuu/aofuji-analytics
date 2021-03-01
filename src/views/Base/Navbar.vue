@@ -76,7 +76,9 @@ export default {
       },
       set(val) {
         if (val) {
-          this.$store.dispatch('common/xaSetCurWebsite', { _id: val });
+          this.$store.commit('dashboard/xmSetInited', { value: false });
+          this.$store.commit('realtime/xmSetInited', { value: false });
+          this.$store.commit('common/xmSetCurWebsite', { _id: val });
         }
       },
     },

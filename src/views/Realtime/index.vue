@@ -6,29 +6,29 @@
           <div class="title">Active Users</div>
           <div class="ctx ctx-au">{{ fmtNumber(activeUsers) }}</div>
         </div>
-        <RealtimeDeviceCategory :data="deviceCategorys" />
+        <RealtimeDeviceCategory :data="deviceCategorys" :loading="!inited" />
       </VCard>
       <VCard class="map">
-        <RealtimeMap :data="userRegions" />
+        <RealtimeMap :data="userRegions" :loading="!inited" />
       </VCard>
     </div>
     <div class="row row-norm">
       <VCard class="data">
         <div class="section">
           <div class="title">Page Views</div>
-          <VList class="ctx ctx-pv" type="dense" :data="pageViews" />
+          <VList class="ctx ctx-pv" type="dense" :data="pageViews" :loading="!inited" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">User Events</div>
-          <VList class="ctx ctx-ue" type="dense" :data="userEvents" />
+          <VList class="ctx ctx-ue" type="dense" :data="userEvents" :loading="!inited" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">User Regions</div>
-          <VList class="ctx ctx-ur" type="dense" :data="userRegions" />
+          <VList class="ctx ctx-ur" type="dense" :data="userRegions" :loading="!inited" />
         </div>
       </VCard>
     </div>
@@ -47,6 +47,7 @@ export default {
     RealtimeDeviceCategory,
     RealtimeMap,
   },
+
   computed: {
     curWebsite() {
       return this.$store.state.common.curWebsite?._id;
@@ -70,11 +71,13 @@ export default {
       await this.fetchRealtime(_id);
     },
   },
+
   async mounted() {
     if (!this.inited && this.curWebsite) {
       await this.fetchRealtime(this.curWebsite);
     }
   },
+
   methods: {
     fmtNumber,
     /**

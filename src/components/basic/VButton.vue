@@ -23,8 +23,9 @@ export default {
       options.attrs.rel = 'noopener';
     }
 
-    const children = this.loading ? [h('VIconCircle')] : this.$slots.default;
-    return h(tag, options, children);
+    const icon = [h('VIconCircle', { class: 'v-spin' })];
+    const slot = this.$slots.default;
+    return h(tag, options, this.loading ? icon : slot);
   },
   name: 'VButton',
   props: {
@@ -111,24 +112,9 @@ export default {
     background-color: transparent;
   }
 
-  &-loading {
-    &:hover {
-      cursor: wait;
-      background-color: transparent;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    .v-icon {
-      animation: spin 1s infinite linear;
-    }
+  &-loading:hover {
+    cursor: wait;
+    background-color: transparent;
   }
 }
 </style>

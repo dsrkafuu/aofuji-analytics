@@ -36,14 +36,17 @@ export default {
       state.websites = cloneDeep(payload);
     },
     // set current website
-    // payload: { _id, name, ... }
+    // payload: { _id }
     xmSetCurWebsite(state, payload) {
       const { _id } = payload;
       if (_id) {
-        state.curWebsite = { ...payload };
-      } else {
-        state.curWebsite = null;
+        const index = findIndex(state.websites, ['_id', _id]);
+        if (index >= 0) {
+          state.curWebsite = { ...state.websites[index] };
+          return;
+        }
       }
+      state.curWebsite = null;
     },
   },
 
@@ -92,21 +95,6 @@ export default {
         const { _id } = res.data[0];
         commit('xmSetCurWebsite', { _id });
       }
-    },
-    // set current website
-    // payload: { _id }
-    async xaSetCurWebsite({ commit, state }, payload) {
-      const { _id } = payload;
-      if (_id) {
-        const index = findIndex(state.websites, ['_id', _id]);
-        if (index >= 0) {
-          commit('xmSetCurWebsite', { ...state.websites[index] });
-          commit('dashboard/xmSetInited', { value: false }, { root: true });
-          commit('realtime/xmSetInited', { value: false }, { root: true });
-          return;
-        }
-      }
-      commit('xmSetCurWebsite', { _id: '' });
     },
   },
 };

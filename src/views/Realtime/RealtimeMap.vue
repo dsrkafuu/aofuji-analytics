@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <VNoData v-if="noData" />
+    <VLoading :loading="loading" :nodata="nodata" />
     <div class="ctx ctx-map">
       <canvas ref="mapRef"></canvas>
     </div>
@@ -16,6 +16,7 @@ export default {
   name: 'RealtimeMap',
   props: {
     data: { type: Array },
+    loading: { type: Boolean },
   },
   data() {
     return {
@@ -25,7 +26,7 @@ export default {
     };
   },
   computed: {
-    noData() {
+    nodata() {
       return this.data.length <= 0;
     },
   },

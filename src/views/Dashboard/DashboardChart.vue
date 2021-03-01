@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <VNoData v-if="noData" />
+    <VLoading :loading="loading" :nodata="nodata" />
     <div class="ctx ctx-chart">
       <canvas ref="chartRef"></canvas>
     </div>
@@ -16,6 +16,7 @@ export default {
   props: {
     pvsData: { type: Array },
     ussData: { type: Array },
+    loading: { type: Boolean },
   },
   data() {
     return {
@@ -26,7 +27,7 @@ export default {
     data() {
       return [this.pvsData, this.ussData];
     },
-    noData() {
+    nodata() {
       return this.pvsData.reduce((preVal, curVal) => preVal + curVal, 0) <= 0;
     },
   },

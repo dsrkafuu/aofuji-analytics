@@ -21,20 +21,20 @@
         </div>
       </VCard>
       <VCard class="chart">
-        <DashboardChart :pvsData="pageViewSteps" :ussData="uniqueSessionSteps" />
+        <DashboardChart :pvsData="pageViewSteps" :ussData="uniqueSessionSteps" :loading="!inited" />
       </VCard>
     </div>
     <div class="row row-prim">
       <VCard class="data">
         <div class="section">
           <div class="title">Pages</div>
-          <VList class="ctx ctx-path" type="dense" :data="pathnames" />
+          <VList class="ctx ctx-path" type="dense" :data="pathnames" :loading="!inited" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">Referers</div>
-          <VList class="ctx ctx-ref" type="dense" :data="referrers" />
+          <VList class="ctx ctx-ref" type="dense" :data="referrers" :loading="!inited" />
         </div>
       </VCard>
     </div>
@@ -42,19 +42,19 @@
       <VCard class="data">
         <div class="section">
           <div class="title">Systems</div>
-          <VList class="ctx ctx-sys" type="dense" :data="systems" />
+          <VList class="ctx ctx-sys" type="dense" :data="systems" :loading="!inited" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">Browsers</div>
-          <VList class="ctx ctx-brow" type="dense" :data="browsers" />
+          <VList class="ctx ctx-brow" type="dense" :data="browsers" :loading="!inited" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">Device Platforms</div>
-          <VList class="ctx ctx-plat" type="dense" :data="platforms" />
+          <VList class="ctx ctx-plat" type="dense" :data="platforms" :loading="!inited" />
         </div>
       </VCard>
     </div>
@@ -62,13 +62,13 @@
       <VCard class="data">
         <div class="section">
           <div class="title">Languages</div>
-          <VList class="ctx ctx-lang" type="dense" :data="languages" />
+          <VList class="ctx ctx-lang" type="dense" :data="languages" :loading="!inited" />
         </div>
       </VCard>
       <VCard class="data">
         <div class="section">
           <div class="title">Locations</div>
-          <VList class="ctx ctx-loc" type="dense" :data="locations" />
+          <VList class="ctx ctx-loc" type="dense" :data="locations" :loading="!inited" />
         </div>
       </VCard>
     </div>
@@ -92,6 +92,7 @@ export default {
   components: {
     DashboardChart,
   },
+
   data() {
     return {
       rangeMap,
@@ -132,6 +133,7 @@ export default {
     },
     async range(key) {
       if (this.inited && this.curWebsite) {
+        this.$store.commit('dashboard/xmSetInited', { value: false });
         await this.fetchDashboard(
           this.curWebsite,
           rangeMap[key].value * 1000,
@@ -140,6 +142,7 @@ export default {
       }
     },
   },
+
   async mounted() {
     if (!this.inited && this.curWebsite) {
       await this.fetchDashboard(
@@ -149,6 +152,7 @@ export default {
       );
     }
   },
+
   methods: {
     fmtNumber,
     fmtTime,

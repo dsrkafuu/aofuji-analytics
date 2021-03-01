@@ -2,7 +2,7 @@
   <div class="section">
     <div class="title">Device Category</div>
     <div class="ctx ctx-dc">
-      <VNoData v-if="noData" />
+      <VLoading :loading="loading" :nodata="nodata" />
       <canvas ref="deviceCategoryRef"></canvas>
     </div>
   </div>
@@ -17,6 +17,7 @@ export default {
   name: 'RealtimeDeviceCategory',
   props: {
     data: { type: Array },
+    loading: { type: Boolean },
   },
   data() {
     return {
@@ -24,7 +25,7 @@ export default {
     };
   },
   computed: {
-    noData() {
+    nodata() {
       return this.data.length <= 0;
     },
   },

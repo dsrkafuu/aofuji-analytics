@@ -80,7 +80,9 @@ export default {
       }
       // change tab
       this.curTab = newTab;
-      this.$router.replace({ query: { tab: newTab } });
+      if (this.$route.query.tab !== newTab) {
+        this.$router.replace({ query: { tab: newTab } });
+      }
     },
   },
 };
