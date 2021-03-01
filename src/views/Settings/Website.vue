@@ -6,7 +6,8 @@
       </VButton>
     </VHeader>
     <div class="content">
-      <VList :data="websites" type="extend" custom v-slot="{ item }" :loading="loading">
+      <VLoading :loading="loading" :nodata="nodata" />
+      <VList :data="websites" type="extend" custom v-slot="{ item }">
         <div class="v-list-ctrl">
           <div class="v-list-ctrl-item">
             <VButton @click="handleShowCode(item.id)">
@@ -64,6 +65,9 @@ export default {
         }
       }
       return ret;
+    },
+    nodata() {
+      return this.websites.length <= 0;
     },
   },
 
