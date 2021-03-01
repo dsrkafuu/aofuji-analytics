@@ -3,20 +3,20 @@
     <div class="ctrl">
       <VCard>
         <VButton
-          v-for="(tab, index) of tabs"
-          :key="tab.name"
+          v-for="(tab, key) of tabsMap"
+          :key="key"
           type="full-width"
-          @click.prevent="changeTab(index)"
-          :active="index === curIndex"
+          @click.prevent="changeTab(key)"
+          :active="key === curTab"
         >
-          {{ tab.name }}
+          {{ tab.text }}
         </VButton>
       </VCard>
     </div>
     <div class="content">
       <VCard>
         <keep-alive>
-          <component :is="curTab"></component>
+          <component :is="curTabComponent"></component>
         </keep-alive>
       </VCard>
     </div>
@@ -29,6 +29,12 @@ import WebsiteEdit from './WebsiteEdit.vue';
 import Account from './Account.vue';
 import About from './About.vue';
 
+const tabsMap = {
+  website: { text: 'Website', component: Website },
+  account: { text: 'Account', component: Account },
+  about: { text: 'About', component: About },
+};
+
 export default {
   name: 'Settings',
   components: {
@@ -39,43 +45,42 @@ export default {
   },
   data() {
     return {
-      tabQuerys: ['website', 'account', 'about'],
-      tabs: [
-        { name: 'Website', component: Website },
-        { name: 'Account', component: Account },
-        { name: 'About', component: About },
-      ],
+      curTab: 'website',
+      tabsMap,
     };
   },
   computed: {
-    // current tab index
-    curIndex() {
-      const tabQuery = this.$route.query.tab;
-      const tabIndex = this.tabQuerys.indexOf(tabQuery);
-      return tabIndex >= 0 ? tabIndex : 0;
-    },
     // current tab component object
-    curTab() {
+    curTabComponent() {
       if (this.$store.state.settings.editWebsite) {
         return WebsiteEdit;
       } else {
-        return this.tabs[this.curIndex].component;
+        return tabsMap[this.curTab].component;
       }
     },
+  },
+  activated() {
+    // fix missing tab query
+    const query = this.$route.query.tab;
+    if (query) {
+      this.curTab = query;
+    } else {
+      this.$router.replace({ query: { tab: this.curTab } });
+    }
   },
   methods: {
     /**
      * change current tab
-     * @param {number} newIndex
+     * @param {string} newTab
      */
-    changeTab(newIndex) {
+    changeTab(newTab) {
       // exit editing
       if (this.$store.state.settings.editWebsite) {
         this.$store.commit('xmSetEditWebsite', {});
       }
       // change tab
-      const tabQuery = this.tabQuerys[newIndex];
-      this.$router.replace({ query: { tab: tabQuery } });
+      this.curTab = newTab;
+      this.$router.replace({ query: { tab: newTab } });
     },
   },
 };

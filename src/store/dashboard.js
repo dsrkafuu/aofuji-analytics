@@ -21,6 +21,13 @@ export default {
   }),
 
   mutations: {
+    // set inited
+    // payload: { value }
+    xmSetInited(state, payload) {
+      const { value } = payload;
+      state.inited = Boolean(value);
+    },
+
     // set all dashboard data
     // payload: { pv, us, pvt, pvs, uss, path, ref, lang, brow, sys, plat, loc }
     xmSetAll(state, payload) {
@@ -38,7 +45,6 @@ export default {
       state.systems = sys;
       state.platforms = plat;
       state.locations = loc;
-      state.inited = true;
     },
   },
 
@@ -56,6 +62,7 @@ export default {
         `/metrics/dashboard?website=${_id}&from=${from}&to=${to}&step=${step}`
       );
       commit('xmSetAll', res.data);
+      commit('xmSetInited', { value: true });
     },
   },
 };

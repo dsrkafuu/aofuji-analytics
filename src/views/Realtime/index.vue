@@ -62,29 +62,27 @@ export default {
   },
   watch: {
     // fetch data when website changed
-    async curWebsite() {
+    async curWebsite(_id) {
       // fix missing route query
-      if (this.$route.query.website !== this.curWebsite) {
-        this.$router.replace({ query: { website: this.curWebsite } });
+      if (this.$route.query.website !== _id) {
+        this.$router.replace({ query: { website: _id } });
       }
-      if (!this.inited) {
-        await this.fetchRealtime();
-      }
+      await this.fetchRealtime(_id);
     },
   },
-  async activated() {
-    // fetch data when router push in
+  async mounted() {
     if (!this.inited && this.curWebsite) {
-      await this.fetchRealtime();
+      await this.fetchRealtime(this.curWebsite);
     }
   },
   methods: {
     fmtNumber,
     /**
      * fetch realtime data
+     * @param {string} _id
      */
-    async fetchRealtime() {
-      await this.$store.dispatch('realtime/xaFetchAll', { _id: this.curWebsite });
+    async fetchRealtime(_id) {
+      await this.$store.dispatch('realtime/xaFetchAll', { _id });
     },
   },
 };

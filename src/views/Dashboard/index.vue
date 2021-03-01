@@ -102,12 +102,6 @@ export default {
     curWebsite() {
       return this.$store.state.common.curWebsite?._id;
     },
-    rangeValue() {
-      return rangeMap[this.range].value * 1000;
-    },
-    rangeStep() {
-      return rangeMap[this.range].step * 1000;
-    },
     ...mapState('dashboard', [
       'inited',
       'pageViews',
@@ -125,25 +119,34 @@ export default {
     ]),
   },
   watch: {
-    async curWebsite() {
+    async curWebsite(_id) {
       // fix missing route query
-      if (this.$route.query.website !== this.curWebsite._id) {
-        this.$router.replace({ query: { website: this.curWebsite._id } });
+      if (this.$route.query.website !== _id) {
+        this.$router.replace({ query: { website: _id } });
       }
-      if (!this.inited) {
-        await this.fetchDashboard();
-      }
+      await this.fetchDashboard(
+        _id,
+        rangeMap[this.range].value * 1000,
+        rangeMap[this.range].step * 1000
+      );
     },
-    async range() {
+    async range(key) {
       if (this.inited && this.curWebsite) {
-        await this.fetchDashboard();
+        await this.fetchDashboard(
+          this.curWebsite,
+          rangeMap[key].value * 1000,
+          rangeMap[key].step * 1000
+        );
       }
     },
   },
-  async activated() {
-    // fetch data when router push in
+  async mounted() {
     if (!this.inited && this.curWebsite) {
-      await this.fetchDashboard();
+      await this.fetchDashboard(
+        this.curWebsite,
+        rangeMap[this.range].value * 1000,
+        rangeMap[this.range].step * 1000
+      );
     }
   },
   methods: {
@@ -151,13 +154,12 @@ export default {
     fmtTime,
     /**
      * fetch dashboard data
+     * @param {string} _id
+     * @param {number} range
+     * @param {number} step
      */
-    async fetchDashboard() {
-      await this.$store.dispatch('dashboard/xaFetchAll', {
-        _id: this.curWebsite,
-        range: this.rangeValue,
-        step: this.rangeStep,
-      });
+    async fetchDashboard(_id, range, step) {
+      await this.$store.dispatch('dashboard/xaFetchAll', { _id, range, step });
     },
   },
 };

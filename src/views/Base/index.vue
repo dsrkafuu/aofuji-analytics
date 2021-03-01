@@ -3,7 +3,7 @@
     <Navbar />
 
     <main class="v-container">
-      <keep-alive>
+      <keep-alive :include="['Settings']">
         <router-view />
       </keep-alive>
     </main>

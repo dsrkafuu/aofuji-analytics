@@ -13,6 +13,13 @@ export default {
   }),
 
   mutations: {
+    // set inited
+    // payload: { value }
+    xmSetInited(state, payload) {
+      const { value } = payload;
+      state.inited = Boolean(value);
+    },
+
     // set all realtime data
     // payload: { au, dc, pv, ue, ur }
     xmSetAll(state, payload) {
@@ -22,7 +29,6 @@ export default {
       state.pageViews = pv;
       state.userEvents = ue;
       state.userRegions = ur;
-      state.inited = true;
     },
   },
 
@@ -33,6 +39,7 @@ export default {
       const { _id } = payload;
       const res = await $api.get(`/metrics/realtime?website=${_id}`);
       commit('xmSetAll', res.data);
+      commit('xmSetInited', { value: true });
     },
   },
 };

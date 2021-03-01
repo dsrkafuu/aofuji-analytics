@@ -75,12 +75,8 @@ export default {
         return this.$store.state.common.curWebsite?._id || '';
       },
       set(val) {
-        val && this.$store.commit('common/xmSetCurWebsite', { _id: val });
-        // update url search param
-        if (val && val !== this.$route.query.website) {
-          this.$router.replace({
-            query: { website: val },
-          });
+        if (val) {
+          this.$store.dispatch('common/xaSetCurWebsite', { _id: val });
         }
       },
     },
