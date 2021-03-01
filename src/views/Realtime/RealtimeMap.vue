@@ -1,7 +1,7 @@
 <template>
-  <div class="section">
+  <div class="realtime-map">
     <VLoading :loading="loading" :nodata="nodata" />
-    <div class="ctx ctx-map">
+    <div class="ctx">
       <canvas ref="mapRef"></canvas>
     </div>
   </div>
@@ -15,6 +15,7 @@ import { setLS, getLS } from '@/utils/storage';
 
 export default {
   name: 'RealtimeMap',
+
   props: {
     data: { type: Array },
     loading: { type: Boolean },
@@ -40,10 +41,12 @@ export default {
       }
     },
   },
+
   mounted() {
     const fetchPromise = this.fetchTopojson();
     this.topoStatus = fetchPromise;
   },
+
   methods: {
     /**
      * fetch world map topojson
@@ -137,13 +140,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.section {
+.realtime-map {
   position: relative;
   overflow: hidden;
   height: 100%;
 }
 
-.ctx-map {
+.ctx {
   position: absolute;
   top: -18%;
   left: 0;

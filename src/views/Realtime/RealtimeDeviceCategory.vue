@@ -1,7 +1,7 @@
 <template>
-  <div class="section">
+  <div class="realtime-device-category">
     <div class="title">Device Category</div>
-    <div class="ctx ctx-dc">
+    <div class="ctx">
       <VLoading :loading="loading" :nodata="nodata" />
       <canvas ref="deviceCategoryRef"></canvas>
     </div>
@@ -15,6 +15,7 @@ import { fromPairs } from '@/utils/lodash';
 
 export default {
   name: 'RealtimeDeviceCategory',
+
   props: {
     data: { type: Array },
     loading: { type: Boolean },
@@ -38,6 +39,7 @@ export default {
       }
     },
   },
+
   methods: {
     /**
      * draw device category chart
@@ -78,12 +80,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.section {
+.realtime-device-category {
   flex: 1 1 auto;
   position: relative;
 }
 
-.ctx-dc {
+.ctx {
   position: relative;
   height: 90%;
   padding-top: $space-sm;

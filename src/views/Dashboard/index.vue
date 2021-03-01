@@ -2,23 +2,12 @@
   <div class="dashboard">
     <div class="row row-hero">
       <VCard class="summary">
-        <div class="section">
-          <div class="ctx ctx-rg">
-            <VSelect :map="rangeMap" v-model="range" />
-          </div>
+        <div class="range">
+          <VSelect :map="rangeMap" v-model="range" />
         </div>
-        <div class="section">
-          <div class="title">Page Views</div>
-          <div class="ctx ctx-pv">{{ fmtNumber(pageViews) }}</div>
-        </div>
-        <div class="section">
-          <div class="title">Unique Visitors</div>
-          <div class="ctx ctx-us">{{ fmtNumber(uniqueSessions) }}</div>
-        </div>
-        <div class="section">
-          <div class="title">Avg. View Time</div>
-          <div class="ctx ctx-pvt">{{ fmtTime(pageViewTime) }}</div>
-        </div>
+        <VStatistic title="Page Views" :value="pageViews" :loading="!inited" />
+        <VStatistic title="Unique Visitors" :value="uniqueSessions" :loading="!inited" />
+        <VStatistic title="Avg. View Time" :value="pageViewTime" type="time" :loading="!inited" />
       </VCard>
       <VCard class="chart">
         <DashboardChart :pvsData="pageViewSteps" :ussData="uniqueSessionSteps" :loading="!inited" />
@@ -26,50 +15,29 @@
     </div>
     <div class="row row-prim">
       <VCard class="data">
-        <div class="section">
-          <div class="title">Pages</div>
-          <VList class="ctx ctx-path" type="dense" :data="pathnames" :loading="!inited" />
-        </div>
+        <VStatlist title="Pages" :data="pathnames" :loading="!inited" />
       </VCard>
       <VCard class="data">
-        <div class="section">
-          <div class="title">Referers</div>
-          <VList class="ctx ctx-ref" type="dense" :data="referrers" :loading="!inited" />
-        </div>
+        <VStatlist title="Referers" :data="referrers" :loading="!inited" />
       </VCard>
     </div>
     <div class="row row-norm">
       <VCard class="data">
-        <div class="section">
-          <div class="title">Systems</div>
-          <VList class="ctx ctx-sys" type="dense" :data="systems" :loading="!inited" />
-        </div>
+        <VStatlist title="Systems" :data="systems" :loading="!inited" />
       </VCard>
       <VCard class="data">
-        <div class="section">
-          <div class="title">Browsers</div>
-          <VList class="ctx ctx-brow" type="dense" :data="browsers" :loading="!inited" />
-        </div>
+        <VStatlist title="Browsers" :data="browsers" :loading="!inited" />
       </VCard>
       <VCard class="data">
-        <div class="section">
-          <div class="title">Device Platforms</div>
-          <VList class="ctx ctx-plat" type="dense" :data="platforms" :loading="!inited" />
-        </div>
+        <VStatlist title="Device Platforms" :data="platforms" :loading="!inited" />
       </VCard>
     </div>
     <div class="row row-norm">
       <VCard class="data">
-        <div class="section">
-          <div class="title">Languages</div>
-          <VList class="ctx ctx-lang" type="dense" :data="languages" :loading="!inited" />
-        </div>
+        <VStatlist title="Languages" :data="languages" :loading="!inited" />
       </VCard>
       <VCard class="data">
-        <div class="section">
-          <div class="title">Locations</div>
-          <VList class="ctx ctx-loc" type="dense" :data="locations" :loading="!inited" />
-        </div>
+        <VStatlist title="Locations" :data="locations" :loading="!inited" />
       </VCard>
     </div>
   </div>
@@ -175,77 +143,51 @@ export default {
   display: flex;
   flex-direction: column;
   gap: $space-base;
+}
 
-  .row {
-    display: flex;
-    gap: $space-base;
+.row {
+  display: flex;
+  gap: $space-base;
+  height: $dashboard-data-height;
+
+  &-prim {
+    .data:first-child {
+      flex: 1 1 60%;
+    }
+
+    .data:last-child {
+      flex: 1 1 40%;
+    }
+  }
+}
+
+.range {
+  margin-top: $space-xs !important;
+  margin-bottom: $space-sm;
+
+  .v-select {
+    width: 100%;
+  }
+}
+
+.data {
+  flex: 0 1 32.3%;
+
+  .v-statlist {
     height: $dashboard-data-height;
-
-    &-prim {
-      .data:first-child {
-        flex: 1 1 60%;
-      }
-      .data:last-child {
-        flex: 1 1 40%;
-      }
-    }
   }
+}
 
-  .title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ctx {
-    margin-top: $space-sm;
-    position: relative;
+.summary {
+  padding: $space-lg;
+  flex: 0 0 26%;
+  display: flex;
+  flex-direction: column;
+  gap: $space-base;
+}
 
-    &-rg {
-      margin-top: $space-xs !important;
-      margin-bottom: $space-sm;
-      .v-select {
-        width: 100%;
-      }
-    }
-
-    &-pv,
-    &-us,
-    &-pvt {
-      font-size: $font-size-xl * 1.5;
-      text-align: center;
-    }
-  }
-
-  .data {
-    flex: 0 1 32.3%;
-
-    .section {
-      display: flex;
-      height: $realtime-data-height;
-      flex-direction: column;
-    }
-    .title {
-      padding: $space-lg;
-      padding-bottom: 0;
-    }
-    .ctx {
-      flex: 1 1 auto;
-      padding: $space-xs $space-sm;
-      padding-bottom: $space-base;
-      position: relative;
-    }
-  }
-
-  .summary {
-    padding: $space-lg;
-    flex: 0 0 26%;
-    display: flex;
-    flex-direction: column;
-    gap: $space-base;
-  }
-  .chart {
-    flex: 1 1 auto;
-    padding: $space-base;
-  }
+.chart {
+  flex: 1 1 auto;
+  padding: $space-base;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
   <div :class="['v-list', `v-list-${type}`]">
-    <VLoading :loading="loading" :nodata="nodata" />
     <div class="v-list-item" v-for="item of data" :key="item.key || item.id || item[0]">
       <!-- key-value pair list -->
       <template v-if="Array.isArray(item) && item.length === 2">
         <div class="v-list-text">{{ item[0] }}</div>
         <div class="v-list-count">{{ item[1] }}</div>
       </template>
+
       <!-- object list -->
       <template v-else>
         <div v-if="type === 'extend'" class="v-list-text-wrapper">
@@ -20,6 +20,7 @@
           </span>
         </div>
       </template>
+
       <!-- custom row item -->
       <template v-if="custom">
         <slot :item="item"></slot>
@@ -54,12 +55,6 @@ export default {
       default: 'default', // common list by default
     },
     custom: Boolean, // custom list
-    loading: { type: Boolean },
-  },
-  computed: {
-    nodata() {
-      return this.data.length <= 0;
-    },
   },
 };
 </script>

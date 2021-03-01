@@ -2,10 +2,7 @@
   <div class="realtime">
     <div class="row row-hero">
       <VCard class="count">
-        <div class="section">
-          <div class="title">Active Users</div>
-          <div class="ctx ctx-au">{{ fmtNumber(activeUsers) }}</div>
-        </div>
+        <VStatistic title="Active Users" :value="activeUsers" :loading="!inited" />
         <RealtimeDeviceCategory :data="deviceCategorys" :loading="!inited" />
       </VCard>
       <VCard class="map">
@@ -14,22 +11,13 @@
     </div>
     <div class="row row-norm">
       <VCard class="data">
-        <div class="section">
-          <div class="title">Page Views</div>
-          <VList class="ctx ctx-pv" type="dense" :data="pageViews" :loading="!inited" />
-        </div>
+        <VStatlist title="Page Views" :data="pageViews" :loading="!inited" />
       </VCard>
       <VCard class="data">
-        <div class="section">
-          <div class="title">User Events</div>
-          <VList class="ctx ctx-ue" type="dense" :data="userEvents" :loading="!inited" />
-        </div>
+        <VStatlist title="User Events" :data="userEvents" :loading="!inited" />
       </VCard>
       <VCard class="data">
-        <div class="section">
-          <div class="title">User Regions</div>
-          <VList class="ctx ctx-ur" type="dense" :data="userRegions" :loading="!inited" />
-        </div>
+        <VStatlist title="User Regions" :data="userRegions" :loading="!inited" />
       </VCard>
     </div>
   </div>
@@ -39,7 +27,6 @@
 import { mapState } from 'vuex';
 import RealtimeDeviceCategory from './RealtimeDeviceCategory.vue';
 import RealtimeMap from './RealtimeMap.vue';
-import { fmtNumber } from '@/utils/formatters';
 
 export default {
   name: 'Realtime',
@@ -79,7 +66,6 @@ export default {
   },
 
   methods: {
-    fmtNumber,
     /**
      * fetch realtime data
      * @param {string} _id
@@ -103,22 +89,9 @@ export default {
   display: flex;
   gap: $space-base;
   height: $realtime-data-height;
+
   &-hero {
     height: $realtime-hero-height;
-  }
-}
-
-.title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.ctx {
-  margin-top: $space-sm;
-
-  &-au {
-    font-size: $font-size-xl * 1.5;
-    text-align: center;
   }
 }
 
@@ -129,6 +102,7 @@ export default {
   flex-direction: column;
   gap: $space-lg;
 }
+
 .map {
   flex: 1 1 auto;
 }
@@ -136,20 +110,8 @@ export default {
 .data {
   flex: 0 1 32.3%;
 
-  .section {
+  .v-statlist {
     height: $realtime-data-height;
-    display: flex;
-    flex-direction: column;
-  }
-  .title {
-    padding: $space-lg;
-    padding-bottom: 0;
-  }
-  .ctx {
-    flex: 1 1 auto;
-    padding: $space-xs $space-sm;
-    padding-bottom: $space-base;
-    position: relative;
   }
 }
 </style>

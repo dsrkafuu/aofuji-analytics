@@ -1,7 +1,7 @@
 <template>
-  <div class="section">
+  <div class="dashboard-chart">
     <VLoading :loading="loading" :nodata="nodata" />
-    <div class="ctx ctx-chart">
+    <div class="ctx">
       <canvas ref="chartRef"></canvas>
     </div>
   </div>
@@ -13,6 +13,7 @@ import { Chart } from '@/utils/chartjs';
 
 export default {
   name: 'DashboardChart',
+
   props: {
     pvsData: { type: Array },
     ussData: { type: Array },
@@ -40,6 +41,7 @@ export default {
       }
     },
   },
+
   methods: {
     /**
      * draw device category chart
@@ -84,8 +86,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.section,
-.ctx-chart {
+.dashboard-chart,
+.ctx {
   position: relative;
   height: 100%;
 }
