@@ -2,17 +2,11 @@
 
 Minimal alternative to Google Analytics based on Vue.js and MongoDB.
 
-## About Vue.js v2
+## About the Project
+
+This project does not use semantic versioning until v1 is officially released, so please check the changelog carefully before each upgrade to see if it is still working properly.
 
 Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem is not stable yet.
-
-## Bypass Blocker Extensions
-
-Add `VUE_APP_TRACKER_FILENAME` environment variable to customize the tracker script name, for example:
-
-```
-VUE_APP_TRACKER_FILENAME="jquery.min.js"
-```
 
 ## Environment Variables
 
@@ -41,6 +35,14 @@ Difference is that the API server is deployed on `SERVER_API_PORT` without stati
 
 ```
 SERVER_API_PORT=3001
+```
+
+## Bypass Blocker Extensions
+
+Add `VUE_APP_TRACKER_FILENAME` environment variable to customize the tracker script name, for example:
+
+```
+VUE_APP_TRACKER_FILENAME="jquery.min.js"
 ```
 
 ## Contribute

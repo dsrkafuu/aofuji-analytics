@@ -37,7 +37,7 @@ export default {
 
   &-ctx {
     flex: 1 1 auto;
-    padding: $space-xs $space-sm;
+    padding: $space-sm;
     padding-bottom: $space-base;
     position: relative;
   }
