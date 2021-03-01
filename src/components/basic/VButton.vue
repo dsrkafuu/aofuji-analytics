@@ -114,10 +114,5 @@ export default {
     cursor: not-allowed;
     background-color: transparent;
   }
-
-  &-loading:hover {
-    cursor: wait;
-    background-color: transparent;
-  }
 }
 </style>
