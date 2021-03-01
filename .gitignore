@@ -5,7 +5,7 @@ api/assets/*.mmdb
 api/assets/*.tar.gz
 
 # env
-.env.production
+.env*
 
 # deps
 node_modules/

@@ -166,7 +166,13 @@ const route = async (req, res) => {
           }
           // try update advanced session data when missing
           if (lng && !session.language) {
-            session.language = lng;
+            // ensure lang format
+            const exp = /-(.*)$/i.exec(lng);
+            if (exp && exp[1]) {
+              session.language = lng.split('-')[0] + '-' + exp[1].toUpperCase();
+            } else {
+              session.language = lng;
+            }
             needSave = true;
           }
           if (clientUA && (!session.browser || !session.system || !session.platform)) {
