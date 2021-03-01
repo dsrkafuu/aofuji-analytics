@@ -33,18 +33,21 @@ export default {
     },
   },
   watch: {
-    data(data) {
+    async data(data) {
       if (this.chart) {
-        this.updateMap(data);
+        await this.updateMap(data);
       } else {
-        this.drawMap(data);
+        await this.drawMap(data);
       }
     },
   },
 
-  mounted() {
+  async mounted() {
     const fetchPromise = this.fetchTopojson();
     this.topoStatus = fetchPromise;
+    if (!this.nodata) {
+      await this.drawMap(this.data);
+    }
   },
 
   methods: {

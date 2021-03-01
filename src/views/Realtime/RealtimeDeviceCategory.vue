@@ -31,13 +31,19 @@ export default {
     },
   },
   watch: {
-    data(data) {
+    async data(data) {
       if (this.chart) {
-        this.updateChart(data);
+        await this.updateChart(data);
       } else {
-        this.drawChart(data);
+        await this.drawChart(data);
       }
     },
+  },
+
+  async mounted() {
+    if (!this.nodata) {
+      await this.drawChart(this.data);
+    }
   },
 
   methods: {
