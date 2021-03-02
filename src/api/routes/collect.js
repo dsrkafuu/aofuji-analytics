@@ -178,11 +178,9 @@ const route = async (req, res) => {
           if (clientUA && (!session.browser || !session.system || !session.platform)) {
             const Bowser = require('bowser');
             const bowser = Bowser.getParser(clientUA);
-            const formatString = (str) =>
-              (str || '').toLowerCase().replace(/ +/gi, '-') || undefined;
-            session.browser = formatString(bowser.getBrowserName());
-            session.system = formatString(bowser.getOSName());
-            session.platform = formatString(bowser.getPlatformType());
+            session.browser = bowser.getBrowserName();
+            session.system = bowser.getOSName();
+            session.platform = bowser.getPlatformType();
             needSave = true;
           }
           if (clientIP && !session.location) {
