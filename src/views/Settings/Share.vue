@@ -56,7 +56,7 @@ export default {
             text: shares[i]._website.name,
             sub:
               expire > 0
-                ? `Expire at ${dayjs(expire).format('YYYY-MM-DD HH:mm:ss')}`
+                ? `Expires at ${dayjs(expire).format('YYYY-MM-DD HH:mm:ss')}`
                 : 'Never expire',
             label: expire > 0 ? (expire < Date.now() ? 'expired' : 'active') : 'active',
           });
@@ -102,7 +102,7 @@ export default {
      * @param {string} _id
      */
     handleShowLink(_id) {
-      this.shareLink = window.location.origin + '/share/' + _id;
+      this.shareLink = `${window.location.origin}/share?id=${_id}`;
     },
     /**
      * close link modal

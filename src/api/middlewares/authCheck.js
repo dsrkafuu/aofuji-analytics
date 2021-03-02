@@ -1,28 +1,31 @@
 const jwt = require('jsonwebtoken');
 
 const buildError = require('../utils/buildError');
-const { Account } = require('../models');
+const { Account, Share } = require('../models');
 const { JWT_DEFAULT_SECRET, COOKIE_TOKEN } = require('../utils/constants');
 
 const SECRET = process.env.TOKEN_SECRET || JWT_DEFAULT_SECRET;
 const defaultOptions = {
-  checkPublic: false, // whether check public websites' `share` search param
+  checkShare: false, // whether check `share` search param
 };
 
 function authCheck(options = defaultOptions) {
-  const { checkPublic } = options;
+  const { checkShare } = { defaultOptions, ...options };
   return async (req, res, next) => {
-    // routes that can be public
-    // and also passed `share` search param
+    // routes that can be public and also passed `share` search param
     const { share } = req.query;
-    if (checkPublic && share) {
-      // [TODO]
-      buildError(418, 'TODO');
+    if (checkShare && share) {
+      const result = await Share.findById(share).select('expire').lean();
+      if (result.expire < 0 || Date.now() < result.expire) {
+        next();
+      } else {
+        throw buildError(403, 'expired or invalid share request');
+      }
     } else {
       // check token
       const { [COOKIE_TOKEN]: token } = req.cookies;
       if (!token) {
-        buildError(403, 'api request unauthorized');
+        throw buildError(403, 'api request unauthorized');
       }
       // get token data
       let tokenData;
@@ -32,7 +35,7 @@ function authCheck(options = defaultOptions) {
         tokenData = null;
       }
       if (!tokenData || !tokenData._id || !tokenData.username) {
-        buildError(403, 'api request unauthorized');
+        throw buildError(403, 'api request unauthorized');
       }
       // check user
       const { _id, username } = tokenData;
@@ -44,7 +47,7 @@ function authCheck(options = defaultOptions) {
         authed = false;
       }
       if (!authed) {
-        buildError(403, 'api request unauthorized');
+        throw buildError(403, 'api request unauthorized');
       }
       next();
     }

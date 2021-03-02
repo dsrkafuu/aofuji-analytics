@@ -1,23 +1,21 @@
-import Base from '@/views/Base/index.vue';
-
 export const routes = [
   {
     path: '/',
     name: 'Base',
-    component: Base,
-    redirect: '/realtime',
+    component: () => import(/* webpackChunkName: "chunk-base" */ '@/views/Base.vue'),
+    redirect: '/dashboard',
     children: [
-      {
-        path: '/realtime',
-        name: 'Realtime',
-        component: () =>
-          import(/* webpackChunkName: "chunk-realtime" */ '@/views/Realtime/index.vue'),
-      },
       {
         path: '/dashboard',
         name: 'Dashboard',
         component: () =>
           import(/* webpackChunkName: "chunk-dashboard" */ '@/views/Dashboard/index.vue'),
+      },
+      {
+        path: '/realtime',
+        name: 'Realtime',
+        component: () =>
+          import(/* webpackChunkName: "chunk-realtime" */ '@/views/Realtime/index.vue'),
       },
       {
         path: '/settings',
@@ -26,6 +24,11 @@ export const routes = [
           import(/* webpackChunkName: "chunk-settings" */ '@/views/Settings/index.vue'),
       },
     ],
+  },
+  {
+    path: '/share',
+    name: 'Share',
+    component: () => import(/* webpackChunkName: "chunk-share" */ '@/views/Share.vue'),
   },
   {
     path: '/login',

@@ -46,7 +46,6 @@
 <script>
 import { mapState } from 'vuex';
 import DashboardChart from './DashboardChart.vue';
-import { fmtNumber, fmtTime } from '@/utils/formatters';
 
 const rangeMap = {
   LAST_15M: { text: 'Last 15 Minutes', value: 900, step: 60 },
@@ -64,7 +63,7 @@ export default {
   data() {
     return {
       rangeMap,
-      range: 'LAST_15M',
+      range: 'LAST_24H',
     };
   },
   computed: {
@@ -86,11 +85,19 @@ export default {
       'platforms',
       'locations',
     ]),
+
+    // share mode computes
+    shareID() {
+      return this.$store.state.common.shareID || '';
+    },
+    shareWebsite() {
+      return this.$store.state.common.curWebsite?.name || '';
+    },
   },
   watch: {
     async curWebsite(_id) {
-      // fix missing route query
-      if (this.$route.query.website !== _id) {
+      // if not share mode, fix missing route query
+      if (!this.shareID && this.$route.query.website !== _id) {
         this.$router.replace({ query: { website: _id } });
       }
       await this.fetchDashboard(
@@ -122,8 +129,6 @@ export default {
   },
 
   methods: {
-    fmtNumber,
-    fmtTime,
     /**
      * fetch dashboard data
      * @param {string} _id
@@ -131,7 +136,16 @@ export default {
      * @param {number} step
      */
     async fetchDashboard(_id, range, step) {
-      await this.$store.dispatch('dashboard/xaFetchAll', { _id, range, step });
+      if (this.shareID) {
+        await this.$store.dispatch('dashboard/xaFetchShareAll', {
+          _id,
+          range,
+          step,
+          share: this.shareID,
+        });
+      } else {
+        await this.$store.dispatch('dashboard/xaFetchAll', { _id, range, step });
+      }
     },
   },
 };

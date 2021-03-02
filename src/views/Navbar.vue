@@ -8,23 +8,31 @@
       </div>
       <div class="menu">
         <div class="start">
-          <VRouterLink
-            class="item"
-            :to="{ name: 'Dashboard', query: curWebsite ? { website: curWebsite } : {} }"
-            type="full-height"
-          >
-            Dashboard
-          </VRouterLink>
-          <VRouterLink
-            class="item"
-            :to="{ name: 'Realtime', query: curWebsite ? { website: curWebsite } : {} }"
-            type="full-height"
-          >
-            Realtime
-          </VRouterLink>
-          <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
-            Settings
-          </VRouterLink>
+          <template v-if="shareID">
+            <span class="item expire">
+              <VLoading :loading="!shareWebsite" />
+              {{ shareWebsite }}
+            </span>
+          </template>
+          <template v-else>
+            <VRouterLink
+              class="item"
+              :to="{ name: 'Dashboard', query: curWebsite ? { website: curWebsite } : {} }"
+              type="full-height"
+            >
+              Dashboard
+            </VRouterLink>
+            <VRouterLink
+              class="item"
+              :to="{ name: 'Realtime', query: curWebsite ? { website: curWebsite } : {} }"
+              type="full-height"
+            >
+              Realtime
+            </VRouterLink>
+            <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
+              Settings
+            </VRouterLink>
+          </template>
         </div>
         <div class="end">
           <div class="select" v-if="showSelectWebsite">
@@ -55,6 +63,9 @@ export default {
     },
     // should show logout button
     showLogout() {
+      if (this.shareID) {
+        return false;
+      }
       return Boolean(this.$store.state.common.account?._id);
     },
     // should show common website select
@@ -82,6 +93,14 @@ export default {
           this.$store.commit('common/xmSetCurWebsite', { _id: val });
         }
       },
+    },
+
+    // share mode computes
+    shareID() {
+      return this.$store.state.common.shareID || '';
+    },
+    shareWebsite() {
+      return this.$store.state.common.curWebsite?.name || '';
     },
   },
 
@@ -150,5 +169,17 @@ export default {
   flex: 0 0 auto;
   display: flex;
   gap: $space-sm;
+}
+
+// share mode styles
+.expire {
+  padding: 0 $space-base;
+  position: relative;
+  width: 100%;
+
+  .v-loading {
+    justify-content: flex-start;
+    padding-left: $space-base;
+  }
 }
 </style>

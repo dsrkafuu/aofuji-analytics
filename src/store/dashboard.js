@@ -64,5 +64,22 @@ export default {
       commit('xmSetAll', res.data);
       commit('xmSetInited', { value: true });
     },
+
+    // fetch all dashboard data (share mode)
+    // payload: { _id, range, step, share }
+    async xaFetchShareAll({ commit }, payload) {
+      const { _id, range, step, share } = payload;
+      if (share) {
+        // calculate from to
+        const to = Date.now();
+        const from = to - range;
+        // fetch data
+        const res = await $api.get(
+          `/metrics/dashboard?share=${share}&website=${_id}&from=${from}&to=${to}&step=${step}`
+        );
+        commit('xmSetAll', res.data);
+        commit('xmSetInited', { value: true });
+      }
+    },
   },
 };

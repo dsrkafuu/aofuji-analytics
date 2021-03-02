@@ -29,8 +29,12 @@ const router = new Router({
 
 /* guards */
 router.beforeEach((to, from, next) => {
+  // if going to share page and has share query
+  if (to.name === 'Share' && to.query.id) {
+    next();
+  }
   // login check, only when not going to login/404
-  if (to.name !== 'NotFound' && to.name !== 'Login' && !Cookie.get(COOKIE_TOKEN)) {
+  else if (to.name !== 'NotFound' && to.name !== 'Login' && !Cookie.get(COOKIE_TOKEN)) {
     next({ name: 'Login' });
   }
   // default behavior

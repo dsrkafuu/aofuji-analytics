@@ -12,19 +12,16 @@ const cacheControl = require('./middlewares/cacheControl');
 // routes
 router.use('/collect', cacheControl(), require('./routes/collect'));
 router.use('/login', cacheControl(), require('./routes/login'));
-router.use(
-  '/common',
-  cacheControl(),
-  /*authCheck({ checkPublic: true }),*/ require('./routes/common')
-);
+router.use('/common', authCheck({ checkShare: true }), cacheControl(), require('./routes/common'));
 
-router.use('/admin/website', cacheControl(), authCheck(), require('./routes/admin/website'));
-router.use('/admin/account', cacheControl(), authCheck(), require('./routes/admin/account'));
-router.use('/admin/share', cacheControl(), require('./routes/admin/share'));
-router.use('/admin/debug', cacheControl(), authCheck(), require('./routes/admin/debug'));
+router.use('/admin/website', authCheck(), cacheControl(), require('./routes/admin/website'));
+router.use('/admin/account', authCheck(), cacheControl(), require('./routes/admin/account'));
+router.use('/admin/share', authCheck(), cacheControl(), require('./routes/admin/share'));
+router.use('/admin/debug', authCheck(), cacheControl(), require('./routes/admin/debug'));
 
 router.use(
   '/metrics/dashboard',
+  authCheck({ checkShare: true }),
   cacheControl({ allowCache: true }),
   require('./routes/metrics/dashboard')
 );

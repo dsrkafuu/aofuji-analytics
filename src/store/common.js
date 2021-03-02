@@ -19,6 +19,9 @@ export default {
     // avaliable websites data for tab
     websites: [],
     curWebsite: null, // selected website
+
+    // share mode data
+    shareID: '',
   }),
 
   mutations: {
@@ -36,17 +39,34 @@ export default {
       state.websites = cloneDeep(payload);
     },
     // set current website
-    // payload: { _id }
+    // payload: { _id, name }
     xmSetCurWebsite(state, payload) {
-      const { _id } = payload;
+      const { _id, name } = payload;
       if (_id) {
-        const index = findIndex(state.websites, ['_id', _id]);
-        if (index >= 0) {
-          state.curWebsite = { ...state.websites[index] };
+        // normal mode
+        if (!name) {
+          const index = findIndex(state.websites, ['_id', _id]);
+          if (index >= 0) {
+            state.curWebsite = { ...state.websites[index] };
+            return;
+          }
+        }
+        // share mode
+        else {
+          state.curWebsite = { _id, name };
           return;
         }
       }
       state.curWebsite = null;
+    },
+
+    // share mode setter
+    // payload: { _id }
+    xmSetShareID(state, payload) {
+      const { _id } = payload;
+      if (_id) {
+        state.shareID = _id;
+      }
     },
   },
 
@@ -95,6 +115,16 @@ export default {
         const { _id } = res.data[0];
         commit('xmSetCurWebsite', { _id });
       }
+    },
+    // fet all websites (share mode)
+    // payload: { _id } (share id)
+    async xaFetchShareWebsites({ commit }, payload) {
+      const { _id } = payload;
+      commit('xmSetShareID', { _id });
+      const res = await $api.get(`/common?share=${_id}`);
+      const { _website } = res.data;
+      const { _id: websiteID, name } = _website;
+      commit('xmSetCurWebsite', { _id: websiteID, name });
     },
   },
 };
