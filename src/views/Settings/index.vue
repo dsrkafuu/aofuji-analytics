@@ -27,11 +27,14 @@
 import Website from './Website.vue';
 import WebsiteEdit from './WebsiteEdit.vue';
 import Account from './Account.vue';
+import Share from './Share.vue';
+import ShareEdit from './ShareEdit.vue';
 import About from './About.vue';
 
 const tabsMap = {
   website: { text: 'Website', component: Website },
   account: { text: 'Account', component: Account },
+  share: { text: 'Share', component: Share },
   about: { text: 'About', component: About },
 };
 
@@ -41,6 +44,8 @@ export default {
     Website,
     WebsiteEdit,
     Account,
+    Share,
+    ShareEdit,
     About,
   },
 
@@ -55,6 +60,8 @@ export default {
     curTabComponent() {
       if (this.$store.state.settings.editWebsite) {
         return WebsiteEdit;
+      } else if (this.$store.state.settings.editShare) {
+        return ShareEdit;
       } else {
         return tabsMap[this.curTab].component;
       }
@@ -79,7 +86,10 @@ export default {
     changeTab(newTab) {
       // exit editing
       if (this.$store.state.settings.editWebsite) {
-        this.$store.commit('xmSetEditWebsite', {});
+        this.$store.commit('settings/xmSetEditWebsite', {});
+      }
+      if (this.$store.state.settings.editShare) {
+        this.$store.commit('settings/xmSetEditShare', {});
       }
       // change tab
       this.curTab = newTab;

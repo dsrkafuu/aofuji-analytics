@@ -7,9 +7,9 @@ module.exports.DOM_ATTR_THEME = 'data-theme';
 module.exports.COOKIE_TOKEN = 'vec_token';
 
 // storage
-module.exports.LS_KEY = 'vec_data';
-module.exports.STORAGE_THEME = 'theme';
-module.exports.STORAGE_ACCOUNT = 'account';
+module.exports.STORAGE_THEME = 'va_theme';
+module.exports.STORAGE_ACCOUNT = 'va_account';
+module.exports.STORAGE_TOPOJSON = 'va_topojson';
 
 // api
 module.exports.VIEW_EXPIRE_TIME = 10 * 60 * 1000; // 10 minutes

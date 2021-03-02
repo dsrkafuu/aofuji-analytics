@@ -20,6 +20,7 @@ router.use(
 
 router.use('/admin/website', cacheControl(), authCheck(), require('./routes/admin/website'));
 router.use('/admin/account', cacheControl(), authCheck(), require('./routes/admin/account'));
+router.use('/admin/share', cacheControl(), require('./routes/admin/share'));
 router.use('/admin/debug', cacheControl(), authCheck(), require('./routes/admin/debug'));
 
 router.use(

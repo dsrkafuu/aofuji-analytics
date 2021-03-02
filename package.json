@@ -1,6 +1,6 @@
 {
   "name": "vector-analytics",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Minimal alternative to Google Analytics.",
   "author": "DSRKafuU <dsrkafuu@outlook.com> (https://dsrkafuu.su)",
   "license": "MIT",
@@ -29,6 +29,7 @@
     "cookie-parser": "~1.4.5",
     "core-js": "~3.9.1",
     "cors": "~2.8.5",
+    "dayjs": "~1.10.4",
     "express": "5.0.0-alpha.8",
     "is-localhost-ip": "~1.4.0",
     "isbot": "~3.0.24",

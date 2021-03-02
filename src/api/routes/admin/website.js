@@ -7,19 +7,19 @@ const { Website, Account } = require('../../models');
 
 // get all websites
 router.get('/', async (req, res) => {
-  const result = await Website.find({}).select('name url base isPublic').limit(20).lean();
+  const result = await Website.find({}).select('name url base').limit(20).lean();
   res.send(result);
 });
 
 // get one website
 router.get('/:id', async (req, res) => {
-  const result = await Website.findById(req.params.id).select('name url base isPublic').lean();
+  const result = await Website.findById(req.params.id).select('name url base').lean();
   res.send(result);
 });
 
 // create a new website
 router.post('/', async (req, res) => {
-  const { name, url, base, isPublic } = req.body;
+  const { name, url, base } = req.body;
   const account = await Account.findOne({}).lean();
   if (account) {
     const result = await Website.create({
@@ -27,10 +27,9 @@ router.post('/', async (req, res) => {
       name,
       url,
       base,
-      isPublic,
       _date: Date.now(),
     });
-    res.status(201).send(selectQuery(result, 'name url base isPublic'));
+    res.status(201).send(selectQuery(result, 'name url base'));
   } else {
     throw buildError(403, 'website account not found');
   }
@@ -38,15 +37,14 @@ router.post('/', async (req, res) => {
 
 // modify a website
 router.put('/:id', async (req, res) => {
-  const { name, url, base, isPublic } = req.body;
+  const { name, url, base } = req.body;
   const result = await Website.findByIdAndUpdate(req.params.id, {
     name,
     url,
     base,
-    isPublic,
     _date: Date.now(),
   })
-    .select('name url base isPublic')
+    .select('name url base')
     .lean();
   res.status(201).send(result);
 });

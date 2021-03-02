@@ -36,7 +36,6 @@ export default {
       name: '',
       url: '',
       base: '',
-      isPublic: false,
 
       awaitingCheck: false,
     };
@@ -58,7 +57,6 @@ export default {
     this.name = '';
     this.url = '';
     this.base = '';
-    this.isPublic = false;
 
     this.awaitingCheck = false;
   },
@@ -73,7 +71,6 @@ export default {
         this.name = editing.name || '';
         this.url = editing.url || '';
         this.base = editing.base || '';
-        this.isPublic = editing.isPublic || false;
       }
     },
     /**
@@ -86,14 +83,12 @@ export default {
           name: this.name,
           url: this.url,
           base: this.base,
-          isPublic: this.isPublic,
         });
       } else {
         await this.$store.dispatch('settings/xaPostWebsite', {
           name: this.name,
           url: this.url,
           base: this.base,
-          isPublic: this.isPublic,
         });
       }
       this.awaitingCheck = false;

@@ -34,7 +34,7 @@ export default {
 
 <style lang="scss" scoped>
 .about {
-  margin: $space-lg;
+  padding: $space-lg;
 }
 
 .test span {

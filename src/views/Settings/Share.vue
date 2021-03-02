@@ -1,22 +1,17 @@
 <template>
-  <div class="website">
-    <VHeader text="Website">
+  <div class="share">
+    <VHeader text="Share">
       <VButton @click="handleAdd">
         <VIconPlus />
       </VButton>
     </VHeader>
     <div class="content">
       <VLoading :loading="loading" :nodata="nodata" />
-      <VList :data="websites" type="extend" custom v-slot="{ item }">
+      <VList :data="shares" type="extend" custom v-slot="{ item }">
         <div class="v-list-ctrl">
           <div class="v-list-ctrl-item">
-            <VButton @click="handleShowCode(item.id)">
+            <VButton @click="handleShowLink(item.id)">
               <VIconCode />
-            </VButton>
-          </div>
-          <div class="v-list-ctrl-item">
-            <VButton @click="handleEdit(item.id)">
-              <VIconEdit />
             </VButton>
           </div>
           <div class="v-list-ctrl-item">
@@ -27,104 +22,100 @@
         </div>
       </VList>
     </div>
-    <VModal type="alert" :show="Boolean(showCodeID)" @confirm="handleCloseCode" custom>
+    <VModal type="alert" :show="Boolean(shareLink)" @confirm="handleCloseLink" custom>
       <div class="code">
-        <pre class="code-pre" v-text="fmtCode(showCodeID)"></pre>
+        <pre class="code-pre" v-text="shareLink"></pre>
       </div>
     </VModal>
   </div>
 </template>
 
 <script>
-import { fmtCode } from '@/utils/formatters';
+import dayjs from 'dayjs';
 
 export default {
-  name: 'Website',
+  name: 'Share',
 
   data() {
     return {
-      showCode: false,
-      showCodeID: '',
       awaitingDelete: '',
+      shareLink: '',
 
       loading: true,
     };
   },
   computed: {
-    websites() {
+    shares() {
       const ret = [];
-      const websites = this.$store.state.settings.websites;
-      if (websites && Array.isArray(websites)) {
-        for (let i = 0; i < websites.length; i++) {
+      const shares = this.$store.state.settings.shares;
+      if (shares && Array.isArray(shares)) {
+        for (let i = 0; i < shares.length; i++) {
+          const expire = shares[i].expire;
           ret.push({
-            id: websites[i]._id,
-            text: websites[i].name,
-            sub: websites[i].url,
+            id: shares[i]._id,
+            text: shares[i]._website.name,
+            sub:
+              expire > 0
+                ? `Expire at ${dayjs(expire).format('YYYY-MM-DD HH:mm:ss')}`
+                : 'Never expire',
+            label: expire > 0 ? (expire < Date.now() ? 'expired' : 'active') : 'active',
           });
         }
       }
       return ret;
     },
     nodata() {
-      return this.websites.length <= 0;
+      return this.shares.length <= 0;
     },
   },
 
   async mounted() {
-    await this.fetchWebsites();
+    await this.fetchShare();
   },
 
   methods: {
-    fmtCode,
     /**
-     * fetch website data when first mounted
+     * fetch sharing data when first mounted
      */
-    async fetchWebsites() {
+    async fetchShare() {
       this.loading = true;
-      await this.$store.dispatch('settings/xaFetchWebsites');
+      await this.$store.dispatch('settings/xaFetchShares');
       this.loading = false;
     },
     /**
-     * handle website add
+     * handle sharing add
      */
     handleAdd() {
-      this.$store.commit('settings/xmSetEditWebsite', { _id: '' });
+      this.$store.commit('settings/xmSetEditShare', { _id: '' });
     },
     /**
-     * handle website edit
-     * @param {string} _id
-     */
-    handleEdit(_id) {
-      this.$store.commit('settings/xmSetEditWebsite', { _id });
-    },
-    /**
-     * handle website delete
+     * handle sharing delete
      * @param {string} _id
      */
     async handleDelete(_id) {
       this.awaitingDelete = _id;
-      await this.$store.dispatch('settings/xaDeleteWebsite', { _id });
+      await this.$store.dispatch('settings/xaDeleteShare', { _id });
       this.awaitingDelete = '';
     },
     /**
-     * handle get tracker code
+     * handle get sharing link
      * @param {string} _id
      */
-    handleShowCode(_id) {
-      this.showCodeID = _id;
+    handleShowLink(_id) {
+      this.shareLink = window.location.origin + '/share/' + _id;
     },
     /**
-     * close show code modal
+     * close link modal
      */
-    handleCloseCode() {
-      this.showCodeID = '';
+    handleCloseLink() {
+      this.shareLink = '';
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.website {
+.share {
   padding: $space-lg;
 }
 
@@ -135,7 +126,7 @@ export default {
   .v-list-ctrl {
     flex: 0 0 auto;
     display: flex;
-    width: 12rem;
+    width: 8rem;
     justify-content: center;
   }
 }

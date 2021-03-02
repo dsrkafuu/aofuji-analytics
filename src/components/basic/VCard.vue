@@ -15,6 +15,5 @@ export default {
   background-color: var(--color-bg);
   box-shadow: var(--shadow);
   border-radius: $radius;
-  overflow: hidden; // prevent internal elements to cover radius
 }
 </style>
