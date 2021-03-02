@@ -95,27 +95,30 @@ export default {
     },
     // add a website
     // payload: { _id, name, ... }
-    async xaPostWebsite({ commit }, payload) {
+    async xaPostWebsite({ commit, dispatch }, payload) {
       const { name, url, base } = payload;
       const res = await $api.post('/admin/website', { name, url, base });
       commit('xmAddWebsite', res.data);
       $info('new website added');
+      await dispatch('common/xaRefreshWebsites', null, { root: true }); // refresh common data
     },
     // modify a website
     // payload: { _id, name, ... }
-    async xaPutWebsite({ commit }, payload) {
+    async xaPutWebsite({ commit, dispatch }, payload) {
       const { _id, name, url, base } = payload;
       const res = await $api.put(`/admin/website/${_id}`, { name, url, base });
       commit('xmUpdateWebsite', res.data);
       $info('website modified');
+      await dispatch('common/xaRefreshWebsites', null, { root: true }); // refresh common data
     },
     // delete a website
     // payload: { _id }
-    async xaDeleteWebsite({ commit }, payload) {
+    async xaDeleteWebsite({ commit, dispatch }, payload) {
       const { _id } = payload;
       await $api.delete(`/admin/website/${_id}`);
       commit('xmRemoveWebsite', { _id });
       $info('website removed');
+      await dispatch('common/xaRefreshWebsites', null, { root: true }); // refresh common data
     },
 
     // modify a account

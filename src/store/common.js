@@ -131,5 +131,12 @@ export default {
       const { _id: websiteID, name } = _website;
       commit('xmSetCurWebsite', { _id: websiteID, name });
     },
+
+    // refresh all websites
+    async xaRefreshWebsites({ commit, dispatch }) {
+      commit('dashboard/xmSetInited', { value: false }, { root: true });
+      commit('realtime/xmSetInited', { value: false }, { root: true });
+      await dispatch('xaFetchWebsites');
+    },
   },
 };
