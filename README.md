@@ -1,5 +1,9 @@
 # Vector Analytics
 
+![](https://img.shields.io/github/package-json/v/dsrkafuu/aofuji-analytics)
+![](https://img.shields.io/github/workflow/status/dsrkafuu/aofuji-analytics/test)
+![](https://img.shields.io/github/license/dsrkafuu/aofuji-analytics)
+
 Minimal alternative to Google Analytics based on Vue.js and MongoDB.
 
 - [Documentation](https://aofuji.ink)
@@ -117,4 +121,4 @@ Alternatively, all view components in `@/views` should use scoped styles.
 
 This project is released under `MIT License`, for more information read the [LICENSE](https://github.com/dsrkafuu/aofuji-analytics/blob/main/LICENSE).
 
-Copyright © 2020-present DSRKafuU (<https://dsrkafuu.su>)
+**Copyright © 2020-present DSRKafuU (<https://dsrkafuu.su>)**
