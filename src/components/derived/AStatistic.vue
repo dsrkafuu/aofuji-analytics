@@ -1,9 +1,9 @@
 <template>
-  <div class="v-statistic">
-    <div class="v-statistic-title">{{ title }}</div>
-    <div class="v-statistic-value">
-      <VLoading :loading="loading" />
-      <span class="v-statistic-ctx" v-if="!loading">{{ fmtValue }}</span>
+  <div class="a-statistic">
+    <div class="a-statistic-title">{{ title }}</div>
+    <div class="a-statistic-value">
+      <ALoading :loading="loading" />
+      <span class="a-statistic-ctx" v-if="!loading">{{ fmtValue }}</span>
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@
 import { fmtNumber, fmtTime } from '@/utils/formatters';
 
 export default {
-  name: 'VStatistic',
+  name: 'AStatistic',
 
   props: {
     type: {
@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-statistic {
+.a-statistic {
   &-title {
     white-space: nowrap;
     overflow: hidden;

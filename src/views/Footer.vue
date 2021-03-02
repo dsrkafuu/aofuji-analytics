@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
-    <div class="v-container">
-      <div class="power">Powered by Vector Analytics</div>
+    <div class="a-container">
+      <div class="power">Powered by Aofuji Analytics</div>
       <div class="copy">&copy; 2020-{{ new Date().getFullYear() }} DSRKafuU</div>
     </div>
   </footer>
@@ -21,7 +21,7 @@ export default {
   font-size: $font-size-sm;
   line-height: 1.5rem;
 
-  .v-container {
+  .a-container {
     height: $navbar-height * 1.5;
     display: flex;
     flex-direction: column;

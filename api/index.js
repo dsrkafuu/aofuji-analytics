@@ -1,4 +1,4 @@
-/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) MIT License */
+/*! aofuji-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) MIT License */
 require('../utils/env')();
 
 const app = require('../src/api');
@@ -19,7 +19,7 @@ if (!process.env.SERVERLESS) {
       ? process.env.SERVER_PORT || 3000
       : process.env.SERVER_API_PORT || 3001;
   app.listen(port, () => {
-    console.log(`[vector-api] listening at http://localhost:${port}`);
+    console.log(`[aofuji] listening at http://localhost:${port}`);
   });
 }
 

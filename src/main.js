@@ -1,4 +1,4 @@
-/*! vector-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) MIT License */
+/*! aofuji-analytics | DSRKafuU (https://dsrkafuu.su) | Copyright (c) MIT License */
 
 import Vue from 'vue';
 Vue.config.productionTip = false;
@@ -10,8 +10,8 @@ import './scss/index.scss';
 
 import VComponents from './plugins/components';
 Vue.use(VComponents);
-import VMessage from './plugins/message';
-Vue.use(VMessage);
+import AMessage from './plugins/message';
+Vue.use(AMessage);
 import Axios from './plugins/axios';
 Vue.use(Axios);
 

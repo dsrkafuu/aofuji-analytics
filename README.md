@@ -31,7 +31,7 @@ VUE_APP_BASE_URL="/"
 
 In development mode, the website itself is provided by Vue CLI on `SERVER_PORT`.
 
-Difference is that the API server is deployed on `SERVER_API_PORT` without static file provider, then proxyed by Vue CLI's webpack-dev-server to the same port as `SERVER_PORT`.
+Difference is that the API server is deployed on `SERVER_API_PORT` without static file provider, then proxyed by Vue CLI's webpack-dea-server to the same port as `SERVER_PORT`.
 
 ```
 SERVER_API_PORT=3001
@@ -76,7 +76,7 @@ methods
 
 #### SCSS Scopes
 
-All basic components in `@/components` should not use scoped styles, styles of those needs to be named like `v-component-ctx`.
+All basic components in `@/components` should not use scoped styles, styles of those needs to be named like `a-component-ctx`.
 
 Alternatively, all view components in `@/views` should use scoped styles.
 

@@ -1,24 +1,24 @@
 <template>
   <div class="realtime">
     <div class="row row-hero">
-      <VCard class="count">
-        <VStatistic title="Active Users" :value="activeUsers" :loading="!inited" />
+      <ACard class="count">
+        <AStatistic title="Active Users" :value="activeUsers" :loading="!inited" />
         <RealtimeDeviceCategory :data="deviceCategorys" :loading="!inited" />
-      </VCard>
-      <VCard class="map">
+      </ACard>
+      <ACard class="map">
         <RealtimeMap :data="userRegions" :loading="!inited" />
-      </VCard>
+      </ACard>
     </div>
     <div class="row row-norm">
-      <VCard class="data">
-        <VStatlist title="Page Views" :data="pageViews" :loading="!inited" />
-      </VCard>
-      <VCard class="data">
-        <VStatlist title="User Events" :data="userEvents" :loading="!inited" />
-      </VCard>
-      <VCard class="data">
-        <VStatlist title="User Regions" :data="userRegions" :loading="!inited" />
-      </VCard>
+      <ACard class="data">
+        <AStatlist title="Page Views" :data="pageViews" :loading="!inited" />
+      </ACard>
+      <ACard class="data">
+        <AStatlist title="User Events" :data="userEvents" :loading="!inited" />
+      </ACard>
+      <ACard class="data">
+        <AStatlist title="User Regions" :data="userRegions" :loading="!inited" />
+      </ACard>
     </div>
   </div>
 </template>
@@ -110,7 +110,7 @@ export default {
 .data {
   flex: 0 1 32.3%;
 
-  .v-statlist {
+  .a-statlist {
     height: $realtime-data-height;
   }
 }

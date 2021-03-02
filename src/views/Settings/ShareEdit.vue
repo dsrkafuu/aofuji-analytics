@@ -1,20 +1,20 @@
 <template>
   <div class="share-edit">
-    <VHeader text="Create Share">
-      <VButton @click="handleExit">
-        <VIconTimes />
-      </VButton>
-      <VButton @click="handleCheck" :loading="awaitingCheck">
-        <VIconCheck />
-      </VButton>
-    </VHeader>
+    <AHeader text="Create Share">
+      <AButton @click="handleExit">
+        <AIconTimes />
+      </AButton>
+      <AButton @click="handleCheck" :loading="awaitingCheck">
+        <AIconCheck />
+      </AButton>
+    </AHeader>
     <div class="line">
       <span class="keyname">Website</span>
-      <VSelect :map="websitesMap" v-model="website" />
+      <ASelect :map="websitesMap" v-model="website" />
     </div>
     <div class="line">
       <span class="keyname">Expire</span>
-      <VSelect :map="expireMap" v-model="expire" />
+      <ASelect :map="expireMap" v-model="expire" />
     </div>
   </div>
 </template>
@@ -95,14 +95,14 @@ export default {
   align-items: center;
   padding: 0 $space-sm;
 
-  .v-label,
-  .v-input {
+  .a-label,
+  .a-input {
     margin: 0 !important;
     min-width: 20rem;
     text-align: left;
   }
 
-  .v-label {
+  .a-label {
     font-size: $font-size-sm;
     height: 2rem;
     line-height: 2rem;

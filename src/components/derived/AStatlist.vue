@@ -1,16 +1,16 @@
 <template>
-  <div class="v-statlist">
-    <div class="v-statlist-title">{{ title }}</div>
-    <div class="v-statlist-ctx">
-      <VLoading :loading="loading" :nodata="nodata" />
-      <VList v-if="!loading" type="dense" :data="data" />
+  <div class="a-statlist">
+    <div class="a-statlist-title">{{ title }}</div>
+    <div class="a-statlist-ctx">
+      <ALoading :loading="loading" :nodata="nodata" />
+      <AList v-if="!loading" type="dense" :data="data" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'VStatlist',
+  name: 'AStatlist',
 
   props: {
     title: { type: String },
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-statlist {
+.a-statlist {
   display: flex;
   flex-direction: column;
 

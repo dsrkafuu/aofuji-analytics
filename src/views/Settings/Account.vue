@@ -1,22 +1,22 @@
 <template>
   <div class="account">
-    <VHeader text="Account">
-      <VButton @click="handleCheck" :loading="awaitingCheck">
-        <VIconCheck />
-      </VButton>
-    </VHeader>
+    <AHeader text="Account">
+      <AButton @click="handleCheck" :loading="awaitingCheck">
+        <AIconCheck />
+      </AButton>
+    </AHeader>
     <div class="content">
       <div class="line">
         <span class="keyname">ID</span>
-        <VLabel>{{ id }}</VLabel>
+        <ALabel>{{ id }}</ALabel>
       </div>
       <div class="line">
         <span class="keyname">Username</span>
-        <VInput class="name" v-model="username" :validator="validUsername" />
+        <AInput class="name" v-model="username" :validator="validUsername" />
       </div>
       <div class="line">
         <span class="keyname">Password</span>
-        <VInput class="pass" v-model="password" type="password" :validator="validPassword" />
+        <AInput class="pass" v-model="password" type="password" :validator="validPassword" />
       </div>
     </div>
   </div>
@@ -96,13 +96,13 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 $space-sm;
-  .v-label,
-  .v-input {
+  .a-label,
+  .a-input {
     margin: 0 !important;
     min-width: 20rem;
     text-align: left;
   }
-  .v-label {
+  .a-label {
     font-size: $font-size-sm;
     height: 2rem;
     line-height: 2rem;

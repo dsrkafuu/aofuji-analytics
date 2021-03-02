@@ -1,4 +1,4 @@
-.v-container {
+.a-container {
   width: $responsive-desktop;
   margin: 0 auto;
 
@@ -11,15 +11,15 @@
   }
 }
 
-.v-icon {
+.a-icon {
   fill: currentColor;
 
-  .v-icon-opacity {
+  &-opacity {
     opacity: 0.4;
   }
 }
 
-.v-spin {
+.a-spin {
   @keyframes spin {
     0% {
       transform: rotate(0deg);

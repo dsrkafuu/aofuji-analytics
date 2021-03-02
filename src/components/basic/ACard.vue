@@ -1,17 +1,17 @@
 <template>
-  <div class="v-card">
+  <div class="a-card">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'VCard',
+  name: 'ACard',
 };
 </script>
 
 <style lang="scss">
-.v-card {
+.a-card {
   background-color: var(--color-bg);
   box-shadow: var(--shadow);
   border-radius: $radius;

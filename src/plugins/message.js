@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import VMessage from '@/components/VMessage.vue';
+import AMessage from '@/components/AMessage.vue';
 import { findIndex } from '@/utils/lodash';
 
 // message id controller
@@ -64,9 +64,9 @@ function removeMessage(id) {
   }
 }
 
-// mount `VMessage` component directly to body
-const VMessageClass = Vue.extend(VMessage);
-const message = new VMessageClass({
+// mount `AMessage` component directly to body
+const AMessageClass = Vue.extend(AMessage);
+const message = new AMessageClass({
   data() {
     return { messages };
   },

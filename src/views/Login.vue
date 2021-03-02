@@ -1,24 +1,24 @@
 <template>
   <div class="login">
-    <VCard class="card">
-      <VHeader :text="siteTitle" />
+    <ACard class="card">
+      <AHeader :text="siteTitle" />
       <div class="line">
         <span>Username</span>
-        <VInput v-model="username" :validator="validUsername" />
+        <AInput v-model="username" :validator="validUsername" />
       </div>
       <div class="line">
         <span>Password</span>
-        <VInput
+        <AInput
           v-model="password"
           type="password"
           :validator="validPassword"
           @keyup.enter="handleLogin"
         />
       </div>
-      <VButton class="submit" type="full-width" @click="handleLogin" :loading="awaitingLogin">
+      <AButton class="submit" type="full-width" @click="handleLogin" :loading="awaitingLogin">
         Login
-      </VButton>
-    </VCard>
+      </AButton>
+    </ACard>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
   computed: {
     // site title from environment variables
     siteTitle() {
-      return process.env.VUE_APP_TITLE || 'Vector Analytics';
+      return process.env.VUE_APP_TITLE || 'Aofuji Analytics';
     },
   },
 
@@ -104,7 +104,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: $space-lg 0;
-  .v-header {
+  .a-header {
     margin-bottom: $space-xs;
   }
 }

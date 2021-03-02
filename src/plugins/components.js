@@ -24,7 +24,7 @@ export default {
     const requireIcons = require.context('../assets/icons', false, /.*\.svg$/);
     requireIcons.keys().forEach((fileName) => {
       const componentConfig = requireIcons(fileName);
-      const componentName = `VIcon${getComponentName(fileName)}`;
+      const componentName = `AIcon${getComponentName(fileName)}`;
       Vue.component(componentName, componentConfig.default || componentConfig);
     });
 

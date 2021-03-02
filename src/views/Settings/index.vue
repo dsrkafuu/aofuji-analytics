@@ -1,8 +1,8 @@
 <template>
   <div class="settings">
     <div class="ctrl">
-      <VCard>
-        <VButton
+      <ACard>
+        <AButton
           v-for="(tab, key) of tabsMap"
           :key="key"
           type="full-width"
@@ -10,15 +10,15 @@
           :active="key === curTab"
         >
           {{ tab.text }}
-        </VButton>
-      </VCard>
+        </AButton>
+      </ACard>
     </div>
     <div class="content">
-      <VCard>
+      <ACard>
         <keep-alive>
           <component :is="curTabComponent"></component>
         </keep-alive>
-      </VCard>
+      </ACard>
     </div>
   </div>
 </template>
@@ -110,7 +110,7 @@ export default {
 .ctrl {
   flex: 0 0 20%;
 
-  .v-card {
+  .a-card {
     padding: $space-base 0;
   }
 }

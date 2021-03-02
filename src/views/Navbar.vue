@@ -1,50 +1,54 @@
 <template>
   <nav class="navbar">
-    <div class="v-container">
+    <div class="a-container">
       <div class="brand">
-        <VButton class="item" type="full-height" href="https://appvector.icu" external>
+        <ARouterLink
+          class="item"
+          :to="{ name: 'Dashboard', query: curWebsite ? { website: curWebsite } : {} }"
+          type="full-height"
+        >
           {{ siteTitle }}
-        </VButton>
+        </ARouterLink>
       </div>
       <div class="menu">
         <div class="start">
           <template v-if="shareID">
             <span class="item expire">
-              <VLoading :loading="!shareWebsite" />
+              <ALoading :loading="!shareWebsite" />
               {{ shareWebsite }}
             </span>
           </template>
           <template v-else>
-            <VRouterLink
+            <ARouterLink
               class="item"
               :to="{ name: 'Dashboard', query: curWebsite ? { website: curWebsite } : {} }"
               type="full-height"
             >
               Dashboard
-            </VRouterLink>
-            <VRouterLink
+            </ARouterLink>
+            <ARouterLink
               class="item"
               :to="{ name: 'Realtime', query: curWebsite ? { website: curWebsite } : {} }"
               type="full-height"
             >
               Realtime
-            </VRouterLink>
-            <VRouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
+            </ARouterLink>
+            <ARouterLink class="item" :to="{ name: 'Settings' }" type="full-height">
               Settings
-            </VRouterLink>
+            </ARouterLink>
           </template>
         </div>
         <div class="end">
           <div class="select" v-if="showSelectWebsite">
-            <VSelect :map="websitesMap" v-model="curWebsite" />
+            <ASelect :map="websitesMap" v-model="curWebsite" />
           </div>
           <div class="ctrl">
-            <VButton class="item" type="full-height" v-if="showLogout" @click="handleLogout">
-              <VIconSignOut />
-            </VButton>
-            <VButton class="item" type="full-height" @click="handleThemeSwitch">
-              <VIconAdjust />
-            </VButton>
+            <AButton class="item" type="full-height" v-if="showLogout" @click="handleLogout">
+              <AIconSignOut />
+            </AButton>
+            <AButton class="item" type="full-height" @click="handleThemeSwitch">
+              <AIconAdjust />
+            </AButton>
           </div>
         </div>
       </div>
@@ -59,7 +63,7 @@ export default {
   computed: {
     // site title from environment variables
     siteTitle() {
-      return process.env.VUE_APP_TITLE || 'Vector Analytics';
+      return process.env.VUE_APP_TITLE || 'Aofuji Analytics';
     },
     // should show logout button
     showLogout() {
@@ -127,7 +131,7 @@ export default {
   height: $navbar-height;
   box-shadow: var(--shadow);
 
-  .v-container {
+  .a-container {
     display: flex;
     height: $navbar-height;
     line-height: $navbar-height;
@@ -177,7 +181,7 @@ export default {
   position: relative;
   width: 100%;
 
-  .v-loading {
+  .a-loading {
     justify-content: flex-start;
     padding-left: $space-base;
   }

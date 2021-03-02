@@ -1,22 +1,22 @@
 <template>
-  <div :class="['v-list', `v-list-${type}`]">
-    <div class="v-list-item" v-for="item of data" :key="item.key || item.id || item[0]">
+  <div :class="['a-list', `a-list-${type}`]">
+    <div class="a-list-item" v-for="item of data" :key="item.key || item.id || item[0]">
       <!-- key-value pair list -->
       <template v-if="Array.isArray(item) && item.length === 2">
-        <div class="v-list-text">{{ item[0] }}</div>
-        <div class="v-list-count">{{ item[1] }}</div>
+        <div class="a-list-text">{{ item[0] }}</div>
+        <div class="a-list-count">{{ item[1] }}</div>
       </template>
 
       <!-- object list -->
       <template v-else>
-        <div v-if="type === 'extend'" class="v-list-text-wrapper">
-          <div class="v-list-text">{{ item.text }}</div>
-          <div class="v-list-sub">{{ item.sub }}</div>
+        <div v-if="type === 'extend'" class="a-list-text-wrapper">
+          <div class="a-list-text">{{ item.text }}</div>
+          <div class="a-list-sub">{{ item.sub }}</div>
         </div>
-        <div v-else class="v-list-text">{{ item.text }}</div>
-        <div class="v-list-label" v-if="item.label">
-          <span class="v-label">
-            <VLabel>{{ item.label }}</VLabel>
+        <div v-else class="a-list-text">{{ item.text }}</div>
+        <div class="a-list-label" v-if="item.label">
+          <span class="a-label">
+            <ALabel>{{ item.label }}</ALabel>
           </span>
         </div>
       </template>
@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: 'VList',
+  name: 'AList',
 
   props: {
     data: {
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-list {
+.a-list {
   display: flex;
   flex-direction: column;
 
@@ -93,7 +93,7 @@ export default {
 
   /* dense list */
   &-dense {
-    .v-list-item {
+    .a-list-item {
       height: $list-item-height-sm;
       line-height: $list-item-height-sm;
       font-size: $font-size-sm;
@@ -102,22 +102,22 @@ export default {
 
   /* extend list */
   &-extend {
-    .v-list-item {
+    .a-list-item {
       height: $list-item-height + $list-item-height-sm;
     }
 
-    .v-list-text-wrapper {
+    .a-list-text-wrapper {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
     }
 
-    .v-list-text {
+    .a-list-text {
       height: $list-item-height;
       line-height: $list-item-height;
     }
 
-    .v-list-sub {
+    .a-list-sub {
       height: $list-item-height-sm;
       line-height: initial;
       font-size: $font-size-sm;

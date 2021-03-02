@@ -2,7 +2,7 @@
   <div class="base">
     <Navbar />
 
-    <main class="v-container">
+    <main class="a-container">
       <Dashboard />
     </main>
 

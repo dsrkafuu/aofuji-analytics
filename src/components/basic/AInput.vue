@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'VInput',
+  name: 'AInput',
 
   props: {
     value: String,
@@ -46,11 +46,11 @@ export default {
     // classes
     classes() {
       return [
-        'v-input',
+        'a-input',
         {
-          'v-input-error': !this.valid,
-          'v-input-password': this.type === 'password',
-          'v-input-focus': this.focused,
+          'a-input-error': !this.valid,
+          'a-input-password': this.type === 'password',
+          'a-input-focus': this.focused,
         },
       ];
     },
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-input {
+.a-input {
   display: inline-block;
   padding: $space-xs $space-xs * 1.75;
   background-color: var(--color-wrapper);

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-chart">
-    <VLoading :loading="loading" :nodata="nodata" />
+    <ALoading :loading="loading" :nodata="nodata" />
     <div class="ctx">
       <canvas ref="chartRef"></canvas>
     </div>

@@ -1,11 +1,11 @@
 <template>
-  <div :class="['v-select', { 'v-select-active': active }]">
-    <div class="v-select-input" @click="handleSwitch">
+  <div :class="['a-select', { 'a-select-active': active }]">
+    <div class="a-select-input" @click="handleSwitch">
       <span>{{ selectedText }}</span>
-      <VIconChevronUp v-if="active" />
-      <VIconChevronDown v-else />
+      <AIconChevronUp v-if="active" />
+      <AIconChevronDown v-else />
     </div>
-    <ul class="v-select-list" v-show="active">
+    <ul class="a-select-list" v-show="active">
       <li v-for="key of Object.keys(map)" :key="key" @click="handleSelect(key)">
         {{ map[key] ? map[key].text : '' }}
       </li>
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'VSelect',
+  name: 'ASelect',
 
   props: {
     map: {
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-select {
+.a-select {
   display: inline-block;
   background-color: var(--color-wrapper);
   height: $select-height;
@@ -89,7 +89,7 @@ export default {
       text-overflow: ellipsis;
     }
 
-    .v-icon {
+    .a-icon {
       flex: 0 0 auto;
     }
   }

@@ -23,12 +23,12 @@ export default {
       options.attrs.rel = 'noopener';
     }
 
-    const icon = [h('VIconCircle', { class: 'v-spin' })];
+    const icon = [h('AIconCircle', { class: 'a-spin' })];
     const slot = this.$slots.default;
     return h(tag, options, this.loading ? icon : slot);
   },
 
-  name: 'VButton',
+  name: 'AButton',
 
   props: {
     type: {
@@ -47,12 +47,12 @@ export default {
   computed: {
     buttonClasses() {
       return [
-        'v-button',
-        `v-button-${this.type}`,
+        'a-button',
+        `a-button-${this.type}`,
         {
-          'v-button-disabled': this.disabled,
-          'v-button-active': this.active,
-          'v-button-loading': this.loading,
+          'a-button-disabled': this.disabled,
+          'a-button-active': this.active,
+          'a-button-loading': this.loading,
         },
       ];
     },
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-button {
+.a-button {
   color: var(--color-font);
   background-color: transparent;
   text-align: center;

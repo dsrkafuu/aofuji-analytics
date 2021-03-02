@@ -84,6 +84,6 @@ export function fmtCode(id = '') {
   async
   data-vaid="${id}"
   data-vaapi="${origin + base}api"
-  src="https://cdn.jsdelivr.net/npm/vector-tracker@0.1/lib/vector.min.js"
+  src="https://cdn.jsdelivr.net/npm/aofuji-tracker@0.1/lib/aofuji.min.js"
 ></script>`;
 }

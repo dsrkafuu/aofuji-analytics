@@ -10,7 +10,7 @@ function errorHandler() {
     });
     // if customized error
     if (err.status !== undefined) {
-      res.status(err.status).send('[vector-api] ' + err.message);
+      res.status(err.status).send('[aofuji] ' + err.message);
     }
     // pass to express default
     else {

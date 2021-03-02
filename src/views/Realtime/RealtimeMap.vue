@@ -1,6 +1,6 @@
 <template>
   <div class="realtime-map">
-    <VLoading :loading="loading" :nodata="nodata" />
+    <ALoading :loading="loading" :nodata="nodata" />
     <div class="ctx">
       <canvas ref="mapRef"></canvas>
     </div>

@@ -1,4 +1,5 @@
-require('./utils/env')();
+// ensure env not undefined in index html template
+process.env.VUE_APP_TITLE = process.env.VUE_APP_TITLE || 'Aofuji Analytics';
 
 module.exports = {
   publicPath: process.env.VUE_APP_BASE_URL || '/',

@@ -1,37 +1,37 @@
 <template>
   <div class="website">
-    <VHeader text="Website">
-      <VButton @click="handleAdd">
-        <VIconPlus />
-      </VButton>
-    </VHeader>
+    <AHeader text="Website">
+      <AButton @click="handleAdd">
+        <AIconPlus />
+      </AButton>
+    </AHeader>
     <div class="content">
-      <VLoading :loading="loading" :nodata="nodata" />
-      <VList :data="websites" type="extend" custom v-slot="{ item }">
-        <div class="v-list-ctrl">
-          <div class="v-list-ctrl-item">
-            <VButton @click="handleShowCode(item.id)">
-              <VIconCode />
-            </VButton>
+      <ALoading :loading="loading" :nodata="nodata" />
+      <AList :data="websites" type="extend" custom v-slot="{ item }">
+        <div class="a-list-ctrl">
+          <div class="a-list-ctrl-item">
+            <AButton @click="handleShowCode(item.id)">
+              <AIconCode />
+            </AButton>
           </div>
-          <div class="v-list-ctrl-item">
-            <VButton @click="handleEdit(item.id)">
-              <VIconEdit />
-            </VButton>
+          <div class="a-list-ctrl-item">
+            <AButton @click="handleEdit(item.id)">
+              <AIconEdit />
+            </AButton>
           </div>
-          <div class="v-list-ctrl-item">
-            <VButton @click="handleDelete(item.id)" :loading="item.id === awaitingDelete">
-              <VIconTrash />
-            </VButton>
+          <div class="a-list-ctrl-item">
+            <AButton @click="handleDelete(item.id)" :loading="item.id === awaitingDelete">
+              <AIconTrash />
+            </AButton>
           </div>
         </div>
-      </VList>
+      </AList>
     </div>
-    <VModal type="alert" :show="Boolean(showCodeID)" @confirm="handleCloseCode" custom>
+    <AModal type="alert" :show="Boolean(showCodeID)" @confirm="handleCloseCode" custom>
       <div class="code">
         <pre class="code-pre" v-text="fmtCode(showCodeID)"></pre>
       </div>
-    </VModal>
+    </AModal>
   </div>
 </template>
 
@@ -132,7 +132,7 @@ export default {
   position: relative;
   min-height: 3rem;
 
-  .v-list-ctrl {
+  .a-list-ctrl {
     flex: 0 0 auto;
     display: flex;
     width: 12rem;

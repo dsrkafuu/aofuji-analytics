@@ -1,32 +1,32 @@
 <template>
   <div class="share">
-    <VHeader text="Share">
-      <VButton @click="handleAdd">
-        <VIconPlus />
-      </VButton>
-    </VHeader>
+    <AHeader text="Share">
+      <AButton @click="handleAdd">
+        <AIconPlus />
+      </AButton>
+    </AHeader>
     <div class="content">
-      <VLoading :loading="loading" :nodata="nodata" />
-      <VList :data="shares" type="extend" custom v-slot="{ item }">
-        <div class="v-list-ctrl">
-          <div class="v-list-ctrl-item">
-            <VButton @click="handleShowLink(item.id)">
-              <VIconCode />
-            </VButton>
+      <ALoading :loading="loading" :nodata="nodata" />
+      <AList :data="shares" type="extend" custom v-slot="{ item }">
+        <div class="a-list-ctrl">
+          <div class="a-list-ctrl-item">
+            <AButton @click="handleShowLink(item.id)">
+              <AIconCode />
+            </AButton>
           </div>
-          <div class="v-list-ctrl-item">
-            <VButton @click="handleDelete(item.id)" :loading="item.id === awaitingDelete">
-              <VIconTrash />
-            </VButton>
+          <div class="a-list-ctrl-item">
+            <AButton @click="handleDelete(item.id)" :loading="item.id === awaitingDelete">
+              <AIconTrash />
+            </AButton>
           </div>
         </div>
-      </VList>
+      </AList>
     </div>
-    <VModal type="alert" :show="Boolean(shareLink)" @confirm="handleCloseLink" custom>
+    <AModal type="alert" :show="Boolean(shareLink)" @confirm="handleCloseLink" custom>
       <div class="code">
         <pre class="code-pre" v-text="shareLink"></pre>
       </div>
-    </VModal>
+    </AModal>
   </div>
 </template>
 
@@ -123,7 +123,7 @@ export default {
   position: relative;
   min-height: 3rem;
 
-  .v-list-ctrl {
+  .a-list-ctrl {
     flex: 0 0 auto;
     display: flex;
     width: 8rem;

@@ -1,44 +1,44 @@
 <template>
   <div class="dashboard">
     <div class="row row-hero">
-      <VCard class="summary">
+      <ACard class="summary">
         <div class="range">
-          <VSelect :map="rangeMap" v-model="range" />
+          <ASelect :map="rangeMap" v-model="range" />
         </div>
-        <VStatistic title="Page Views" :value="pageViews" :loading="!inited" />
-        <VStatistic title="Unique Visitors" :value="uniqueSessions" :loading="!inited" />
-        <VStatistic title="Avg. View Time" :value="pageViewTime" type="time" :loading="!inited" />
-      </VCard>
-      <VCard class="chart">
+        <AStatistic title="Page Views" :value="pageViews" :loading="!inited" />
+        <AStatistic title="Unique Visitors" :value="uniqueSessions" :loading="!inited" />
+        <AStatistic title="Avg. View Time" :value="pageViewTime" type="time" :loading="!inited" />
+      </ACard>
+      <ACard class="chart">
         <DashboardChart :pvsData="pageViewSteps" :ussData="uniqueSessionSteps" :loading="!inited" />
-      </VCard>
+      </ACard>
     </div>
     <div class="row row-prim">
-      <VCard class="data">
-        <VStatlist title="Pages" :data="pathnames" :loading="!inited" />
-      </VCard>
-      <VCard class="data">
-        <VStatlist title="Referers" :data="referrers" :loading="!inited" />
-      </VCard>
+      <ACard class="data">
+        <AStatlist title="Pages" :data="pathnames" :loading="!inited" />
+      </ACard>
+      <ACard class="data">
+        <AStatlist title="Referers" :data="referrers" :loading="!inited" />
+      </ACard>
     </div>
     <div class="row row-norm">
-      <VCard class="data">
-        <VStatlist title="Systems" :data="systems" :loading="!inited" />
-      </VCard>
-      <VCard class="data">
-        <VStatlist title="Browsers" :data="browsers" :loading="!inited" />
-      </VCard>
-      <VCard class="data">
-        <VStatlist title="Device Platforms" :data="platforms" :loading="!inited" />
-      </VCard>
+      <ACard class="data">
+        <AStatlist title="Systems" :data="systems" :loading="!inited" />
+      </ACard>
+      <ACard class="data">
+        <AStatlist title="Browsers" :data="browsers" :loading="!inited" />
+      </ACard>
+      <ACard class="data">
+        <AStatlist title="Device Platforms" :data="platforms" :loading="!inited" />
+      </ACard>
     </div>
     <div class="row row-norm">
-      <VCard class="data">
-        <VStatlist title="Languages" :data="languages" :loading="!inited" />
-      </VCard>
-      <VCard class="data">
-        <VStatlist title="Locations" :data="locations" :loading="!inited" />
-      </VCard>
+      <ACard class="data">
+        <AStatlist title="Languages" :data="languages" :loading="!inited" />
+      </ACard>
+      <ACard class="data">
+        <AStatlist title="Locations" :data="locations" :loading="!inited" />
+      </ACard>
     </div>
   </div>
 </template>
@@ -179,7 +179,7 @@ export default {
   margin-top: $space-xs !important;
   margin-bottom: $space-sm;
 
-  .v-select {
+  .a-select {
     width: 100%;
   }
 }
@@ -187,7 +187,7 @@ export default {
 .data {
   flex: 0 1 32.3%;
 
-  .v-statlist {
+  .a-statlist {
     height: $dashboard-data-height;
   }
 }

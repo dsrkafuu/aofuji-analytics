@@ -1,33 +1,33 @@
 <template>
-  <div class="v-modal" v-if="show">
-    <VCard class="v-modal-card">
-      <div class="v-modal-body">
+  <div class="a-modal" v-if="show">
+    <ACard class="a-modal-card">
+      <div class="a-modal-body">
         <template v-if="custom">
           <slot></slot>
         </template>
         <template v-else>
-          <span class="v-modal-text">{{ value }}</span>
+          <span class="a-modal-text">{{ value }}</span>
         </template>
       </div>
-      <div class="v-modal-ctrl">
-        <div class="v-modal-ctrl-item" v-if="type === 'confirm'">
-          <VButton @click="$emit('cancel')">
-            <VIconTimes />
-          </VButton>
+      <div class="a-modal-ctrl">
+        <div class="a-modal-ctrl-item" v-if="type === 'confirm'">
+          <AButton @click="$emit('cancel')">
+            <AIconTimes />
+          </AButton>
         </div>
-        <div class="v-modal-ctrl-item">
-          <VButton @click="$emit('confirm')">
-            <VIconCheck />
-          </VButton>
+        <div class="a-modal-ctrl-item">
+          <AButton @click="$emit('confirm')">
+            <AIconCheck />
+          </AButton>
         </div>
       </div>
-    </VCard>
+    </ACard>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'VModal',
+  name: 'AModal',
   props: {
     show: { type: Boolean, default: false },
     type: {
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-modal {
+.a-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -55,7 +55,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  .v-card {
+  .a-card {
     position: relative;
     flex-direction: column;
     display: flex;

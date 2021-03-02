@@ -1,8 +1,8 @@
 <template>
-  <transition-group tag="div" name="v-message" class="v-message-wrapper">
-    <div :class="['v-message', `v-message-${item.type}`]" v-for="item of messages" :key="item.id">
+  <transition-group tag="div" name="a-message" class="a-message-wrapper">
+    <div :class="['a-message', `a-message-${item.type}`]" v-for="item of messages" :key="item.id">
       <span>{{ item.text }}</span>
-      <VButton type="full-height" @click="handleClose(item.id)"><VIconTimes /></VButton>
+      <AButton type="full-height" @click="handleClose(item.id)"><AIconTimes /></AButton>
     </div>
   </transition-group>
 </template>
@@ -13,14 +13,14 @@
  * may use vue 3 teleport feature to mount message inside body
  * instead of using Vue.extend() directly
  */
-import VButton from '@/components/basic/VButton.vue';
-import VIconTimes from '@/assets/icons/times.svg';
+import AButton from '@/components/basic/AButton.vue';
+import AIconTimes from '@/assets/icons/times.svg';
 
 export default {
-  name: 'VMessage',
+  name: 'AMessage',
   components: {
-    VButton,
-    VIconTimes,
+    AButton,
+    AIconTimes,
   },
 
   // data and method from outer `Vue.extend()`
@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-message {
+.a-message {
   &-wrapper {
     z-index: 99;
     position: fixed;
@@ -64,7 +64,7 @@ export default {
     flex: 1 1 auto;
   }
 
-  & > .v-button {
+  & > .a-button {
     overflow: hidden;
   }
 

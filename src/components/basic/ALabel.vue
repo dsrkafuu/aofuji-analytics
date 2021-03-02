@@ -1,17 +1,17 @@
 <template>
-  <span class="v-label">
+  <span class="a-label">
     <slot></slot>
   </span>
 </template>
 
 <script>
 export default {
-  name: 'VLabel',
+  name: 'ALabel',
 };
 </script>
 
 <style lang="scss">
-.v-label {
+.a-label {
   background-color: var(--color-wrapper);
   padding: $space-xs 1.25 * $space-xs;
   border-radius: $radius;

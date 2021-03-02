@@ -16,7 +16,7 @@ function buildTracker() {
     fs.mkdirSync(dist);
   }
 
-  const src = path.resolve(__dirname, '../node_modules/vector-tracker/lib/vector.min.js');
+  const src = path.resolve(__dirname, '../node_modules/aofuji-tracker/lib/aofuji.min.js');
   const dest = path.resolve(__dirname, `../dist/${fileName}`);
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, dest);

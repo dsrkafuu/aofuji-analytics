@@ -1,28 +1,28 @@
 <template>
   <div class="website-edit">
-    <VHeader :text="`${_id ? 'Edit' : 'Add'} Website`">
-      <VButton @click="handleExit">
-        <VIconTimes />
-      </VButton>
-      <VButton @click="handleCheck" :loading="awaitingCheck">
-        <VIconCheck />
-      </VButton>
-    </VHeader>
+    <AHeader :text="`${_id ? 'Edit' : 'Add'} Website`">
+      <AButton @click="handleExit">
+        <AIconTimes />
+      </AButton>
+      <AButton @click="handleCheck" :loading="awaitingCheck">
+        <AIconCheck />
+      </AButton>
+    </AHeader>
     <div class="line" v-show="_id">
       <span class="keyname">ID</span>
-      <VLabel>{{ _id }}</VLabel>
+      <ALabel>{{ _id }}</ALabel>
     </div>
     <div class="line">
       <span class="keyname">Name</span>
-      <VInput class="name" v-model="name" />
+      <AInput class="name" v-model="name" />
     </div>
     <div class="line">
       <span class="keyname">URL</span>
-      <VInput class="domain" v-model="url" />
+      <AInput class="domain" v-model="url" />
     </div>
     <div class="line">
       <span class="keyname">Base URL</span>
-      <VInput class="domain" v-model="base" />
+      <AInput class="domain" v-model="base" />
     </div>
   </div>
 </template>
@@ -114,14 +114,14 @@ export default {
   align-items: center;
   padding: 0 $space-sm;
 
-  .v-label,
-  .v-input {
+  .a-label,
+  .a-input {
     margin: 0 !important;
     min-width: 20rem;
     text-align: left;
   }
 
-  .v-label {
+  .a-label {
     font-size: $font-size-sm;
     height: 2rem;
     line-height: 2rem;

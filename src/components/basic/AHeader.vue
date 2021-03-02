@@ -1,9 +1,9 @@
 <template>
-  <div class="v-header">
-    <span class="v-header-title">
+  <div class="a-header">
+    <span class="a-header-title">
       {{ text }}
     </span>
-    <div class="v-header-ctrl">
+    <div class="a-header-ctrl">
       <slot></slot>
     </div>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'VHeader',
+  name: 'AHeader',
 
   props: {
     text: { type: String },
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-header {
+.a-header {
   height: 3rem;
   display: flex;
   user-select: none;

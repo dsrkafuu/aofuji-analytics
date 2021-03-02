@@ -1,19 +1,19 @@
 <template>
   <router-link :to="to" v-slot="{ href, navigate, isActive }" custom>
-    <VButton
+    <AButton
       :type="type"
       :href="href"
       @click="navigate"
-      :class="['v-router', { 'v-router-active': isActive }]"
+      :class="['a-router', { 'a-router-active': isActive }]"
     >
       <slot></slot>
-    </VButton>
+    </AButton>
   </router-link>
 </template>
 
 <script>
 export default {
-  name: 'VRouterLink',
+  name: 'ARouterLink',
 
   props: {
     to: [String, Object],
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-router-active {
+.a-router-active {
   color: var(--color-primary);
 }
 </style>

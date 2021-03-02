@@ -2,7 +2,7 @@
   <div class="realtime-device-category">
     <div class="title">Device Category</div>
     <div class="ctx">
-      <VLoading :loading="loading" :nodata="nodata" />
+      <ALoading :loading="loading" :nodata="nodata" />
       <canvas ref="deviceCategoryRef"></canvas>
     </div>
   </div>

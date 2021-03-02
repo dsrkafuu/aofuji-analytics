@@ -1,11 +1,11 @@
 <template>
-  <div class="v-loading" v-if="loading || nodata">
+  <div class="a-loading" v-if="loading || nodata">
     <template v-if="loading">
-      <VIconCircle :class="{ 'v-spin': loading }" />
+      <AIconCircle :class="{ 'a-spin': loading }" />
       <span>Loading</span>
     </template>
     <template v-else>
-      <VIconExclamation />
+      <AIconExclamation />
       <span>No Data</span>
     </template>
   </div>
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'VLoading',
+  name: 'ALoading',
 
   props: {
     loading: { type: Boolean },
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style lang="scss">
-.v-loading {
+.a-loading {
   position: absolute;
   top: 0;
   left: 0;
