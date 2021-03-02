@@ -1,6 +1,6 @@
 {
   "name": "vector-analytics",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Minimal alternative to Google Analytics.",
   "author": "DSRKafuU <dsrkafuu@outlook.com> (https://dsrkafuu.su)",
   "license": "MIT",
