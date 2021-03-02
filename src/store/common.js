@@ -111,9 +111,14 @@ export default {
       const res = await $api.get('/common');
       commit('xmSetWebsites', res.data);
       // init default selected website
-      if (res.data[0]) {
+      if (res.data.length > 0) {
         const { _id } = res.data[0];
         commit('xmSetCurWebsite', { _id });
+      }
+      // if no available website
+      else {
+        commit('dashboard/xmSetInited', { value: true }, { root: true });
+        commit('realtime/xmSetInited', { value: true }, { root: true });
       }
     },
     // fet all websites (share mode)
