@@ -40,7 +40,7 @@ export default {
   computed: {
     // site title from environment variables
     siteTitle() {
-      return process.env.VUE_APP_TITLE || 'Goose Analytics';
+      return process.env.VUE_APP_TITLE || 'Vector Analytics';
     },
   },
 
