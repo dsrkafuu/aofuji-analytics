@@ -16,17 +16,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-body);
   color: var(--color-font);
-  display: flex;
-  flex-direction: column;
 }
 
-main {
-  flex: 1 1 auto;
-}
-
-header,
-footer {
-  flex: 0 0 auto;
+#app {
+  min-height: 100vh;
 }
 
 /* reset */

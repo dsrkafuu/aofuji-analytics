@@ -5,6 +5,8 @@
     <main class="v-container">
       <Dashboard />
     </main>
+
+    <Footer />
   </div>
 </template>
 
