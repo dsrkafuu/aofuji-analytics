@@ -31,6 +31,10 @@ export default {
     nodata() {
       return this.pvsData.reduce((preVal, curVal) => preVal + curVal, 0) <= 0;
     },
+    // theme
+    theme() {
+      return this.$store.state.theme.theme;
+    },
   },
   watch: {
     async data(data) {
@@ -39,6 +43,10 @@ export default {
       } else {
         await this.drawChart(data[0], data[1]);
       }
+    },
+    // watch theme change
+    async theme() {
+      await this.updateChart();
     },
   },
 
@@ -82,10 +90,14 @@ export default {
      * @param {Array} ussData unique sessions steps
      */
     async updateChart(pvsData, ussData) {
-      this.chart.data.labels = pvsData.map((val, index) => `${index}`);
-      this.chart.data.datasets[0].data = ussData;
-      this.chart.data.datasets[1].data = pvsData;
-      this.chart.update();
+      if (this.chart) {
+        if (pvsData && ussData) {
+          this.chart.data.labels = pvsData.map((val, index) => `${index}`);
+          this.chart.data.datasets[0].data = ussData;
+          this.chart.data.datasets[1].data = pvsData;
+        }
+        this.chart.update();
+      }
     },
   },
 };

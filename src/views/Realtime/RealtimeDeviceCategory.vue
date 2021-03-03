@@ -29,6 +29,10 @@ export default {
     nodata() {
       return this.data.length <= 0;
     },
+    // theme
+    theme() {
+      return this.$store.state.theme.theme;
+    },
   },
   watch: {
     async data(data) {
@@ -37,6 +41,10 @@ export default {
       } else {
         await this.drawChart(data);
       }
+    },
+    // watch theme change
+    async theme() {
+      await this.updateChart();
     },
   },
 
@@ -60,7 +68,7 @@ export default {
             {
               data: [...Object.values(fromPairs(data))],
               backgroundColor: ['#9db1da', '#aba4d3', '#ababab'],
-              borderWidth: 1,
+              borderWidth: 0,
             },
           ],
         },
@@ -77,9 +85,13 @@ export default {
      * @param {Array} data user regions data
      */
     async updateChart(data) {
-      this.chart.data.labels = [...Object.keys(fromPairs(data))];
-      this.chart.data.datasets[0].data = [...Object.values(fromPairs(data))];
-      this.chart.update();
+      if (this.chart) {
+        if (data) {
+          this.chart.data.labels = [...Object.keys(fromPairs(data))];
+          this.chart.data.datasets[0].data = [...Object.values(fromPairs(data))];
+        }
+        this.chart.update();
+      }
     },
   },
 };

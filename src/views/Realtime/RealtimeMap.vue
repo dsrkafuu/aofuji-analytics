@@ -31,6 +31,10 @@ export default {
     nodata() {
       return this.data.length <= 0;
     },
+    // theme
+    theme() {
+      return this.$store.state.theme.theme;
+    },
   },
   watch: {
     async data(data) {
@@ -39,6 +43,10 @@ export default {
       } else {
         await this.drawMap(data);
       }
+    },
+    // watch theme change
+    async theme() {
+      await this.updateMap();
     },
   },
 
@@ -124,19 +132,23 @@ export default {
     async updateMap(data) {
       // wait for topojson fetched
       await this.topoStatus;
-      // combine user regions data with topojson
-      const regions = fromPairs(data);
-      this.topojson.forEach((d) => {
-        const ISO = d.properties.ISO_A2;
-        d.properties.VALUE = regions[ISO] || null;
-      });
-      // draw chart
-      this.chart.data.labels = this.topojson.map((d) => d.properties.NAME);
-      this.chart.data.datasets[0].data = this.topojson.map((d) => ({
-        feature: d,
-        value: d.properties.VALUE,
-      }));
-      this.chart.update();
+      if (this.chart) {
+        if (data) {
+          // combine user regions data with topojson
+          const regions = fromPairs(data);
+          this.topojson.forEach((d) => {
+            const ISO = d.properties.ISO_A2;
+            d.properties.VALUE = regions[ISO] || null;
+          });
+          // draw chart
+          this.chart.data.labels = this.topojson.map((d) => d.properties.NAME);
+          this.chart.data.datasets[0].data = this.topojson.map((d) => ({
+            feature: d,
+            value: d.properties.VALUE,
+          }));
+        }
+        this.chart.update();
+      }
     },
   },
 };

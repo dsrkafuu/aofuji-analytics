@@ -1,51 +1,20 @@
 import {
   Chart,
   ArcElement,
-  // LineElement,
   BarElement,
-  // PointElement,
   BarController,
-  // BubbleController,
   DoughnutController,
-  // LineController,
-  // PieController,
-  // PolarAreaController,
-  // RadarController,
-  // ScatterController,
   CategoryScale,
-  // LinearScale,
-  // LogarithmicScale,
-  // RadialLinearScale,
-  // TimeScale,
-  // TimeSeriesScale,
-  // Filler,
   Legend,
-  // Title,
   Tooltip,
 } from 'chart.js';
-
 Chart.register(
   ArcElement,
-  // LineElement,
   BarElement,
-  // PointElement,
   BarController,
-  // BubbleController,
   DoughnutController,
-  // LineController,
-  // PieController,
-  // PolarAreaController,
-  // RadarController,
-  // ScatterController,
   CategoryScale,
-  // LinearScale,
-  // LogarithmicScale,
-  // RadialLinearScale,
-  // TimeScale,
-  // TimeSeriesScale,
-  // Filler,
   Legend,
-  // Title,
   Tooltip
 );
 
@@ -58,8 +27,21 @@ import {
 } from 'chartjs-chart-geo';
 Chart.register(ChoroplethController, GeoFeature, ColorScale, ProjectionScale);
 
-// settings
+// global settings
 Chart.defaults.font.family = 'inherit';
-Chart.defaults.color = 'var(--color-font)';
 
-export { Chart, topojson };
+// theme controller
+const light = {
+  fontColor: '#3f4551',
+};
+const dark = {
+  fontColor: 'rgba(255, 255, 255, 0.75)',
+};
+function setLightChart() {
+  Chart.defaults.color = light.fontColor;
+}
+function setDarkChart() {
+  Chart.defaults.color = dark.fontColor;
+}
+
+export { Chart, topojson, setLightChart, setDarkChart };
