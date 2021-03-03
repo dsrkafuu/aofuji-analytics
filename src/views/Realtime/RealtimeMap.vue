@@ -87,7 +87,7 @@ export default {
       const regions = fromPairs(data);
       this.topojson.forEach((d) => {
         const ISO = d.properties.ISO_A2;
-        d.properties.VALUE = regions[ISO] || null;
+        d.properties.VALUE = regions[ISO] || 0;
       });
       // draw chart
       this.chart = new Chart(this.$refs.mapRef, {
@@ -114,11 +114,12 @@ export default {
             xy: { projection: 'mercator' }, // square map
             color: {
               display: false, // no color card
-              missing: 'rgba(157, 182, 218, 0.5)',
-              // color calculator, origin value 0-1
-              // target color rgba(157,182,218,0.8)-rgba(157,172,218,1.0)
-              interpolate: (val) => {
-                return `rgba(157, ${182 - 10 * val}, 218, ${0.8 + val * 0.2})`;
+              missing: 'rgba(211, 211, 211, 0.5)',
+              // color calculator, origin value 0-1, target color rgba(211,211,211,0.5)-rgba(138,162,211,0.5)
+              interpolate: () => (v) => {
+                // no idea why the interpolate needs to be a function which returns function
+                // it just only works like this
+                return `rgba(${211 - 73 * v}, ${211 - 49 * v}, 211, ${0.5 + 0.5 * v})`;
               },
             },
           },
