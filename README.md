@@ -1,4 +1,4 @@
-# Vector Analytics
+# Aofuji Analytics
 
 ![](https://img.shields.io/github/package-json/v/dsrkafuu/aofuji-analytics)
 ![](https://img.shields.io/github/workflow/status/dsrkafuu/aofuji-analytics/test)
