@@ -147,8 +147,7 @@ export default {
   font-size: $font-size-md;
   font-weight: 500;
 
-  .navbar-item {
-    padding: 0 $space-lg;
+  .item {
     color: var(--color-font) !important;
   }
 }
