@@ -10,7 +10,7 @@
 
 <script>
 import { CHART_PIXEL_RATIO } from '@/utils/constants';
-import { Chart } from '@/utils/chartjs';
+import { Chart, theme } from '@/utils/chartjs';
 import { fromPairs } from '@/utils/lodash';
 
 export default {
@@ -35,22 +35,22 @@ export default {
     },
   },
   watch: {
-    async data(data) {
+    data(data) {
       if (this.chart) {
-        await this.updateChart(data);
+        this.updateChart(data);
       } else {
-        await this.drawChart(data);
+        this.drawChart(data);
       }
     },
     // watch theme change
-    async theme() {
-      await this.updateChart();
+    theme() {
+      this.updateChart();
     },
   },
 
-  async mounted() {
+  mounted() {
     if (!this.nodata) {
-      await this.drawChart(this.data);
+      this.drawChart(this.data);
     }
   },
 
@@ -59,7 +59,7 @@ export default {
      * draw device category chart
      * @param {Array} data
      */
-    async drawChart(data) {
+    drawChart(data) {
       this.chart = new Chart(this.$refs.deviceCategoryRef, {
         type: 'doughnut',
         data: {
@@ -67,7 +67,12 @@ export default {
           datasets: [
             {
               data: [...Object.values(fromPairs(data))],
-              backgroundColor: ['#9db1da', '#aba4d3', '#ababab'],
+              backgroundColor: [theme.primaryColor, theme.secondaryColor, theme.baseColor],
+              hoverBackgroundColor: [
+                theme.primaryActiveColor,
+                theme.secondaryActiveColor,
+                theme.baseActiveColor,
+              ],
               borderWidth: 0,
             },
           ],
@@ -84,7 +89,7 @@ export default {
      * update device category chart
      * @param {Array} data user regions data
      */
-    async updateChart(data) {
+    updateChart(data) {
       if (this.chart) {
         if (data) {
           this.chart.data.labels = [...Object.keys(fromPairs(data))];

@@ -9,7 +9,7 @@
 
 <script>
 import { CHART_MAP_TOPOJSON, CHART_MAP_PIXEL_RATIO, STORAGE_TOPOJSON } from '@/utils/constants';
-import { Chart, topojson } from '@/utils/chartjs';
+import { Chart, topojson, theme } from '@/utils/chartjs';
 import { fromPairs } from '@/utils/lodash';
 import { setLS, getLS } from '@/utils/storage';
 
@@ -98,7 +98,7 @@ export default {
             {
               data: this.topojson.map((d) => ({ feature: d, value: d.properties.VALUE })),
               borderWidth: 0,
-              borderColor: '#ffffff00',
+              borderColor: 'rgba(255, 255, 255, 0)',
             },
           ],
         },
@@ -114,8 +114,8 @@ export default {
             xy: { projection: 'mercator' }, // square map
             color: {
               display: false, // no color card
-              missing: 'rgba(211, 211, 211, 0.5)',
-              // color calculator, origin value 0-1, target color rgba(211,211,211,0.5)-rgba(138,162,211,0.5)
+              missing: theme.nullColor,
+              // color calculator, origin value 0-1, target color rgba(211,211,211,0.5)-rgba(138,162,211,1.0)
               interpolate: () => (v) => {
                 // no idea why the interpolate needs to be a function which returns function
                 // it just only works like this

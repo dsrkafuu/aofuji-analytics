@@ -9,7 +9,7 @@
 
 <script>
 import { CHART_PIXEL_RATIO } from '@/utils/constants';
-import { Chart } from '@/utils/chartjs';
+import { Chart, theme } from '@/utils/chartjs';
 
 export default {
   name: 'DashboardChart',
@@ -37,22 +37,22 @@ export default {
     },
   },
   watch: {
-    async data(data) {
+    data(data) {
       if (this.chart) {
-        await this.updateChart(data[0], data[1]);
+        this.updateChart(data[0], data[1]);
       } else {
-        await this.drawChart(data[0], data[1]);
+        this.drawChart(data[0], data[1]);
       }
     },
     // watch theme change
-    async theme() {
-      await this.updateChart();
+    theme() {
+      this.updateChart();
     },
   },
 
-  async mounted() {
+  mounted() {
     if (!this.nodata) {
-      await this.drawChart(this.data[0], this.data[1]);
+      this.drawChart(this.data[0], this.data[1]);
     }
   },
 
@@ -62,21 +62,32 @@ export default {
      * @param {Array} pvsData page views steps
      * @param {Array} ussData unique sessions steps
      */
-    async drawChart(pvsData, ussData) {
+    drawChart(pvsData, ussData) {
       this.chart = new Chart(this.$refs.chartRef, {
         type: 'bar',
         data: {
           labels: pvsData.map((val, index) => `${index}`),
           datasets: [
-            { label: 'Unique Sessions', data: ussData, backgroundColor: '#aba4d3' },
-            { label: 'Page Views', data: pvsData, backgroundColor: '#9db1da' },
+            {
+              label: 'Unique Sessions',
+              data: ussData,
+              backgroundColor: theme.primaryColor,
+              hoverBackgroundColor: theme.primaryActiveColor,
+            },
+            {
+              label: 'Page Views',
+              data: pvsData,
+              backgroundColor: theme.baseColor,
+              hoverBackgroundColor: theme.baseActiveColor,
+            },
           ],
         },
         options: {
           devicePixelRatio: (window.devicePixelRatio || 1) * CHART_PIXEL_RATIO,
           maintainAspectRatio: false,
           scales: {
-            x: { gridLines: { display: false }, stacked: true },
+            x: { gridLines: { display: false, color: theme.nullColor }, stacked: true },
+            y: { gridLines: { color: theme.nullColor } },
           },
           plugins: {
             legend: { position: 'bottom' },
@@ -89,14 +100,19 @@ export default {
      * @param {Array} pvsData page views steps
      * @param {Array} ussData unique sessions steps
      */
-    async updateChart(pvsData, ussData) {
+    updateChart(pvsData, ussData) {
       if (this.chart) {
         if (pvsData && ussData) {
           this.chart.data.labels = pvsData.map((val, index) => `${index}`);
           this.chart.data.datasets[0].data = ussData;
           this.chart.data.datasets[1].data = pvsData;
+          this.chart.update();
+        } else {
+          // this.chart.update();
+          // fix axis color not updated issue
+          this.chart.destroy();
+          this.drawChart(this.data[0], this.data[1]);
         }
-        this.chart.update();
       }
     },
   },
