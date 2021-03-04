@@ -56,6 +56,17 @@ export default {
 
   methods: {
     /**
+     * compute display labels
+     * @param {Array} data
+     */
+    computeLabels(data) {
+      const labels = [...Object.keys(fromPairs(data))];
+      labels.forEach((val, idx) => {
+        labels[idx] = val.charAt(0).toUpperCase() + val.slice(1);
+      });
+      return labels;
+    },
+    /**
      * draw device category chart
      * @param {Array} data
      */
@@ -63,7 +74,7 @@ export default {
       this.chart = new Chart(this.$refs.deviceCategoryRef, {
         type: 'doughnut',
         data: {
-          labels: [...Object.keys(fromPairs(data))],
+          labels: this.computeLabels(data),
           datasets: [
             {
               data: [...Object.values(fromPairs(data))],
@@ -92,7 +103,7 @@ export default {
     updateChart(data) {
       if (this.chart) {
         if (data) {
-          this.chart.data.labels = [...Object.keys(fromPairs(data))];
+          this.chart.data.labels = this.computeLabels(data);
           this.chart.data.datasets[0].data = [...Object.values(fromPairs(data))];
         }
         this.chart.update();

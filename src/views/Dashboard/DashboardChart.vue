@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
 import { CHART_PIXEL_RATIO } from '@/utils/constants';
 import { Chart, theme } from '@/utils/chartjs';
 
@@ -17,6 +18,8 @@ export default {
   props: {
     pvsData: { type: Array },
     ussData: { type: Array },
+    rangeMap: { type: Object },
+    range: { type: String },
     loading: { type: Boolean },
   },
   data() {
@@ -58,6 +61,25 @@ export default {
 
   methods: {
     /**
+     * compute display labels
+     */
+    computeLabels() {
+      let date = dayjs();
+      let range = this.rangeMap[this.range].value;
+      const step = this.rangeMap[this.range].step;
+      const labels = [];
+      while (range > 0) {
+        if (['LAST_15M', 'LAST_24H'].includes(this.range)) {
+          labels.unshift(date.format('HH:mm'));
+        } else {
+          labels.unshift(date.format('MM-DD'));
+        }
+        date = date.subtract(step, 'second');
+        range -= step;
+      }
+      return labels;
+    },
+    /**
      * draw device category chart
      * @param {Array} pvsData page views steps
      * @param {Array} ussData unique sessions steps
@@ -66,7 +88,7 @@ export default {
       this.chart = new Chart(this.$refs.chartRef, {
         type: 'bar',
         data: {
-          labels: pvsData.map((val, index) => `${index}`),
+          labels: this.computeLabels(),
           datasets: [
             {
               label: 'Unique Sessions',
@@ -103,7 +125,7 @@ export default {
     updateChart(pvsData, ussData) {
       if (this.chart) {
         if (pvsData && ussData) {
-          this.chart.data.labels = pvsData.map((val, index) => `${index}`);
+          this.chart.data.labels = this.computeLabels();
           this.chart.data.datasets[0].data = ussData;
           this.chart.data.datasets[1].data = pvsData;
           this.chart.update();

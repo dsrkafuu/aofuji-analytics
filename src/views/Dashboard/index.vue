@@ -10,7 +10,13 @@
         <AStatistic title="Avg. View Time" :value="pageViewTime" type="time" :loading="!inited" />
       </ACard>
       <ACard class="chart">
-        <DashboardChart :pvsData="pageViewSteps" :ussData="uniqueSessionSteps" :loading="!inited" />
+        <DashboardChart
+          :pvsData="pageViewSteps"
+          :ussData="uniqueSessionSteps"
+          :rangeMap="rangeMap"
+          :range="range"
+          :loading="!inited"
+        />
       </ACard>
     </div>
     <div class="row row-prim">
