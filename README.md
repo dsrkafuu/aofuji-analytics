@@ -4,16 +4,20 @@
 ![](https://img.shields.io/github/workflow/status/dsrkafuu/aofuji-analytics/test)
 ![](https://img.shields.io/github/license/dsrkafuu/aofuji-analytics)
 
+## Introduction
+
 Minimal alternative to Google Analytics based on Vue.js and MongoDB.
 
 - [Documentation](https://aofuji.ink)
 - [Dedicated Tracker](https://github.com/dsrkafuu/aofuji-tracker)
 
-## About the Project
+![Preview Image](https://raw.githubusercontent.com/dsrkafuu/aofuji-analytics/main/preview.png)
+
+### About the Project
 
 This project does not use semantic versioning until v1 is officially released, so please check the changelog carefully before each upgrade to see if it is still working properly.
 
-## About Vue.js
+### About Vue.js
 
 Vue.js is in the transition phase from v2 to v3, and the project will continue to be based on v2 temporarily because the adaptation of the community ecosystem is not stable yet.
 
