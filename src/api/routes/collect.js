@@ -167,9 +167,11 @@ const route = async (req, res) => {
           // try update advanced session data when missing
           if (lng && !session.language) {
             // ensure lang format
-            const exp = /-(.*)$/i.exec(lng);
-            if (exp && exp[1]) {
-              session.language = lng.split('-')[0] + '-' + exp[1].toUpperCase();
+            const words = lng.split('-');
+            let region = words[words.length - 1];
+            if (words.length >= 2 && region.length === 2) {
+              words[words.length - 1] = region.toUpperCase();
+              session.language = words.join('-');
             } else {
               session.language = lng;
             }
