@@ -60,6 +60,9 @@ const rangeMap = {
   LAST_30D: { text: 'Last Month', value: 2592000, step: 86400 },
 };
 
+import locales from '@/assets/json/locales/en.json';
+import countries from '@/assets/json/countries/en.json';
+
 export default {
   name: 'Dashboard',
   components: {
@@ -76,6 +79,34 @@ export default {
     curWebsite() {
       return this.$store.state.common.curWebsite?._id;
     },
+    platforms() {
+      const plats = this.$store.state.dashboard.platforms;
+      plats.forEach((val, idx) => {
+        const plat = val[0];
+        plats[idx][0] = plat.charAt(0).toUpperCase() + plat.slice(1);
+      });
+      return plats;
+    },
+    languages() {
+      const langs = this.$store.state.dashboard.languages;
+      langs.forEach((val, idx) => {
+        const code = val[0].replace(/-/g, '_');
+        if (locales[code]) {
+          langs[idx][0] = locales[code];
+        }
+      });
+      return langs;
+    },
+    locations() {
+      const locs = this.$store.state.dashboard.locations;
+      locs.forEach((val, idx) => {
+        const code = val[0];
+        if (countries[code]) {
+          locs[idx][0] = countries[code];
+        }
+      });
+      return locs;
+    },
     ...mapState('dashboard', [
       'inited',
       'pageViews',
@@ -85,11 +116,8 @@ export default {
       'uniqueSessionSteps',
       'pathnames',
       'referrers',
-      'languages',
       'browsers',
       'systems',
-      'platforms',
-      'locations',
     ]),
 
     // share mode computes
