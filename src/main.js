@@ -5,9 +5,15 @@ Vue.config.productionTip = false;
 import router from './router';
 import store from './store';
 
+// styles
 import 'normalize.css';
 import './scss/index.scss';
 
+// directives
+import clickout from './directives/clickout';
+Vue.directive('clickout', clickout);
+
+// plugins
 import VComponents from './plugins/components';
 Vue.use(VComponents);
 import AMessage from './plugins/message';

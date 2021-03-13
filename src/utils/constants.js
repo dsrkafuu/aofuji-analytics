@@ -2,6 +2,7 @@
 
 // dom
 export const DOM_ATTR_THEME = 'data-theme';
+export const EL_ATTR_CLICKOUT = '_aofuji_clickout';
 
 // cookie
 export const COOKIE_TOKEN = 'aofuji_token';

@@ -1,11 +1,11 @@
 <template>
-  <div :class="['a-select', { 'a-select-active': active }]">
+  <div :class="['a-select', { 'a-select-active': active }]" v-clickout="handleClickOut">
     <div class="a-select-input" @click="handleSwitch">
       <span>{{ selectedText }}</span>
       <AIconChevronUp v-if="active" />
       <AIconChevronDown v-else />
     </div>
-    <ul class="a-select-list" v-show="active">
+    <ul class="a-select-list" v-if="active">
       <li v-for="key of Object.keys(map)" :key="key" @click="handleSelect(key)">
         {{ map[key] ? map[key].text : '' }}
       </li>
@@ -46,6 +46,14 @@ export default {
       this.active = !this.active;
     },
     /**
+     * handle click outside select
+     */
+    handleClickOut() {
+      if (this.active) {
+        this.active = false;
+      }
+    },
+    /**
      * handle li select
      * @param {string} key
      */
@@ -53,7 +61,9 @@ export default {
       if (key !== this.value) {
         this.$emit('input', key);
       }
-      this.active = false;
+      if (this.active) {
+        this.active = false;
+      }
     },
   },
 };
